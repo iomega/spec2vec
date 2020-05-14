@@ -32,18 +32,18 @@ Word2Vec based similarity measure of mass spectrometry data.
 
 
 .. |GitHub Badge| image:: https://img.shields.io/badge/github-repo-000.svg?logo=github&labelColor=gray&color=blue
-   :target: https://github.com/matchms/matchms
+   :target: https://github.com/iomega/spec2vec
    :alt: GitHub Badge
 
-.. |License Badge| image:: https://img.shields.io/github/license/citation-file-format/cff-converter-python
-   :target: https://github.com/matchms/matchms
+.. |License Badge| image:: https://img.shields.io/github/license/iomega/spec2vec
+   :target: https://github.com/iomega/spec2vec
    :alt: License Badge
 
-.. |Conda Badge| image:: https://anaconda.org/nlesc/matchms/badges/installer/conda.svg
+.. |Conda Badge| image:: https://anaconda.org/nlesc/spec2vec/badges/installer/conda.svg
    :target: https://conda.anaconda.org/nlesc
    :alt: Conda Badge
-.. |Research Software Directory Badge| image:: https://img.shields.io/badge/rsd-matchms-00a3e3.svg
-   :target: https://www.research-software.nl/software/matchms
+.. |Research Software Directory Badge| image:: https://img.shields.io/badge/rsd-spec2vec-00a3e3.svg
+   :target: https://www.research-software.nl/software/spec2vec
    :alt: Research Software Directory Badge
 
 .. |Zenodo Badge| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3716378.svg
@@ -54,29 +54,29 @@ Word2Vec based similarity measure of mass spectrometry data.
    :target: https://bestpractices.coreinfrastructure.org/projects/3792
    :alt: CII Best Practices Badge
 
-.. |GitHub Actions Badge| image:: https://github.com/matchms/matchms/workflows/Build%20matchms/badge.svg
-   :target: https://github.com/matchms/matchms/actions?query=workflow%3A%22Build+matchms%22
+.. |GitHub Actions Badge| image:: https://github.com/iomega/spec2vec/workflows/Build%20spec2vec/badge.svg
+   :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Build+spec2vec%22
    :alt: GitHub Actions Badge
 
-.. |ReadTheDocs Badge| image:: https://readthedocs.org/projects/matchms/badge/?version=latest
+.. |ReadTheDocs Badge| image:: https://readthedocs.org/projects/spec2vec/badge/?version=latest
     :alt: Documentation Status
     :scale: 100%
-    :target: https://matchms.readthedocs.io/en/latest/?badge=latest
+    :target: https://spec2vec.readthedocs.io/en/latest/?badge=latest
 
-.. |Sonarcloud Quality Gate Badge| image:: https://sonarcloud.io/api/project_badges/measure?project=matchms_matchms&metric=alert_status
-   :target: https://sonarcloud.io/dashboard?id=matchms_matchms
+.. |Sonarcloud Quality Gate Badge| image:: https://sonarcloud.io/api/project_badges/measure?project=iomega_spec2vec&metric=alert_status
+   :target: https://sonarcloud.io/dashboard?id=iomega_spec2vec
    :alt: Sonarcloud Quality Gate
 
-.. |Sonarcloud Coverage Badge| image:: https://sonarcloud.io/api/project_badges/measure?project=matchms_matchms&metric=coverage
-   :target: https://sonarcloud.io/component_measures?id=matchms_matchms&metric=Coverage&view=list
+.. |Sonarcloud Coverage Badge| image:: https://sonarcloud.io/api/project_badges/measure?project=iomega_spec2vec&metric=coverage
+   :target: https://sonarcloud.io/component_measures?id=iomega_spec2vec&metric=Coverage&view=list
    :alt: Sonarcloud Coverage
 
-.. |Python Build| image:: https://github.com/matchms/matchms/workflows/Python%20Build/badge.svg
-   :target: https://github.com/matchms/matchms/actions?query=workflow%3A%22Python%20Build%22
+.. |Python Build| image:: https://github.com/iomega/spec2vec/workflows/Python%20Build/badge.svg
+   :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Python%20Build%22
    :alt: Python Build
 
-.. |Anaconda Build and Publish| image:: https://github.com/matchms/matchms/workflows/Anaconda%20Build%20and%20Publish/badge.svg
-   :target: https://github.com/matchms/matchms/actions?query=workflow%3A%22Anaconda%20Build%20and%20Publish%22
+.. |Anaconda Build and Publish| image:: https://github.com/iomega/spec2vec/workflows/Anaconda%20Build%20and%20Publish/badge.svg
+   :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Anaconda%20Build%20and%20Publish%22
    :alt: Anaconda Build and Publish
 
 ***********************
@@ -86,11 +86,11 @@ Documentation for users
 Installation
 ============
 
-Install matchms from PyPI with
+Install spec2vec from Anaconda Cloud with
 
 .. code-block:: console
 
-  conda install --channel nlesc spec2vec
+  conda install -c nlesc -c bioconda -c conda-forge spec2vec
 
 Glossary of terms
 =================
@@ -142,8 +142,9 @@ To install spec2vec, do:
 
   git clone https://github.com/iomega/spec2vec.git
   cd spec2vec
-  conda env create
+  conda env create --file conda/environment.yml
   conda activate spec2vec
+  pip install -r conda/requirements-dev.txt
   pip install --editable .
 
 Run the linter with:
@@ -157,6 +158,34 @@ Run tests (including coverage) with:
 .. code-block:: console
 
   pytest
+
+
+Conda package
+=============
+
+To build anaconda package locally, do:
+
+.. code-block:: console
+
+  conda deactivate
+  conda env create --file conda/environment-build.yml
+  conda activate spec2vec-build
+  rm -rfv output;mkdir ./output
+  conda build --numpy 1.18.1 --no-include-recipe -c bioconda -c conda-forge \
+  --croot /tmp/matchms/_build --output-folder ./output ./conda
+
+To remove matchms package:
+
+.. code-block:: console
+
+  conda remove spec2vec
+
+To remove environment:
+
+.. code-block:: console
+
+  conda env remove --name spec2vec-build
+
 
 Contributing
 ============

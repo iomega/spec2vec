@@ -1,7 +1,7 @@
 ################################################################################
-matchms
+spec2vec
 ################################################################################
-Vector representation and similarity measure for mass spectrometry data.
+Word2Vec based similarity measure of mass spectrometry data.
 
 |
 
@@ -14,7 +14,7 @@ Vector representation and similarity measure for mass spectrometry data.
    * - \1. Code repository
      - |GitHub Badge|
    * - \2. License
-     - |License Badge| |FOSSA Badge|
+     - |License Badge|
    * - \3. Community Registry
      - |Conda Badge| |Research Software Directory Badge|
    * - \4. Enable Citation
@@ -24,7 +24,7 @@ Vector representation and similarity measure for mass spectrometry data.
    * - **Other best practices**
      -
    * - Continuous integration
-     - |Python Build| |Anaconda Build and Publish| |PyPI Publish|
+     - |Python Build| |Anaconda Build and Publish|
    * - Documentation
      - |ReadTheDocs Badge|
    * - Code Quality
@@ -38,9 +38,6 @@ Vector representation and similarity measure for mass spectrometry data.
 .. |License Badge| image:: https://img.shields.io/github/license/citation-file-format/cff-converter-python
    :target: https://github.com/matchms/matchms
    :alt: License Badge
-.. |FOSSA Badge| image:: https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmatchms%2Fmatchms.svg?type=shield
-   :target: https://app.fossa.io/projects/git%2Bgithub.com%2Fmatchms%2Fmatchms?ref=badge_shield
-   :alt: FOSSA Badge
 
 .. |Conda Badge| image:: https://anaconda.org/nlesc/matchms/badges/installer/conda.svg
    :target: https://conda.anaconda.org/nlesc
@@ -82,11 +79,6 @@ Vector representation and similarity measure for mass spectrometry data.
    :target: https://github.com/matchms/matchms/actions?query=workflow%3A%22Anaconda%20Build%20and%20Publish%22
    :alt: Anaconda Build and Publish
 
-.. |PyPI Publish| image:: https://github.com/matchms/matchms/workflows/PyPI%20Publish/badge.svg
-   :target: https://github.com/matchms/matchms/actions?query=workflow%3A%22PyPI%20Publish%22
-   :alt: PyPI Publish
-
-
 ***********************
 Documentation for users
 ***********************
@@ -98,7 +90,7 @@ Install matchms from PyPI with
 
 .. code-block:: console
 
-  conda install --channel nlesc matchms
+  conda install --channel nlesc spec2vec
 
 Glossary of terms
 =================
@@ -144,14 +136,14 @@ Documentation for developers
 Installation
 ============
 
-To install matchms, do:
+To install spec2vec, do:
 
 .. code-block:: console
 
-  git clone https://github.com/matchms/matchms.git
-  cd matchms
+  git clone https://github.com/iomega/spec2vec.git
+  cd spec2vec
   conda env create
-  conda activate matchms
+  conda activate spec2vec
   pip install --editable .
 
 Run the linter with:
@@ -166,17 +158,10 @@ Run tests (including coverage) with:
 
   pytest
 
-Flowchart
-=========
-
-.. image:: flowchart.svg.png
-  :width: 400
-  :alt: Flowchart
-
 Contributing
 ============
 
-If you want to contribute to the development of matchms,
+If you want to contribute to the development of spec2vec,
 have a look at the `contribution guidelines <CONTRIBUTING.rst>`_.
 
 *****************************

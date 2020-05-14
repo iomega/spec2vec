@@ -172,9 +172,9 @@ To build anaconda package locally, do:
   conda activate spec2vec-build
   rm -rfv output;mkdir ./output
   conda build --numpy 1.18.1 --no-include-recipe -c bioconda -c conda-forge \
-  --croot /tmp/matchms/_build --output-folder ./output ./conda
+  --croot /tmp/spec2vec/_build --output-folder ./output ./conda
 
-To remove matchms package:
+To remove spec2vec package:
 
 .. code-block:: console
 

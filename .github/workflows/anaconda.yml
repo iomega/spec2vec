@@ -21,7 +21,7 @@ jobs:
           miniconda-version: 'latest'
           auto-update-conda: true
           python-version: ${{ matrix.python-version }}
-          activate-environment: matchms
+          activate-environment: spec2vec
           auto-activate-base: false
           channels: conda-forge,bioconda,nlesc
       - name: Install required packages

@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to matchms's documentation!
+Welcome to spec2vec's documentation!
 ===================================
 
 Word2Vec based similarity measure of mass spectrometry data.
@@ -12,7 +12,7 @@ Word2Vec based similarity measure of mass spectrometry data.
    :maxdepth: 3
    :caption: Contents:
 
-   API <api/matchms.rst>
+   API <api/spec2vec.rst>
 
 Indices and tables
 ==================

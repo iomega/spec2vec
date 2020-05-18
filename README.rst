@@ -50,8 +50,8 @@ Word2Vec based similarity measure of mass spectrometry data.
    :target: https://doi.org/10.5281/zenodo.3716378
    :alt: Zenodo Badge
 
-.. |CII Best Practices Badge| image:: https://bestpractices.coreinfrastructure.org/projects/3792/badge
-   :target: https://bestpractices.coreinfrastructure.org/projects/3792
+.. |CII Best Practices Badge| image:: https://bestpractices.coreinfrastructure.org/projects/3967/badge
+   :target: https://bestpractices.coreinfrastructure.org/projects/3967
    :alt: CII Best Practices Badge
 
 .. |GitHub Actions Badge| image:: https://github.com/iomega/spec2vec/workflows/Build%20spec2vec/badge.svg

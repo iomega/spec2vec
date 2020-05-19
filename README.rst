@@ -207,7 +207,7 @@ Contributing
 ============
 
 If you want to contribute to the development of spec2vec,
-have a look at the `contribution guidelines <CONTRIBUTING.rst>`_.
+have a look at the `contribution guidelines <CONTRIBUTING.md>`_.
 
 *****************************
 Documentation for maintainers

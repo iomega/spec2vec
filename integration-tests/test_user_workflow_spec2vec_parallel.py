@@ -63,16 +63,16 @@ def test_user_workflow_spec2vec_parallel():
     actual_top10 = sorted_by_score[:10]
 
     expected_top10 = [
-        (documents[15], documents[44], pytest.approx(0.9966129569388921, rel=1e-9)),
-        (documents[0], documents[37], pytest.approx(0.9951658453795956, rel=1e-9)),
-        (documents[17], documents[49], pytest.approx(0.9939203924205293, rel=1e-9)),
-        (documents[3], documents[43], pytest.approx(0.9931265507262842, rel=1e-9)),
-        (documents[17], documents[47], pytest.approx(0.9929958113234495, rel=1e-9)),
-        (documents[20], documents[38], pytest.approx(0.9927337063757894, rel=1e-9)),
-        (documents[20], documents[53], pytest.approx(0.9910801906892196, rel=1e-9)),
-        (documents[17], documents[46], pytest.approx(0.989670765524488, rel=1e-9)),
-        (documents[0], documents[47], pytest.approx(0.9888398328259893, rel=1e-9)),
-        (documents[24], documents[60], pytest.approx(0.9880880691915778, rel=1e-9))
+        (documents[16], documents[38], pytest.approx(0.9968146516288907)),
+        (documents[16], documents[61], pytest.approx(0.9941841832552322)),
+        (documents[10], documents[58], pytest.approx(0.9940519283255305)),
+        (documents[8],  documents[26], pytest.approx(0.9926849150218476)),
+        (documents[16], documents[55], pytest.approx(0.9917865922946578)),
+        (documents[16], documents[62], pytest.approx(0.991290192194624)),
+        (documents[16], documents[46], pytest.approx(0.9908729442589261)),
+        (documents[2],  documents[37], pytest.approx(0.9904318498241543)),
+        (documents[10], documents[60], pytest.approx(0.9902712249648715)),
+        (documents[14], documents[61], pytest.approx(0.989827726618046))
     ]
 
     assert actual_top10 == expected_top10

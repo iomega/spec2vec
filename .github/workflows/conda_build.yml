@@ -4,8 +4,8 @@ on: [push, pull_request]
 
 jobs:
 
-  publish:
-    name: Python ${{ matrix.python-version }}, ${{ matrix.os }}: build
+  build:
+    name: Python ${{ matrix.python-version }} on ${{ matrix.os }}: build
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false

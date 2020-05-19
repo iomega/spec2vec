@@ -24,7 +24,7 @@ Word2Vec based similarity measure of mass spectrometry data.
    * - **Other best practices**
      -
    * - Continuous integration
-     - |Python Build| |Anaconda Build and Publish|
+     - |Python Build| |Anaconda Build| |Anaconda Publish|
    * - Documentation
      - |ReadTheDocs Badge|
    * - Code Quality
@@ -75,9 +75,13 @@ Word2Vec based similarity measure of mass spectrometry data.
    :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Python%20Build%22
    :alt: Python Build
 
-.. |Anaconda Build and Publish| image:: https://github.com/iomega/spec2vec/workflows/Anaconda%20Build%20and%20Publish/badge.svg
-   :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Anaconda%20Build%20and%20Publish%22
-   :alt: Anaconda Build and Publish
+.. |Anaconda Build| image:: https://github.com/iomega/spec2vec/workflows/Anaconda%20Build/badge.svg
+   :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Anaconda%20Build%22
+   :alt: Anaconda Build
+
+.. |Anaconda Publish| image:: https://github.com/iomega/spec2vec/workflows/Anaconda%20Publish/badge.svg
+   :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Anaconda%20Publish%22
+   :alt: Anaconda Publish
 
 ***********************
 Documentation for users
@@ -169,12 +173,13 @@ To build anaconda package locally, do:
   conda deactivate
   conda env create --file conda/environment-build.yml
   conda activate spec2vec-build
-  rm -rfv _build;mkdir ./_build
-  conda build --numpy 1.18.1 --no-include-recipe -c conda-forge \
-  --croot /tmp/spec2vec/_build --output-folder ./_build ./conda
+  BUILD_FOLDER=/tmp/spec2vec/_build
+  rm -rfv $BUILD_FOLDER;mkdir -p $BUILD_FOLDER
+  conda build --numpy 1.18.1 --no-include-recipe -c bioconda -c conda-forge \
+  --croot $BUILD_FOLDER ./conda
 
 If successful, this will yield the built ``spec2vec`` conda package as
-``spec2vec-<version>*.tar.bz2`` in ``_build/noarch/``. You can test if
+``spec2vec-<version>*.tar.bz2`` in ``$BUILD_FOLDER/noarch/``. You can test if
 installation of this conda package works with:
 
 .. code-block:: console

@@ -33,7 +33,7 @@ jobs:
           which python
           python --version
       - name: Conda list
-        shell: pwsh
+        shell: bash -l {0}
         run: conda list
       - name: Check style against standards using prospector
         shell: bash -l {0}

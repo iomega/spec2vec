@@ -2,7 +2,6 @@ name: spec2vec-build
 channels:
   - defaults
 dependencies:
-  #- anaconda
   - anaconda-client
   - conda-build
   - conda-verify

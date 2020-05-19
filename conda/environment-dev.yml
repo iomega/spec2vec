@@ -6,6 +6,7 @@ channels:
   - nlesc
 dependencies:
   - gensim >=3.8.0
+  - matchms
   - numpy
   - pip
   - python >=3.7,<3.8

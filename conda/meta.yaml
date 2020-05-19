@@ -26,6 +26,7 @@ requirements:
     - conda-verify
     - pytest-runner
     - python
+    - numpy {{ numpy }}
     - setuptools
   host:
     - python >=3.7,<3.8
@@ -34,13 +35,9 @@ requirements:
     - setuptools
   run:
     - gensim >=3.8.0
-    - matplotlib
     - numpy
     - pip
-    - pyteomics >=4.2
     - python >=3.7,<3.8
-    - pyyaml
-    - rdkit >=2020.03.1
     - scipy
 
 test:

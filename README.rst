@@ -142,9 +142,8 @@ To install spec2vec, do:
 
   git clone https://github.com/iomega/spec2vec.git
   cd spec2vec
-  conda env create --file conda/environment.yml
-  conda activate spec2vec
-  pip install -r conda/requirements-dev.txt
+  conda env create --file conda/environment-dev.yml
+  conda activate spec2vec-dev
   pip install --editable .
 
 Run the linter with:
@@ -170,9 +169,21 @@ To build anaconda package locally, do:
   conda deactivate
   conda env create --file conda/environment-build.yml
   conda activate spec2vec-build
-  rm -rfv output;mkdir ./output
-  conda build --numpy 1.18.1 --no-include-recipe -c bioconda -c conda-forge \
-  --croot /tmp/spec2vec/_build --output-folder ./output ./conda
+  rm -rfv _build;mkdir ./_build
+  conda build --numpy 1.18.1 --no-include-recipe -c conda-forge \
+  --croot /tmp/spec2vec/_build --output-folder ./_build ./conda
+
+If successful, this will yield the built ``spec2vec`` conda package as
+``spec2vec-<version>*.tar.bz2`` in ``_build/noarch/``. You can test if
+installation of this conda package works with:
+
+.. code-block:: console
+
+  conda deactivate
+  cd $(mktemp -d)
+  conda env create --file <spec2vec directory>/conda/environment.yml
+  conda activate spec2vec
+  conda install --use-local <path to the built conda package>
 
 To remove spec2vec package:
 

@@ -1,0 +1,26 @@
+name: spec2vec-dev
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+  - nlesc
+dependencies:
+  - gensim >=3.8.0
+  - numpy
+  - pip
+  - python >=3.7,<3.8
+  - scipy
+  - pip:
+    - bump2version
+    - isort
+    - prospector[with_pyroma]
+    - pycodestyle>=2.0.0,<=2.4.0
+    - pytest
+    - pytest-cov
+    - pytest-runner
+    - recommonmark
+    - ruamel.yaml
+    - sphinx
+    - sphinx_rtd_theme
+    - sphinxcontrib-apidoc
+    - yapf

@@ -1,11 +1,11 @@
-name: Anaconda Build
+name: 'Anaconda Build'
 
 on: [push, pull_request]
 
 jobs:
 
   build:
-    name: Python ${{ matrix.python-version }} on ${{ matrix.os }}: build
+    name: ${{ matrix.python-version }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false

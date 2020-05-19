@@ -1,4 +1,4 @@
-name: 'Anaconda Publish'
+name: Anaconda Publish
 
 on:
   release:

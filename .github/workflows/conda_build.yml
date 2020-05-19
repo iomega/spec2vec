@@ -1,4 +1,4 @@
-name: 'Anaconda Build'
+name: Anaconda Build
 
 on: [push, pull_request]
 
@@ -19,7 +19,6 @@ jobs:
           activate-environment: spec2vec-build
           auto-activate-base: false
           auto-update-conda: true
-          condarc-file: conda/condarc.yml
           environment-file: conda/environment-build.yml
           miniconda-version: 'latest'
           python-version: ${{ matrix.python-version }}

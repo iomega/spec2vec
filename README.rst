@@ -184,11 +184,20 @@ installation of this conda package works with:
 
 .. code-block:: console
 
+  # make a clean environment
   conda deactivate
   cd $(mktemp -d)
   conda env create --file <spec2vec directory>/conda/environment.yml
   conda activate spec2vec
-  conda install --use-local <path to the built conda package>
+
+To publish the package on anaconda cloud, do:
+
+.. code-block:: console
+
+  anaconda --token ${{ secrets.ANACONDA_TOKEN }} upload --user nlesc --force $BUILD_FOLDER/noarch/*.tar.bz2
+
+where ``secrets.ANACONDA_TOKEN`` is a token to be generated on the Anaconda Cloud website. This secret should be added to GitHub repository.
+
 
 To remove spec2vec package:
 
@@ -196,23 +205,18 @@ To remove spec2vec package:
 
   conda remove spec2vec
 
-To remove environment:
+
+To remove spec2vec environment:
 
 .. code-block:: console
 
-  conda env remove --name spec2vec-build
-
+  conda env remove --name spec2vec
 
 Contributing
 ============
 
 If you want to contribute to the development of spec2vec,
 have a look at the `contribution guidelines <CONTRIBUTING.md>`_.
-
-*****************************
-Documentation for maintainers
-*****************************
-
 
 *******
 License

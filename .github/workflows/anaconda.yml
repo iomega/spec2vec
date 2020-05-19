@@ -18,16 +18,13 @@ jobs:
       - uses: actions/checkout@v2
       - uses: goanpeca/setup-miniconda@v1
         with:
-          miniconda-version: 'latest'
-          auto-update-conda: true
-          python-version: ${{ matrix.python-version }}
-          activate-environment: spec2vec
+          activate-environment: spec2vec-build
           auto-activate-base: false
-          channels: conda-forge,bioconda,nlesc
-      - name: Install required packages
-        shell: bash -l {0}
-        run: |
-          conda install conda-build conda-verify anaconda
+          auto-update-conda: true
+          condarc-file: conda/condarc.yml
+          environment-file: conda/environment-dev.yml
+          miniconda-version: 'latest'
+          python-version: ${{ matrix.python-version }}
       - name: Show conda config
         shell: bash -l {0}
         run: |

@@ -13,13 +13,13 @@ The sections below outline the steps in each case.
 
 ## You have a question
 
-1. use the search functionality [here](https://github.com/matchms/matchms/issues) to see if someone already filed the same issue;
+1. use the search functionality [here](https://github.com/iomega/spec2vec/issues) to see if someone already filed the same issue;
 1. if your issue search did not yield any relevant results, make a new issue;
 1. apply the "Question" label; apply other labels when relevant.
 
 ## You think you may have found a bug
 
-1. use the search functionality [here](https://github.com/matchms/matchms/issues) to see if someone already filed the same issue;
+1. use the search functionality [here](https://github.com/iomega/spec2vec/issues) to see if someone already filed the same issue;
 1. if your issue search did not yield any relevant results, make a new issue, making sure to provide enough information to the rest of the community to understand the cause and context of the problem. Depending on the issue, you may want to include:
     - the [SHA hashcode](https://help.github.com/articles/autolinked-references-and-urls/#commit-shas) of the commit that is causing your problem;
     - some identifying information (name and version number) for dependencies you're using;
@@ -35,7 +35,7 @@ The sections below outline the steps in each case.
 1. add your own tests (if necessary);
 1. update or expand the documentation;
 1. update the `CHANGELOG.md` file with change;
-1. [push](http://rogerdudler.github.io/git-guide/>) your feature branch to (your fork of) the matchms repository on GitHub;
+1. [push](http://rogerdudler.github.io/git-guide/>) your feature branch to (your fork of) the spec2vec repository on GitHub;
 1. create the pull request, e.g. following the instructions [here](https://help.github.com/articles/creating-a-pull-request/).
 
 In case you feel like you've made a valuable contribution, but you don't know how to write or run tests for it, or how to generate the documentation: don't let this discourage you from making the pull request; we can help you! Just go ahead and submit the pull request, but keep in mind that you might be asked to append additional commits to your pull request.
@@ -47,10 +47,10 @@ To create release you need write permission on the repository.
 1. Check author list in `citation.cff` and `.zenodo.json` files
 1. Bump the version using `bump2version <major|minor|patch>`. For example, `bump2version major` will increase major version numbers everywhere its needed (code, meta, etc.) in the repo.
 1. Update the `CHANGELOG.md` to include changes made
-1. Goto [GitHub release page](https://github.com/matchms/matchms/releases)
+1. Goto [GitHub release page](https://github.com/iomega/spec2vec/releases)
 1. Press draft a new release button
 1. Fill version, title and description field
 1. Press the Publish Release button
 
-A GitHub action will run which will publish the new version to [anaconda](https://anaconda.org/nlesc/matchms).
+A GitHub action will run which will publish the new version to [anaconda](https://anaconda.org/nlesc/spec2vec).
 Also a Zenodo entry will be made for the release with its own DOI.

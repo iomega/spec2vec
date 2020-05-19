@@ -1,0 +1,10 @@
+name: spec2vec
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - gensim >=3.8.0
+  - numpy
+  - python >=3.7,<3.8
+  - scipy

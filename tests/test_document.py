@@ -1,5 +1,5 @@
 import pytest
-from matchms.similarity.spec2vec.Document import Document
+from spec2vec.Document import Document
 
 
 def test_document_init():

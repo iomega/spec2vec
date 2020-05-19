@@ -1,7 +1,7 @@
 ################################################################################
-matchms
+spec2vec
 ################################################################################
-Vector representation and similarity measure for mass spectrometry data.
+Word2Vec based similarity measure of mass spectrometry data.
 
 |
 
@@ -14,7 +14,7 @@ Vector representation and similarity measure for mass spectrometry data.
    * - \1. Code repository
      - |GitHub Badge|
    * - \2. License
-     - |License Badge| |FOSSA Badge|
+     - |License Badge|
    * - \3. Community Registry
      - |Conda Badge| |Research Software Directory Badge|
    * - \4. Enable Citation
@@ -24,7 +24,7 @@ Vector representation and similarity measure for mass spectrometry data.
    * - **Other best practices**
      -
    * - Continuous integration
-     - |Python Build| |Anaconda Build and Publish| |PyPI Publish|
+     - |Python Build| |Anaconda Build| |Anaconda Publish|
    * - Documentation
      - |ReadTheDocs Badge|
    * - Code Quality
@@ -32,60 +32,56 @@ Vector representation and similarity measure for mass spectrometry data.
 
 
 .. |GitHub Badge| image:: https://img.shields.io/badge/github-repo-000.svg?logo=github&labelColor=gray&color=blue
-   :target: https://github.com/matchms/matchms
+   :target: https://github.com/iomega/spec2vec
    :alt: GitHub Badge
 
-.. |License Badge| image:: https://img.shields.io/github/license/citation-file-format/cff-converter-python
-   :target: https://github.com/matchms/matchms
+.. |License Badge| image:: https://img.shields.io/github/license/iomega/spec2vec
+   :target: https://github.com/iomega/spec2vec
    :alt: License Badge
-.. |FOSSA Badge| image:: https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmatchms%2Fmatchms.svg?type=shield
-   :target: https://app.fossa.io/projects/git%2Bgithub.com%2Fmatchms%2Fmatchms?ref=badge_shield
-   :alt: FOSSA Badge
 
-.. |Conda Badge| image:: https://anaconda.org/nlesc/matchms/badges/installer/conda.svg
+.. |Conda Badge| image:: https://anaconda.org/nlesc/spec2vec/badges/installer/conda.svg
    :target: https://conda.anaconda.org/nlesc
    :alt: Conda Badge
-.. |Research Software Directory Badge| image:: https://img.shields.io/badge/rsd-matchms-00a3e3.svg
-   :target: https://www.research-software.nl/software/matchms
+.. |Research Software Directory Badge| image:: https://img.shields.io/badge/rsd-spec2vec-00a3e3.svg
+   :target: https://www.research-software.nl/software/spec2vec
    :alt: Research Software Directory Badge
 
 .. |Zenodo Badge| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3716378.svg
    :target: https://doi.org/10.5281/zenodo.3716378
    :alt: Zenodo Badge
 
-.. |CII Best Practices Badge| image:: https://bestpractices.coreinfrastructure.org/projects/3792/badge
-   :target: https://bestpractices.coreinfrastructure.org/projects/3792
+.. |CII Best Practices Badge| image:: https://bestpractices.coreinfrastructure.org/projects/3967/badge
+   :target: https://bestpractices.coreinfrastructure.org/projects/3967
    :alt: CII Best Practices Badge
 
-.. |GitHub Actions Badge| image:: https://github.com/matchms/matchms/workflows/Build%20matchms/badge.svg
-   :target: https://github.com/matchms/matchms/actions?query=workflow%3A%22Build+matchms%22
+.. |GitHub Actions Badge| image:: https://github.com/iomega/spec2vec/workflows/Build%20spec2vec/badge.svg
+   :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Build+spec2vec%22
    :alt: GitHub Actions Badge
 
-.. |ReadTheDocs Badge| image:: https://readthedocs.org/projects/matchms/badge/?version=latest
+.. |ReadTheDocs Badge| image:: https://readthedocs.org/projects/spec2vec/badge/?version=latest
     :alt: Documentation Status
     :scale: 100%
-    :target: https://matchms.readthedocs.io/en/latest/?badge=latest
+    :target: https://spec2vec.readthedocs.io/en/latest/?badge=latest
 
-.. |Sonarcloud Quality Gate Badge| image:: https://sonarcloud.io/api/project_badges/measure?project=matchms_matchms&metric=alert_status
-   :target: https://sonarcloud.io/dashboard?id=matchms_matchms
+.. |Sonarcloud Quality Gate Badge| image:: https://sonarcloud.io/api/project_badges/measure?project=iomega_spec2vec&metric=alert_status
+   :target: https://sonarcloud.io/dashboard?id=iomega_spec2vec
    :alt: Sonarcloud Quality Gate
 
-.. |Sonarcloud Coverage Badge| image:: https://sonarcloud.io/api/project_badges/measure?project=matchms_matchms&metric=coverage
-   :target: https://sonarcloud.io/component_measures?id=matchms_matchms&metric=Coverage&view=list
+.. |Sonarcloud Coverage Badge| image:: https://sonarcloud.io/api/project_badges/measure?project=iomega_spec2vec&metric=coverage
+   :target: https://sonarcloud.io/component_measures?id=iomega_spec2vec&metric=Coverage&view=list
    :alt: Sonarcloud Coverage
 
-.. |Python Build| image:: https://github.com/matchms/matchms/workflows/Python%20Build/badge.svg
-   :target: https://github.com/matchms/matchms/actions?query=workflow%3A%22Python%20Build%22
+.. |Python Build| image:: https://github.com/iomega/spec2vec/workflows/Python%20Build/badge.svg
+   :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Python%20Build%22
    :alt: Python Build
 
-.. |Anaconda Build and Publish| image:: https://github.com/matchms/matchms/workflows/Anaconda%20Build%20and%20Publish/badge.svg
-   :target: https://github.com/matchms/matchms/actions?query=workflow%3A%22Anaconda%20Build%20and%20Publish%22
-   :alt: Anaconda Build and Publish
+.. |Anaconda Build| image:: https://github.com/iomega/spec2vec/workflows/Anaconda%20Build/badge.svg
+   :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Anaconda%20Build%22
+   :alt: Anaconda Build
 
-.. |PyPI Publish| image:: https://github.com/matchms/matchms/workflows/PyPI%20Publish/badge.svg
-   :target: https://github.com/matchms/matchms/actions?query=workflow%3A%22PyPI%20Publish%22
-   :alt: PyPI Publish
-
+.. |Anaconda Publish| image:: https://github.com/iomega/spec2vec/workflows/Anaconda%20Publish/badge.svg
+   :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Anaconda%20Publish%22
+   :alt: Anaconda Publish
 
 ***********************
 Documentation for users
@@ -94,11 +90,11 @@ Documentation for users
 Installation
 ============
 
-Install matchms from PyPI with
+Install spec2vec from Anaconda Cloud with
 
 .. code-block:: console
 
-  conda install --channel nlesc matchms
+  conda install -c nlesc -c bioconda -c conda-forge spec2vec
 
 Glossary of terms
 =================
@@ -144,14 +140,14 @@ Documentation for developers
 Installation
 ============
 
-To install matchms, do:
+To install spec2vec, do:
 
 .. code-block:: console
 
-  git clone https://github.com/matchms/matchms.git
-  cd matchms
-  conda env create
-  conda activate matchms
+  git clone https://github.com/iomega/spec2vec.git
+  cd spec2vec
+  conda env create --file conda/environment-dev.yml
+  conda activate spec2vec-dev
   pip install --editable .
 
 Run the linter with:
@@ -166,18 +162,52 @@ Run tests (including coverage) with:
 
   pytest
 
-Flowchart
-=========
 
-.. image:: flowchart.svg.png
-  :width: 400
-  :alt: Flowchart
+Conda package
+=============
+
+To build anaconda package locally, do:
+
+.. code-block:: console
+
+  conda deactivate
+  conda env create --file conda/environment-build.yml
+  conda activate spec2vec-build
+  BUILD_FOLDER=/tmp/spec2vec/_build
+  rm -rfv $BUILD_FOLDER;mkdir -p $BUILD_FOLDER
+  conda build --numpy 1.18.1 --no-include-recipe -c bioconda -c conda-forge \
+  --croot $BUILD_FOLDER ./conda
+
+If successful, this will yield the built ``spec2vec`` conda package as
+``spec2vec-<version>*.tar.bz2`` in ``$BUILD_FOLDER/noarch/``. You can test if
+installation of this conda package works with:
+
+.. code-block:: console
+
+  conda deactivate
+  cd $(mktemp -d)
+  conda env create --file <spec2vec directory>/conda/environment.yml
+  conda activate spec2vec
+  conda install --use-local <path to the built conda package>
+
+To remove spec2vec package:
+
+.. code-block:: console
+
+  conda remove spec2vec
+
+To remove environment:
+
+.. code-block:: console
+
+  conda env remove --name spec2vec-build
+
 
 Contributing
 ============
 
-If you want to contribute to the development of matchms,
-have a look at the `contribution guidelines <CONTRIBUTING.rst>`_.
+If you want to contribute to the development of spec2vec,
+have a look at the `contribution guidelines <CONTRIBUTING.md>`_.
 
 *****************************
 Documentation for maintainers

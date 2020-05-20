@@ -10,8 +10,8 @@ from matchms.filtering import require_minimum_number_of_peaks
 from matchms.filtering import select_by_mz
 from matchms.filtering import select_by_relative_intensity
 from matchms.importing import load_from_mgf
-from spec2vec import Spec2VecParallel
-from spec2vec import SpectrumDocument
+from matchms.similarity.spec2vec import Spec2VecParallel
+from matchms.similarity.spec2vec import SpectrumDocument
 
 
 def test_user_workflow_spec2vec_parallel():
@@ -63,16 +63,16 @@ def test_user_workflow_spec2vec_parallel():
     actual_top10 = sorted_by_score[:10]
 
     expected_top10 = [
-        (documents[16], documents[38], pytest.approx(0.9968146516288907)),
-        (documents[16], documents[61], pytest.approx(0.9941841832552322)),
-        (documents[10], documents[58], pytest.approx(0.9940519283255305)),
-        (documents[8],  documents[26], pytest.approx(0.9926849150218476)),
-        (documents[16], documents[55], pytest.approx(0.9917865922946578)),
-        (documents[16], documents[62], pytest.approx(0.991290192194624)),
-        (documents[16], documents[46], pytest.approx(0.9908729442589261)),
-        (documents[2],  documents[37], pytest.approx(0.9904318498241543)),
-        (documents[10], documents[60], pytest.approx(0.9902712249648715)),
-        (documents[14], documents[61], pytest.approx(0.989827726618046))
+        (documents[25], documents[61], pytest.approx(0.9961967430032844, rel=1e-9)),
+        (documents[7], documents[25], pytest.approx(0.9928597742721408, rel=1e-9)),
+        (documents[23], documents[38], pytest.approx(0.9924218396259692, rel=1e-9)),
+        (documents[25], documents[56], pytest.approx(0.9920959275602975, rel=1e-9)),
+        (documents[21], documents[38], pytest.approx(0.9917814395457049, rel=1e-9)),
+        (documents[10], documents[38], pytest.approx(0.9915107610836775, rel=1e-9)),
+        (documents[15], documents[53], pytest.approx(0.9914723281404583, rel=1e-9)),
+        (documents[7], documents[61], pytest.approx(0.9911414671886221, rel=1e-9)),
+        (documents[25], documents[49], pytest.approx(0.9909861225199654, rel=1e-9)),
+        (documents[11], documents[62], pytest.approx(0.99092120438651, rel=1e-9))
     ]
 
     assert actual_top10 == expected_top10

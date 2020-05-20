@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 import os
 
 from setuptools import setup
@@ -27,11 +26,10 @@ setup(
     license="Apache Software License 2.0",
     zip_safe=False,
     keywords=[
-        "python",
         "word2vec",
         "mass spectrometry",
         "fuzzy matching",
-        "fuzzy searching",
+        "fuzzy search"
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -48,12 +46,10 @@ setup(
         # see conda/environment.yml
     ],
     setup_requires=[
-        # see conda/environment.yml
     ],
     tests_require=[
-        # see conda/environment.yml
+        # see conda/environment-dev.yml
     ],
     extras_require={
-        # see conda/environment.yml
     }
 )

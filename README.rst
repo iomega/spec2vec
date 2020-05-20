@@ -24,7 +24,7 @@ Word2Vec based similarity measure of mass spectrometry data.
    * - **Other best practices**
      -
    * - Continuous integration
-     - |Python Build| |Anaconda Build| |Anaconda Publish|
+     - |Anaconda Build| |Anaconda Publish|
    * - Documentation
      - |ReadTheDocs Badge|
    * - Code Quality
@@ -54,10 +54,6 @@ Word2Vec based similarity measure of mass spectrometry data.
    :target: https://bestpractices.coreinfrastructure.org/projects/3967
    :alt: CII Best Practices Badge
 
-.. |GitHub Actions Badge| image:: https://github.com/iomega/spec2vec/workflows/Build%20spec2vec/badge.svg
-   :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Build+spec2vec%22
-   :alt: GitHub Actions Badge
-
 .. |ReadTheDocs Badge| image:: https://readthedocs.org/projects/spec2vec/badge/?version=latest
     :alt: Documentation Status
     :scale: 100%
@@ -70,10 +66,6 @@ Word2Vec based similarity measure of mass spectrometry data.
 .. |Sonarcloud Coverage Badge| image:: https://sonarcloud.io/api/project_badges/measure?project=iomega_spec2vec&metric=coverage
    :target: https://sonarcloud.io/component_measures?id=iomega_spec2vec&metric=Coverage&view=list
    :alt: Sonarcloud Coverage
-
-.. |Python Build| image:: https://github.com/iomega/spec2vec/workflows/Python%20Build/badge.svg
-   :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Python%20Build%22
-   :alt: Python Build
 
 .. |Anaconda Build| image:: https://github.com/iomega/spec2vec/workflows/Anaconda%20Build/badge.svg
    :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Anaconda%20Build%22
@@ -94,7 +86,7 @@ Install spec2vec from Anaconda Cloud with
 
 .. code-block:: console
 
-  conda install -c nlesc -c bioconda -c conda-forge spec2vec
+  conda install --channel nlesc --channel bioconda --channel conda-forge spec2vec
 
 Glossary of terms
 =================
@@ -187,8 +179,14 @@ installation of this conda package works with:
   # make a clean environment
   conda deactivate
   cd $(mktemp -d)
-  conda env create --file <spec2vec directory>/conda/environment.yml
-  conda activate spec2vec
+  conda env create --name test python=3.7
+  conda activate test
+
+  conda install \
+    --channel bioconda \
+    --channel conda-forge \
+    --channel file://${CONDA_PREFIX}/noarch/ \
+    spec2vec
 
 To publish the package on anaconda cloud, do:
 
@@ -199,7 +197,7 @@ To publish the package on anaconda cloud, do:
 where ``secrets.ANACONDA_TOKEN`` is a token to be generated on the Anaconda Cloud website. This secret should be added to GitHub repository.
 
 
-To remove spec2vec package:
+To remove spec2vec package from the active environment:
 
 .. code-block:: console
 

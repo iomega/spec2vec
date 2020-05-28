@@ -5,15 +5,47 @@ from .calc_vector import calc_vector
 
 
 class Spec2VecParallel:
+    """Calculate spec2vec similarity scores between all references and queries.
 
+    Using a trained model, spectrum documents will be converted into spectrum
+    vectors. The spec2vec similarity is then the cosine similarity score between
+    two spectrum vectors.
+    """
     def __init__(self, model=None, documents=None, intensity_weighting_power=0):
+        """
+
+        Parameters
+        ----------
+        model : gensim word2vec model
+            Expecgted input is a gensim word2vec model that has been trained on
+            the desired set of spectrum documents.
+        documents : list of SpectrumDocuments
+            DESCRIPTION. The default is None.
+        intensity_weighting_power : float, optional
+            Spectrum vectors are a weighted sum of the word vectors. The given
+            word intensities will be raised to the given power.
+            The default is 0, which means that no weighing will be done.
+        """
         self.model = model
         self.dictionary = gensim.corpora.Dictionary([d.words for d in documents])
         self.intensity_weighting_power = intensity_weighting_power
         self.vector_size = model.wv.vector_size
 
     def __call__(self, references, queries):
+        """Calculate the spec2vec similarities between all references and queries.
 
+        Parameters
+        ----------
+        references : list of SpectrumDocuments
+            Reference spectrum documents.
+        queries : list of SpectrumDocuments
+            Query spectrum documents.
+
+        Returns
+        -------
+        spec2vec_similarity
+            Spec2vec similarity score.
+        """
         n_rows = len(references)
         reference_vectors = numpy.empty((n_rows, self.vector_size), dtype="float")
         for index_reference, reference in enumerate(references):

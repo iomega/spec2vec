@@ -47,7 +47,7 @@ def test_user_workflow_spec2vec_parallel():
         model.save(model_file)
 
     # define similarity_function
-    spec2vec = Spec2VecParallel(model=model, documents=documents, intensity_weighting_power=0.5)
+    spec2vec = Spec2VecParallel(model=model, intensity_weighting_power=0.5)
 
     references = documents[:26]
     queries = documents[25:]
@@ -63,16 +63,16 @@ def test_user_workflow_spec2vec_parallel():
     actual_top10 = sorted_by_score[:10]
 
     expected_top10 = [
-        (documents[15], documents[44], pytest.approx(0.9966129569388921, rel=1e-9)),
-        (documents[0], documents[37], pytest.approx(0.9951658453795956, rel=1e-9)),
-        (documents[17], documents[49], pytest.approx(0.9939203924205293, rel=1e-9)),
-        (documents[3], documents[43], pytest.approx(0.9931265507262842, rel=1e-9)),
-        (documents[17], documents[47], pytest.approx(0.9929958113234495, rel=1e-9)),
-        (documents[20], documents[38], pytest.approx(0.9927337063757894, rel=1e-9)),
-        (documents[20], documents[53], pytest.approx(0.9910801906892196, rel=1e-9)),
-        (documents[17], documents[46], pytest.approx(0.989670765524488, rel=1e-9)),
-        (documents[0], documents[47], pytest.approx(0.9888398328259893, rel=1e-9)),
-        (documents[24], documents[60], pytest.approx(0.9880880691915778, rel=1e-9))
+        (documents[16], documents[60], pytest.approx(0.9935195969996696, rel=1e-9)),
+        (documents[23], documents[60], pytest.approx(0.992661570331129, rel=1e-9)),
+        (documents[18], documents[60], pytest.approx(0.9924692432977384, rel=1e-9)),
+        (documents[14], documents[25], pytest.approx(0.9886931987943378, rel=1e-9)),
+        (documents[18], documents[38], pytest.approx(0.9881353517077364, rel=1e-9)),
+        (documents[9], documents[25], pytest.approx(0.9877818678604277, rel=1e-9)),
+        (documents[23], documents[25], pytest.approx(0.9874236876997894, rel=1e-9)),
+        (documents[16], documents[25], pytest.approx(0.987079830965373, rel=1e-9)),
+        (documents[4], documents[60], pytest.approx(0.9868979695558827, rel=1e-9)),
+        (documents[8], documents[25], pytest.approx(0.9868160586006788, rel=1e-9))
     ]
-
-    assert actual_top10 == expected_top10
+    
+    assert actual_top10 == expected_top10, "Expected different top 10 table."

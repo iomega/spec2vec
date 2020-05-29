@@ -4,47 +4,53 @@ on: [push, pull_request]
 
 jobs:
 
-  analysis:
-    name: Analysis-Python ${{ matrix.python-version }} / ${{ matrix.os }}
+  analyze:
+    name: analyze / python-${{ matrix.python-version }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        python-version: ['3.7']
+        python-version: ["3.7"]
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: '0'
+          fetch-depth: "0"
       - uses: goanpeca/setup-miniconda@v1
         with:
           activate-environment: spec2vec-dev
+          auto-update-conda: true
           environment-file: conda/environment-dev.yml
           python-version: ${{ matrix.python-version }}
-      - name: Conda info
+      - name: Show conda config
         shell: bash -l {0}
-        run: conda info
+        run: |
+          conda info
+          conda list
+          conda config --show-sources
+          conda config --show
       - name: Python info
         shell: bash -l {0}
         run: |
           which python
           python --version
-      - name: Conda list
+      - name: Show environment variables
         shell: bash -l {0}
-        run: conda list
+        run: |
+          env | sort
       - name: Check style against standards using prospector
         shell: bash -l {0}
         run: prospector -o grouped -o pylint:pylint-report.txt
       - name: Check whether import statements are used consistently
         shell: bash -l {0}
-        run: isort --check-only --diff --conda-env spec2vec-dev --recursive --wrap-length 79 --lines-after-imports 2 --force-single-line --no-lines-before FUTURE --no-lines-before STDLIB --no-lines-before THIRDPARTY --no-lines-before FIRSTPARTY --no-lines-before LOCALFOLDER matchms/ tests/ integration-tests/
+        run: isort --check-only --diff --conda-env spec2vec-dev --recursive --wrap-length 79 --lines-after-imports 2 --force-single-line --no-lines-before FUTURE --no-lines-before STDLIB --no-lines-before THIRDPARTY --no-lines-before FIRSTPARTY --no-lines-before LOCALFOLDER spec2vec/ tests/ integration-tests/
       - name: Build documentation
         shell: bash -l {0}
         run: |
           make coverage html
         working-directory: readthedocs/
         env:
-          SPHINXOPTS: '-n'  # enable nit-picky mode
+          SPHINXOPTS: "-n"  # enable nit-picky mode
       - name: Check documentation coverage threshold
         if: matrix.os == 'ubuntu-latest'
         shell: bash -l {0}
@@ -75,26 +81,23 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build:
-    name: Build - Python ${{ matrix.python-version }} / ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    needs: analysis
+    name: build / python-${{ matrix.python-version }} / ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        python-version: ['3.7']
+        python-version: ["3.7"]
+    runs-on: ${{ matrix.os }}
+    needs: analyze
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: '0'
-      - name: Deactivate matchms-dev environment
-        shell: bash -l {0}
-        run: |
-          conda deactivate
-      - name: Create matchms-build environment
+          fetch-depth: "0"
+      - name: Create spec2vec-build environment
         uses: goanpeca/setup-miniconda@v1
         with:
-          activate-environment: matchms-build
+          activate-environment: spec2vec-build
+          auto-update-conda: true
           environment-file: conda/environment-build.yml
           python-version: ${{ matrix.python-version }}
       - name: Show conda config
@@ -110,16 +113,106 @@ jobs:
         run: |
           which python
           python --version
-      - name: Conda list
+      - name: Show environment variables
         shell: bash -l {0}
-        run: conda list
+        run: |
+          env | sort
       - name: Build the conda package
         shell: bash -l {0}
         run: |
+          export BUILDDIR=$RUNNER_TEMP/spec2vec/_build
+          [ "$RUNNING_OS" = "Windows" ] && export BUILDDIR=$RUNNER_TEMP\\spec2vec\\_build\\
           conda config --set anaconda_upload no
-          export BUILD_FOLDER=/tmp/spec2vec/_build
-          mkdir -p $BUILD_FOLDER
           conda build --numpy 1.18.1 --no-include-recipe \
             --channel bioconda --channel conda-forge \
-            --croot $BUILD_FOLDER \
+            --croot ${BUILDDIR} \
             ./conda
+      - name: Upload package artifact from build
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v2
+        with:
+          name: conda-package-artifact
+          path: ${{ runner.temp }}/spec2vec/_build
+
+  verify:
+    name: verify / python-${{ matrix.python-version }} / ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        python-version: ['3.7']
+    runs-on: ${{ matrix.os }}
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+      - name: Create an environment to test the locally published package
+        uses: goanpeca/setup-miniconda@v1
+        with:
+          activate-environment: spec2vec-test
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
+      - name: Show conda config
+        shell: bash -l {0}
+        run: |
+          conda info
+          conda list
+          conda config --show-sources
+          conda config --show
+          conda env list
+      - name: Python info
+        shell: bash -l {0}
+        run: |
+          which python
+          python --version
+      - name: Show environment variables
+        shell: bash -l {0}
+        run: |
+          env | sort
+      - name: Download conda package from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: conda-package-artifact
+          path: ${{ runner.temp }}/spec2vec/_build
+      - name: Artifact folder content
+        shell: bash -l {0}
+        run: |
+          export BUILDDIR=$RUNNER_TEMP/spec2vec/_build/noarch/
+          [ "$RUNNING_OS" = "Windows" ] && export BUILDDIR=$RUNNER_TEMP\\spec2vec\\_build\\noarch\\
+          echo ${RUNNER_TEMP}/spec2vec/_build
+      - name: List artifact folder content
+        shell: bash -l {0}
+        run: |
+          export BUILDDIR=$RUNNER_TEMP/spec2vec/_build/noarch/
+          [ "$RUNNING_OS" = "Windows" ] && export BUILDDIR=$RUNNER_TEMP\\spec2vec\\_build\\noarch\\
+          ls -al ${RUNNER_TEMP}/spec2vec/_build
+      - name: Test locally published conda package
+        shell: bash -l {0}
+        run: |
+          export BUILDDIR=$RUNNER_TEMP/spec2vec/_build/noarch/
+          [ "$RUNNING_OS" = "Windows" ] && export BUILDDIR=$RUNNER_TEMP\\spec2vec\\_build\\noarch\\
+          conda install \
+            --channel bioconda \
+            --channel conda-forge \
+            --channel $BUILDDIR \
+            spec2vec
+      - name: List conda packages
+        shell: bash -l {0}
+        run: |
+          conda list
+      - name: Install dev dependencies to run the tests
+        shell: bash -l {0}
+        run: |
+          conda env update --name spec2vec-test --file conda/environment-dev.yml
+          conda info
+          conda list
+      - name: Run tests after installing the package
+        shell: bash -l {0}
+        run: |
+          export TESTDIR=$RUNNER_TEMP/spec2vec/_test
+          [ "$RUNNING_OS" = "Windows" ] && export TESTDIR=$RUNNER_TEMP\\spec2vec\\_test\\
+          mkdir $TESTDIR
+          cp -iRv tests integration-tests $TESTDIR
+          cd $TESTDIR
+          pytest --ignore="tests/test_version_string_consistency.py"

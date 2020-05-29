@@ -7,20 +7,16 @@ on:
 jobs:
 
   publish:
-    name: Publish-Python ${{ matrix.python-version }} / ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: ['ubuntu-latest']
-        python-version: ['3.7']
+    name: publish / python-3.7 / ubuntu-latest
+    runs-on: 'ubuntu-latest'
     steps:
       - uses: actions/checkout@v2
       - uses: goanpeca/setup-miniconda@v1
         with:
           activate-environment: spec2vec-build
+          auto-update-conda: true
           environment-file: conda/environment-build.yml
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.7"
       - name: Show conda config
         shell: bash -l {0}
         run: |
@@ -49,25 +45,24 @@ jobs:
           export BUILD_FOLDER=/tmp/spec2vec/_build
           anaconda --token ${{ secrets.ANACONDA_TOKEN }} upload --user nlesc --force $BUILD_FOLDER/noarch/*.tar.bz2
 
-  testpublished:
-    name: Test Published-Python ${{ matrix.python-version }} / ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    needs: publish
+  verify:
+    name: verify / python-${{ matrix.python-version }} / ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-latest']
-        python-version: ['3.7']
+        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        python-version: ["3.7"]
+    runs-on: ${{ matrix.os }}
+    needs: publish
     steps:
       - uses: actions/checkout@v2
         with:
-          fetch-depth: '0'
+          fetch-depth: "0"
       - uses: goanpeca/setup-miniconda@v1
         with:
-          activate-environment: spec2vec-dev
-          environment-file: conda/environment-dev.yml
-          channels: conda-forge,bioconda,nlesc
-          python-version: ${{ matrix.python-version }}
+          activate-environment: spec2vec-test
+          auto-update-conda: true
+          python-version: "3.7"
       - name: Show conda config
         shell: bash -l {0}
         run: |
@@ -78,9 +73,23 @@ jobs:
       - name: Install the conda package from anaconda repository
         shell: bash -l {0}
         run: |
-          conda install -c bioconda -c conda-forge -c nlesc spec2vec
-      - name: Test the installed conda package
+          conda install --channel bioconda --channel conda-forge --channel nlesc spec2vec
+      - name: List conda packages
         shell: bash -l {0}
         run: |
-          cd ${CONDA_PREFIX}/pkgs/spec2vec-*/site-packages/tests
-          pytest --ignore-glob='test_version_string_consistency.py'
+          conda list
+      - name: Install dev dependencies to run the tests
+        shell: bash -l {0}
+        run: |
+          conda env update --name spec2vec-test --file conda/environment-dev.yml
+          conda info
+          conda list
+      - name: Run tests after installing the package
+        shell: bash -l {0}
+        run: |
+          export TESTDIR=$RUNNER_TEMP/spec2vec/_test
+          [ "$RUNNING_OS" = "Windows" ] && export TESTDIR=$RUNNER_TEMP\\spec2vec\\_test\\
+          mkdir -p $TESTDIR
+          cp -iRv tests integration-tests $TESTDIR
+          cd $TESTDIR
+          pytest --ignore="tests/test_version_string_consistency.py"

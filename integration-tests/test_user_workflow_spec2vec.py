@@ -74,5 +74,5 @@ def test_user_workflow_spec2vec():
         (documents[4], documents[60], pytest.approx(0.9868979695558827, rel=1e-9)),
         (documents[8], documents[25], pytest.approx(0.9868160586006788, rel=1e-9))
     ]
-    
+
     assert actual_top10 == expected_top10, "Expected different top 10 table."

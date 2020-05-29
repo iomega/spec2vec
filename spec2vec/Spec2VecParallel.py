@@ -1,4 +1,3 @@
-import gensim
 import numpy
 import scipy
 from .calc_vector import calc_vector

@@ -13,7 +13,7 @@
 import os
 import sys
 d = os.path.dirname(os.path.realpath(__file__))
-sys.path.insert(0, os.path.join(d,".."))
+sys.path.insert(0, os.path.join(d, ".."))
 
 import spec2vec
 
@@ -89,8 +89,9 @@ todo_include_todos = True
 
 # -- Options for intersphinx extension ----------------------------------------------
 
-intersphinx_mapping = {"https://docs.python.org/3": None,
-                       "numpy": ("https://docs.scipy.org/doc/numpy", None),
-                       "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
-                       "gensim": ("https://radimrehurek.com/gensim", None)
-                       }
+intersphinx_mapping = {
+    "https://docs.python.org/3": None,
+    "numpy": ("https://docs.scipy.org/doc/numpy", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
+    "gensim": ("https://radimrehurek.com/gensim", None)
+}

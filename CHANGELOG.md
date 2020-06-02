@@ -41,5 +41,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Flowchart
 
 
-[Unreleased]: https://github.com/matchms/matchms/compare/0.1.0...HEAD
-[0.1.0]: https://github.com/matchms/matchms/releases/tag/0.1.0
+[Unreleased]: https://github.com/iomega/spec2vec/compare/0.1.0...HEAD
+[0.1.0]: https://github.com/iomega/spec2vec/releases/tag/0.1.0

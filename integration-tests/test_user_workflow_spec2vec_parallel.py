@@ -10,7 +10,7 @@ from matchms.filtering import require_minimum_number_of_peaks
 from matchms.filtering import select_by_mz
 from matchms.filtering import select_by_relative_intensity
 from matchms.importing import load_from_mgf
-from matchms.similarity.spec2vec import Spec2VecParallel
+from spec2vec import Spec2VecParallel
 from spec2vec import SpectrumDocument
 
 

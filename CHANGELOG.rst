@@ -1,14 +1,45 @@
-###########
-Change Log
-###########
+# Changelog
 
 All notable changes to this project will be documented in this file.
-This project adheres to `Semantic Versioning <http://semver.org/>`_.
 
-[Unreleased]
-************
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-Added
------
+## [Unreleased]
 
-* Empty Python project directory structure
+### Added
+- ...
+
+### Changed
+- ...
+
+### Fixed
+- ...
+
+### Removed
+- ...
+
+## [0.1.0] - 2020-06-02
+
+### Added
+- Matchms as dependency [#4](https://github.com/iomega/spec2vec/pull/4)
+- Bump2version config
+
+### Changed
+- Splitted spec2vec from [matchms](https://github.com/matchms/matchms) [#1](https://github.com/iomega/spec2vec/pull/1) [#4](https://github.com/iomega/spec2vec/pull/4)
+  - Updated packaging related configuration
+  - Update the GH Actions workflows
+  - Updated the documentation
+  - Updated the badges
+  - Updated the integration and unit tests
+  - Zenodo metadata
+  
+### Fixed
+
+### Removed
+- Fossa configuration
+- Flowchart
+
+
+[Unreleased]: https://github.com/matchms/matchms/compare/0.1.0...HEAD
+[0.1.0]: https://github.com/matchms/matchms/releases/tag/0.1.0

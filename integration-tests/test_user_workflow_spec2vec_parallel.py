@@ -11,7 +11,7 @@ from matchms.filtering import select_by_mz
 from matchms.filtering import select_by_relative_intensity
 from matchms.importing import load_from_mgf
 from matchms.similarity.spec2vec import Spec2VecParallel
-from matchms.similarity.spec2vec import SpectrumDocument
+from spec2vec import SpectrumDocument
 
 
 def test_user_workflow_spec2vec_parallel():

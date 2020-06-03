@@ -1,7 +1,7 @@
 import numpy
 
 
-def calc_vector(model, document, intensity_weighting_power=0):
+def calc_vector(model, document, intensity_weighting_power=0) -> numpy.array:
     """Compute document vector form individual word vectors (and weights).
 
     Parameters
@@ -16,7 +16,7 @@ def calc_vector(model, document, intensity_weighting_power=0):
 
     Returns
     -------
-    vector : numpy.array
+    vector:
         Vector representing the input document in latent space.
     """
     word_vectors = model.wv[document.words]

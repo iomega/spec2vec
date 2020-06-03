@@ -19,8 +19,6 @@ class Spec2VecParallel:
         model : gensim word2vec model
             Expecgted input is a gensim word2vec model that has been trained on
             the desired set of spectrum documents.
-        documents : list of SpectrumDocuments
-            DESCRIPTION. The default is None.
         intensity_weighting_power : float, optional
             Spectrum vectors are a weighted sum of the word vectors. The given
             word intensities will be raised to the given power.
@@ -31,7 +29,7 @@ class Spec2VecParallel:
         self.intensity_weighting_power = intensity_weighting_power
         self.vector_size = model.wv.vector_size
 
-    def __call__(self, references, queries):
+    def __call__(self, references, queries) -> numpy.array:
         """Calculate the spec2vec similarities between all references and queries.
 
         Parameters
@@ -44,7 +42,7 @@ class Spec2VecParallel:
         Returns
         -------
         spec2vec_similarity
-            Spec2vec similarity score.
+            Array of spec2vec similarity scores.
         """
         n_rows = len(references)
         reference_vectors = numpy.empty((n_rows, self.vector_size), dtype="float")

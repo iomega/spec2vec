@@ -34,15 +34,16 @@ def calc_vector(model, document, intensity_weighting_power=0, allowed_missing_fr
             weights_missing_raised = numpy.power(weights_missing, intensity_weighting_power)
             missing_fraction = 100 * weights_missing_raised.sum() / weights_raised.sum()
             print("Found {} word(s) missing in the model.".format(len(idx_not_in_model)),
-                  "Fraction not covered is {:.2f}%.".format(missing_fraction))
+                  "Weighted fraction not covered is {:.2f}%.".format(missing_fraction))
             if missing_fraction > allowed_missing_fraction:
-                print("Missing fraction is larger than set maximum.")
+                print("Missing fraction is larger than set maximum.",
+                      "Consider retraining the used model.")
                 return False
         return True
 
     idx_not_in_model = [i for i, x in enumerate(document.words) if x not in model.wv.vocab]
     words_in_model = [x for i, x in enumerate(document.words) if i not in idx_not_in_model]
-    weights_in_model = numpy.asarray([x for i, x in enumerate(document.weights) \
+    weights_in_model = numpy.asarray([x for i, x in enumerate(document.weights)
                                       if i not in idx_not_in_model]).reshape(len(words_in_model), 1)
 
     word_vectors = model.wv[words_in_model]

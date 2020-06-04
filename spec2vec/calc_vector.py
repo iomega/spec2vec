@@ -1,7 +1,7 @@
 import numpy
 
 
-def calc_vector(model, document, intensity_weighting_power=0, allowed_missing_fraction=0) -> numpy.array:
+def calc_vector(model, document, intensity_weighting_power=1, allowed_missing_fraction=0) -> numpy.array:
     """Compute document vector form individual word vectors (and weights).
 
     Parameters
@@ -32,7 +32,8 @@ def calc_vector(model, document, intensity_weighting_power=0, allowed_missing_fr
         if len(idx_not_in_model) > 0:
             weights_missing = numpy.array([document.weights[i] for i in idx_not_in_model])
             weights_missing_raised = numpy.power(weights_missing, intensity_weighting_power)
-            missing_fraction = 100 * weights_missing_raised.sum() / weights_raised.sum()
+            missing_fraction = 100 * weights_missing_raised.sum() / (weights_raised.sum()
+                                                                     + weights_missing_raised.sum())
             print("Found {} word(s) missing in the model.".format(len(idx_not_in_model)),
                   "Weighted fraction not covered is {:.2f}%.".format(missing_fraction))
             if missing_fraction > allowed_missing_fraction:

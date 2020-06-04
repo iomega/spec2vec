@@ -1,4 +1,3 @@
-import gensim
 import scipy
 from .calc_vector import calc_vector
 
@@ -10,7 +9,7 @@ class Spec2Vec:
     vectors. The spec2vec similarity is then the cosine similarity score between
     two spectrum vectors.
     """
-    def __init__(self, model=None, documents=None, intensity_weighting_power=0):
+    def __init__(self, model, intensity_weighting_power=0):
         """
 
         Parameters
@@ -24,7 +23,6 @@ class Spec2Vec:
             The default is 0, which means that no weighing will be done.
         """
         self.model = model
-        self.dictionary = gensim.corpora.Dictionary([d.words for d in documents])
         self.intensity_weighting_power = intensity_weighting_power
         self.vector_size = model.wv.vector_size
 

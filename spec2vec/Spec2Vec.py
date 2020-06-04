@@ -1,13 +1,11 @@
-import gensim
 import scipy
 from .calc_vector import calc_vector
 
 
 class Spec2Vec:
 
-    def __init__(self, model=None, documents=None, intensity_weighting_power=0):
+    def __init__(self, model, intensity_weighting_power=0):
         self.model = model
-        self.dictionary = gensim.corpora.Dictionary([d.words for d in documents])
         self.intensity_weighting_power = intensity_weighting_power
         self.vector_size = model.wv.vector_size
 

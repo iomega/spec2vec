@@ -32,6 +32,7 @@ class Spec2VecParallel:
         """
         self.model = model
         self.intensity_weighting_power = intensity_weighting_power
+        self.allowed_missing_fraction = allowed_missing_fraction
         self.vector_size = model.wv.vector_size
 
     def __call__(self, references, queries) -> numpy.array:
@@ -54,13 +55,15 @@ class Spec2VecParallel:
         for index_reference, reference in enumerate(references):
             reference_vectors[index_reference, 0:self.vector_size] = calc_vector(self.model,
                                                                                  reference,
-                                                                                 self.intensity_weighting_power)
+                                                                                 self.intensity_weighting_power,
+                                                                                 self.allowed_missing_fraction)
         n_cols = len(queries)
         query_vectors = numpy.empty((n_cols, self.vector_size), dtype="float")
         for index_query, query in enumerate(queries):
             query_vectors[index_query, 0:self.vector_size] = calc_vector(self.model,
                                                                          query,
-                                                                         self.intensity_weighting_power)
+                                                                         self.intensity_weighting_power,
+                                                                         self.allowed_missing_fraction)
 
         cdist = scipy.spatial.distance.cdist(reference_vectors, query_vectors, "cosine")
 

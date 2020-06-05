@@ -31,6 +31,7 @@ class Spec2Vec:
         """
         self.model = model
         self.intensity_weighting_power = intensity_weighting_power
+        self.allowed_missing_fraction = allowed_missing_fraction
         self.vector_size = model.wv.vector_size
 
     def __call__(self, reference, query) -> float:
@@ -48,8 +49,10 @@ class Spec2Vec:
         spec2vec_similarity
             Spec2vec similarity score.
         """
-        reference_vector = calc_vector(self.model, reference, self.intensity_weighting_power)
-        query_vector = calc_vector(self.model, query, self.intensity_weighting_power)
+        reference_vector = calc_vector(self.model, reference,self.intensity_weighting_power,
+                                       self.allowed_missing_fraction)
+        query_vector = calc_vector(self.model, query, self.intensity_weighting_power,
+                                   self.allowed_missing_fraction)
         cdist = scipy.spatial.distance.cosine(reference_vector, query_vector)
 
         return 1 - cdist

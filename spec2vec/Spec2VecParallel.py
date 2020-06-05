@@ -1,3 +1,4 @@
+from typing import Union
 import numpy
 import scipy
 from .calc_vector import calc_vector
@@ -10,7 +11,8 @@ class Spec2VecParallel:
     vectors. The spec2vec similarity is then the cosine similarity score between
     two spectrum vectors.
     """
-    def __init__(self, model, intensity_weighting_power=0):
+    def __init__(self, model, intensity_weighting_power=0,
+                 allowed_missing_fraction: Union[float, int] = 0):
         """
 
         Parameters
@@ -22,6 +24,11 @@ class Spec2VecParallel:
             Spectrum vectors are a weighted sum of the word vectors. The given
             word intensities will be raised to the given power.
             The default is 0, which means that no weighing will be done.
+        allowed_missing_fraction:
+            Set the maximum allowed fraction (in percent) of the document that may
+            be missing from the input model. This is measured as fraction of the
+            missing words compared to all word vectors of the document. Default is
+            0, which means no missing words are allowed.
         """
         self.model = model
         self.intensity_weighting_power = intensity_weighting_power

@@ -1,7 +1,7 @@
 import numpy
 
 
-def calc_vector(model, document, intensity_weighting_power=1, allowed_missing_fraction=0) -> numpy.array:
+def calc_vector(model, document, intensity_weighting_power=0, allowed_missing_fraction=0) -> numpy.array:
     """Compute document vector form individual word vectors (and weights).
 
     Parameters

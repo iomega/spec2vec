@@ -104,9 +104,7 @@ def set_learning_rate_decay(learning_rate_initial, learning_rate_decay, num_of_e
     min_alpha = learning_rate_initial - num_of_epochs * learning_rate_decay
     if min_alpha < 0:
         print("Warning! Number of total iterations is too high for given learning_rate decay.")
-        print("Learning_rate_decay will be set from {} to {}.".format(
-            learning_rate_decay,
-            learning_rate_initial/num_of_epochs)
-             )
+        print("Learning_rate_decay will be set from {} to {}.".format(learning_rate_decay,
+                                                                      learning_rate_initial/num_of_epochs))
         min_alpha = 0
     return learning_rate_initial, min_alpha

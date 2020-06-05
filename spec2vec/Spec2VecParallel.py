@@ -10,7 +10,7 @@ class Spec2VecParallel:
     vectors. The spec2vec similarity is then the cosine similarity score between
     two spectrum vectors.
     """
-    def __init__(self, model=None, intensity_weighting_power=0):
+    def __init__(self, model, intensity_weighting_power=0):
         """
 
         Parameters

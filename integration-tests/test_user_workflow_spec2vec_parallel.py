@@ -19,11 +19,11 @@ def test_user_workflow_spec2vec_parallel():
     def apply_my_filters(s):
         s = default_filters(s)
         s = add_parent_mass(s)
-        s = add_losses(s)
         s = normalize_intensities(s)
         s = select_by_relative_intensity(s, intensity_from=0.01, intensity_to=1.0)
         s = select_by_mz(s, mz_from=0, mz_to=1000)
         s = require_minimum_number_of_peaks(s, n_required=5)
+        s = add_losses(s)
         return s
 
     repository_root = os.path.join(os.path.dirname(__file__), "..")
@@ -42,7 +42,7 @@ def test_user_workflow_spec2vec_parallel():
         model = gensim.models.Word2Vec.load(model_file)
     else:
         # create and train model
-        model = gensim.models.Word2Vec([d.words for d in documents], size=5, min_count=1)
+        model = gensim.models.Word2Vec([d.words for d in documents], size=10, min_count=1)
         model.train([d.words for d in documents], total_examples=len(documents), epochs=20)
         model.save(model_file)
 
@@ -63,16 +63,16 @@ def test_user_workflow_spec2vec_parallel():
     actual_top10 = sorted_by_score[:10]
 
     expected_top10 = [
-        (documents[16], documents[60], pytest.approx(0.9935195969996696, rel=1e-9)),
-        (documents[23], documents[60], pytest.approx(0.992661570331129, rel=1e-9)),
-        (documents[18], documents[60], pytest.approx(0.9924692432977384, rel=1e-9)),
-        (documents[14], documents[25], pytest.approx(0.9886931987943378, rel=1e-9)),
-        (documents[18], documents[38], pytest.approx(0.9881353517077364, rel=1e-9)),
-        (documents[9], documents[25], pytest.approx(0.9877818678604277, rel=1e-9)),
-        (documents[23], documents[25], pytest.approx(0.9874236876997894, rel=1e-9)),
-        (documents[16], documents[25], pytest.approx(0.987079830965373, rel=1e-9)),
-        (documents[4], documents[60], pytest.approx(0.9868979695558827, rel=1e-9)),
-        (documents[8], documents[25], pytest.approx(0.9868160586006788, rel=1e-9))
+        (documents[16], documents[25], pytest.approx(0.9925667499437987, rel=1e-9)),
+        (documents[8], documents[25], pytest.approx(0.9914423759112222, rel=1e-9)),
+        (documents[19], documents[25], pytest.approx(0.9905771377128036, rel=1e-9)),
+        (documents[5], documents[54], pytest.approx(0.9888201301221461, rel=1e-9)),
+        (documents[14], documents[25], pytest.approx(0.9886192749907775, rel=1e-9)),
+        (documents[25], documents[38], pytest.approx(0.988615999732954, rel=1e-9)),
+        (documents[25], documents[59], pytest.approx(0.9885443178528761, rel=1e-9)),
+        (documents[24], documents[60], pytest.approx(0.987736876408806, rel=1e-9)),
+        (documents[17], documents[58], pytest.approx(0.9873454253557157, rel=1e-9)),
+        (documents[15], documents[57], pytest.approx(0.9864730457825401, rel=1e-9))
     ]
 
     assert actual_top10 == expected_top10, "Expected different top 10 table."

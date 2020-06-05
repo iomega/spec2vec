@@ -1,5 +1,4 @@
 from typing import List
-import numpy
 from gensim.models.callbacks import CallbackAny2Vec
 
 
@@ -45,11 +44,6 @@ class ModelSaver(CallbackAny2Vec):
             model.
         filename:
             Filename to save model.
-
-        Returns
-        -------
-        None.
-
         """
         self.epoch = 0
         self.num_of_epochs = num_of_epochs

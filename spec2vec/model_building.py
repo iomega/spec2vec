@@ -107,6 +107,6 @@ def set_learning_rate_decay(learning_rate_initial, learning_rate_decay, num_of_e
         print("Learning_rate_decay will be set from {} to {}.".format(
             learning_rate_decay,
             learning_rate_initial/num_of_epochs)
-            )
+             )
         min_alpha = 0
     return learning_rate_initial, min_alpha

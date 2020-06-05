@@ -49,7 +49,7 @@ class Spec2Vec:
         spec2vec_similarity
             Spec2vec similarity score.
         """
-        reference_vector = calc_vector(self.model, reference,self.intensity_weighting_power,
+        reference_vector = calc_vector(self.model, reference, self.intensity_weighting_power,
                                        self.allowed_missing_fraction)
         query_vector = calc_vector(self.model, query, self.intensity_weighting_power,
                                    self.allowed_missing_fraction)

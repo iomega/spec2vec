@@ -62,6 +62,10 @@ language = "en"
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "readthedocs/conf.rst"]
 
+# Include class __init__ and __call__ docstrings.
+autodoc_default_options = {
+    'special-members': '__init__,__call__',
+}
 
 # -- Options for HTML output -------------------------------------------------
 

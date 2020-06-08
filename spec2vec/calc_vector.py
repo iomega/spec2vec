@@ -1,16 +1,19 @@
+from typing import Union
 import numpy
+from spec2vec import Document
 
 
-def calc_vector(model, document, intensity_weighting_power=0) -> numpy.array:
+def calc_vector(model, document: Document,
+                intensity_weighting_power: Union[float, int] = 0) -> numpy.array:
     """Compute document vector form individual word vectors (and weights).
 
     Parameters
     ----------
     model : gensim word2vec model
         Pretrained word2vec model to convert words into vectors.
-    document : DocumentType
+    document:
         Document containing document.words and document.weights.
-    intensity_weighting_power :
+    intensity_weighting_power:
         Specify to what power weights should be raised. The default is 0, which
         means that no weighing will be done.
 

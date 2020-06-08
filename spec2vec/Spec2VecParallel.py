@@ -60,7 +60,7 @@ class Spec2VecParallel:
         self.vector_size = model.wv.vector_size
 
     def __call__(self, references: List[SpectrumDocument],
-                 queries: List[SpectrumDocument]) -> numpy.array:
+                 queries: List[SpectrumDocument]) -> numpy.ndarray:
         """Calculate the spec2vec similarities between all references and queries.
 
         Parameters
@@ -88,6 +88,6 @@ class Spec2VecParallel:
                                                                          query,
                                                                          self.intensity_weighting_power)
 
-        cdist = scipy.spatial.distance.cdist(reference_vectors, query_vectors, "cosine")
+        spec2vec_similarity = 1 - scipy.spatial.distance.cdist(reference_vectors, query_vectors, "cosine")
 
-        return 1 - cdist
+        return spec2vec_similarity

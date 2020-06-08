@@ -29,10 +29,12 @@ def test_calc_vector_higher_than_allowed_missing_fraction():
 
     document = SpectrumDocument(spectrum, n_decimals=1)
     model = import_pretrained_model()
-    vector = calc_vector(model, document, intensity_weighting_power=0.5, allowed_missing_fraction=1.0)
     assert document.words[1] not in model.wv.vocab, "Expected word to be missing from given model."
-    assert vector is None, "Expected vector to be None."
+    with pytest.raises(AssertionError) as msg:
+        calc_vector(model, document, intensity_weighting_power=0.5, allowed_missing_fraction=1.0)
 
+    expected_message_part = "Missing percentage is larger than set maximum."
+    assert expected_message_part in str(msg.value), "Expected particular error message."
 
 def test_calc_vector_within_allowed_missing_fraction():
     """Test using a pretrained network and a missing word fraction within allowed."""

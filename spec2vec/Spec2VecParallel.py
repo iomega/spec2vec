@@ -12,7 +12,7 @@ class Spec2VecParallel:
     two spectrum vectors.
     """
     def __init__(self, model, intensity_weighting_power=0,
-                 allowed_missing_fraction: Union[float, int] = 0):
+                 allowed_missing_percentage: Union[float, int] = 0):
         """
 
         Parameters
@@ -24,15 +24,15 @@ class Spec2VecParallel:
             Spectrum vectors are a weighted sum of the word vectors. The given
             word intensities will be raised to the given power.
             The default is 0, which means that no weighing will be done.
-        allowed_missing_fraction:
-            Set the maximum allowed fraction (in percent) of the document that may
-            be missing from the input model. This is measured as fraction of the
-            missing words compared to all word vectors of the document. Default is
-            0, which means no missing words are allowed.
+        allowed_missing_percentage:
+            Set the maximum allowed percentage of the document that may be missing
+            from the input model. This is measured as percentage of the weighted, missing
+            words compared to all word vectors of the document. Default is 0, which
+            means no missing words are allowed.
         """
         self.model = model
         self.intensity_weighting_power = intensity_weighting_power
-        self.allowed_missing_fraction = allowed_missing_fraction
+        self.allowed_missing_percentage = allowed_missing_percentage
         self.vector_size = model.wv.vector_size
 
     def __call__(self, references, queries) -> numpy.array:
@@ -56,14 +56,14 @@ class Spec2VecParallel:
             reference_vectors[index_reference, 0:self.vector_size] = calc_vector(self.model,
                                                                                  reference,
                                                                                  self.intensity_weighting_power,
-                                                                                 self.allowed_missing_fraction)
+                                                                                 self.allowed_missing_percentage)
         n_cols = len(queries)
         query_vectors = numpy.empty((n_cols, self.vector_size), dtype="float")
         for index_query, query in enumerate(queries):
             query_vectors[index_query, 0:self.vector_size] = calc_vector(self.model,
                                                                          query,
                                                                          self.intensity_weighting_power,
-                                                                         self.allowed_missing_fraction)
+                                                                         self.allowed_missing_percentage)
 
         cdist = scipy.spatial.distance.cdist(reference_vectors, query_vectors, "cosine")
 

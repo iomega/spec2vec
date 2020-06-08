@@ -2,7 +2,8 @@ from typing import List
 from typing import Union
 import numpy
 import scipy
-from spec2vec import SpectrumDocument
+from gensim.models.basemodel import BaseTopicModel
+from spec2vec.SpectrumDocument import SpectrumDocument
 from .calc_vector import calc_vector
 
 
@@ -20,6 +21,7 @@ class Spec2VecParallel:
         from spec2vec import Spec2VecParallel
         from spec2vec import SpectrumDocument
 
+        # reference_spectrums & query_spectrums loaded from files using https://matchms.readthedocs.io/en/latest/api/matchms.importing.load_from_mgf.html
         references = [SpectrumDocument(s, n_decimals=2) for s in reference_spectrums]
         queries = [SpectrumDocument(s, n_decimals=2) for s in query_spectrums]
 
@@ -38,12 +40,12 @@ class Spec2VecParallel:
 
         sorted_by_score = sorted(filtered, key=lambda elem: elem[2], reverse=True)
     """
-    def __init__(self, model, intensity_weighting_power: Union[float, int] = 0):
+    def __init__(self, model: BaseTopicModel, intensity_weighting_power: Union[float, int] = 0):
         """
 
         Parameters
         ----------
-        model : gensim word2vec model
+        model:
             Expected input is a gensim word2vec model that has been trained on
             the desired set of spectrum documents.
         intensity_weighting_power:

@@ -18,6 +18,8 @@ class Spec2Vec:
         from spec2vec import Spec2Vec
         from spec2vec import SpectrumDocument
 
+      
+        # reference_spectrums & query_spectrums loaded from files using https://matchms.readthedocs.io/en/latest/api/matchms.importing.load_from_mgf.html 
         references = [SpectrumDocument(s, n_decimals=2) for s in reference_spectrums]
         queries = [SpectrumDocument(s, n_decimals=2) for s in query_spectrums]
 

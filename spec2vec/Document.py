@@ -11,7 +11,7 @@ class Document:
         obj:
             Input object of desired class.
         """
-        self._obj = obj
+        self._obj = obj 
         self._index = 0
         self._make_words()
 

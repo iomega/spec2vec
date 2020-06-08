@@ -28,8 +28,7 @@ def calc_vector(model, document, intensity_weighting_power=0,
         if the missing percentage of the document in the model is > allowed_missing_percentage.
     """
     assert max(document.weights) <= 1.0, "Weights are not normalized to unity as expected."
-    assert allowed_missing_percentage <= 100.0 \
-        and allowed_missing_percentage >= 0, "allowed_missing_percentage must be within [0,100]"
+    assert 0 <= allowed_missing_percentage <= 100.0, "allowed_missing_percentage must be within [0,100]"
 
     def _check_model_coverage():
         """Return True if model covers enough of the document words."""
@@ -37,12 +36,12 @@ def calc_vector(model, document, intensity_weighting_power=0,
             weights_missing = numpy.array([document.weights[i] for i in idx_not_in_model])
             weights_missing_raised = numpy.power(weights_missing, intensity_weighting_power)
             missing_percentage = 100 * weights_missing_raised.sum() / (weights_raised.sum()
-                                                                     + weights_missing_raised.sum())
+                                                                       + weights_missing_raised.sum())
             print("Found {} word(s) missing in the model.".format(len(idx_not_in_model)),
                   "Weighted fraction not covered is {:.2f}%.".format(missing_percentage))
 
             message = ("Missing percentage is larger than set maximum.",
-                      "Consider retraining the used model or increasing the allowed percentage.")
+                       "Consider retraining the used model or increasing the allowed percentage.")
             assert missing_percentage > allowed_missing_percentage, message
 
     idx_not_in_model = [i for i, x in enumerate(document.words) if x not in model.wv.vocab]

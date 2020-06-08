@@ -42,7 +42,7 @@ def calc_vector(model, document, intensity_weighting_power=0,
 
             message = ("Missing percentage is larger than set maximum.",
                        "Consider retraining the used model or increasing the allowed percentage.")
-            assert missing_percentage > allowed_missing_percentage, message
+            assert missing_percentage <= allowed_missing_percentage, message
 
     idx_not_in_model = [i for i, x in enumerate(document.words) if x not in model.wv.vocab]
     words_in_model = [x for i, x in enumerate(document.words) if i not in idx_not_in_model]

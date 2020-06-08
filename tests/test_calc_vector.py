@@ -31,7 +31,7 @@ def test_calc_vector_higher_than_allowed_missing_percentage():
     model = import_pretrained_model()
     assert document.words[1] not in model.wv.vocab, "Expected word to be missing from given model."
     with pytest.raises(AssertionError) as msg:
-        calc_vector(model, document, intensity_weighting_power=0.5, allowed_missing_percentage=1.0)
+        calc_vector(model, document, intensity_weighting_power=0.5, allowed_missing_percentage=16.0)
 
     expected_message_part = "Missing percentage is larger than set maximum."
     assert expected_message_part in str(msg.value), "Expected particular error message."
@@ -45,7 +45,7 @@ def test_calc_vector_within_allowed_missing_percentage():
 
     document = SpectrumDocument(spectrum, n_decimals=1)
     model = import_pretrained_model()
-    vector = calc_vector(model, document, intensity_weighting_power=0.5, allowed_missing_percentage=20.0)
+    vector = calc_vector(model, document, intensity_weighting_power=0.5, allowed_missing_percentage=17.0)
     expected_vector = numpy.array([-0.0760859, -0.09670882, 0.10740811, 0.04696679, 0.00893024,
                                    -0.04496526, -0.0079267, -0.05153507, -0.00433566, -0.06211582])
     assert document.words[1] not in model.wv.vocab, "Expected word to be missing from given model."

@@ -3,7 +3,7 @@ class Document:
 
     Use this as parent class to build your own document class. An example used for
     mass spectra is SpectrumDocument."""
-    def __init__(self, obj: object):
+    def __init__(self, obj):
         """
 
         Parameters

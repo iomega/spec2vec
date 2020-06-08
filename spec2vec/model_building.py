@@ -1,4 +1,5 @@
 from typing import List
+from typing import Tuple
 from typing import Union
 import gensim
 from spec2vec.utils import ModelSaver
@@ -40,6 +41,12 @@ def train_new_word2vec_model(documents: List, iterations: Union[List, int], file
     workers: int,
         Number of threads to run the training on (should not be more than
         number of cores/threads. Default is 4.
+    learning_rate_initial: float
+        Set initial learning rate.
+    learning_rate_decay: float
+        After evert epoch, the learning rate will be lowered by the learning_rate_decay.
+    progress_logger: bool
+        If True, the training progress will be printed every epoch.
 
     Returns
     -------
@@ -90,11 +97,21 @@ def train_new_word2vec_model(documents: List, iterations: Union[List, int], file
     return model
 
 
-def set_learning_rate_decay(learning_rate_initial, learning_rate_decay, num_of_epochs):
+def set_learning_rate_decay(learning_rate_initial: float, learning_rate_decay: float,
+                            num_of_epochs: int) -> Tuple[float, float]:
     """The learning rate in Gensim model training is defined by an initial rate
     (alpha) and a final rate (min_alpha). which can be unintuitive. Here those
     parameters will be set based on the given values for learning_rate_initial,
     num_of_epochs, and learning_rate_decay.
+
+    Parameters
+    ----------
+    learning_rate_initial:
+        Set initial learning rate.
+    learning_rate_decay:
+        After evert epoch, the learning rate will be lowered by the learning_rate_decay.
+    number_of_epochs:
+        Total number of epochs for training.
 
     Returns:
     --------

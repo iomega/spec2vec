@@ -1,3 +1,5 @@
+import os
+import gensim
 import numpy
 from matchms import Spectrum
 from spec2vec import SpectrumDocument
@@ -30,6 +32,36 @@ def test_train_new_word2vec_model():
         documents.append(SpectrumDocument(spectrum, n_decimals=1))
     model = train_new_word2vec_model(documents, iterations=20, size=20,
                                      progress_logger=False)
+    assert model.sg == 0, "Expected different default value."
+    assert model.negative == 5, "Expected different default value."
+    assert model.window == 500, "Expected different default value."
+    assert model.alpha == 0.025, "Expected different default value."
+    assert model.min_alpha == 0.02, "Expected different default value."
+    assert model.epochs == 20, "Expected differnt number of epochs."
+    assert model.wv.vector_size == 20, "Expected differnt vector size."
+    assert len(model.wv.vocab) == 109, "Expected different number of words in vocab."
+    assert model.wv.get_vector(documents[0].words[1]).shape[0] == 20, "Expected differnt vector size."
+
+
+def test_train_new_word2vec_model_with_logger_and_saving(tmp_path):
+    """Test training of a dummy model and save it."""
+    # Create fake corpus
+    documents = []
+    for i in range(100):
+        spectrum = Spectrum(mz=numpy.linspace(i, 9+i, 10),
+                            intensities=numpy.ones((10)).astype("float"),
+                            metadata={})
+        documents.append(SpectrumDocument(spectrum, n_decimals=1))
+    # Train model and write to file
+    filename = os.path.join(tmp_path, "test.model")
+    model = train_new_word2vec_model(documents, iterations=20, filename=filename,
+                                     size=20, progress_logger=True)
+
+    # Test if file exists
+    assert os.path.isfile(filename), "Could not find saved model file."
+
+    # Test if saved model seems to be correct
+    model = gensim.models.Word2Vec.load(filename)
     assert model.sg == 0, "Expected different default value."
     assert model.negative == 5, "Expected different default value."
     assert model.window == 500, "Expected different default value."

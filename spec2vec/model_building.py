@@ -76,7 +76,7 @@ def train_new_word2vec_model(documents: List, iterations: Union[List, int], file
         callbacks.append(training_progress_logger)
     if filename:
         if isinstance(iterations, int):
-            iterations = list(iterations)
+            iterations = [iterations]
         model_saver = ModelSaver(num_of_epochs, iterations, filename)
         callbacks.append(model_saver)
 

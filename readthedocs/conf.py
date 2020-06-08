@@ -98,5 +98,5 @@ intersphinx_mapping = {
     "numpy": ("https://docs.scipy.org/doc/numpy", None),
     "scipy": ("https://docs.scipy.org/doc/scipy/reference", None),
     "gensim": ("https://radimrehurek.com/gensim", None),
-    "matchms": ("https://matchms.readthedocs.io/en/latest/api/", None),
+    "matchms": ("https://matchms.readthedocs.io/en/latest", None),
 }

@@ -15,6 +15,8 @@ class Spec2Vec:
     Example code to calcualte spec2vec similarities between query and reference
     spectrums:
 
+    .. code-block:: python
+
         import gensim
         from spec2vec import Spec2Vec
         from spec2vec import SpectrumDocument

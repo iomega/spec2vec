@@ -92,7 +92,7 @@ Example
 =======
 Below is a small example of using spec2vec to calculate the similarities between mass Spectrums.
 
-..code-block::python
+.. code-block:: python
 
     import gensim
     from spec2vec import Spec2VecParallel

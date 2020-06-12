@@ -7,7 +7,7 @@ from spec2vec.Document import Document
 def calc_vector(model: BaseTopicModel, document: Document,
                 intensity_weighting_power: Union[float, int] = 0,
                 allowed_missing_percentage: Union[float, int] = 0) -> numpy.ndarray:
-    """Compute document vector form individual word vectors (and weights).
+    """Compute document vector as a (weighted) sum of individual word vectors.
 
     Parameters
     ----------

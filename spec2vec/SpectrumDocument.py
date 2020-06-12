@@ -1,4 +1,3 @@
-from matchms.typing import SpectrumType
 from .Document import Document
 
 
@@ -12,7 +11,7 @@ class SpectrumDocument(Document):
     exist multiple times in a document (e.g. peaks at 100.31 and 100.29 would lead to
     two words "peak@100.3" when using n_decimals=1).
     """
-    def __init__(self, spectrum: SpectrumType, n_decimals: int = 1):
+    def __init__(self, spectrum: "matchms.SpectrumType", n_decimals: int = 1):
         """
 
         Parameters

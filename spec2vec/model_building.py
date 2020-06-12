@@ -14,7 +14,7 @@ def train_new_word2vec_model(documents: List, iterations: Union[List, int], file
     documents:
         List of documents, each document being a list of words (strings).
     iterations:
-        Specify the number of training interations. This can be done by setting
+        Specifies the number of training interations. This can be done by setting
         iterations to the total number of training epochs (e.g. "iterations=15"),
         or by passing a list of iterations (e.g. "iterations=[5,10,15]") which will
         also led to a total training of max(iterations) epochs, but will save the
@@ -44,7 +44,7 @@ def train_new_word2vec_model(documents: List, iterations: Union[List, int], file
     learning_rate_initial: float
         Set initial learning rate.
     learning_rate_decay: float
-        After evert epoch, the learning rate will be lowered by the learning_rate_decay.
+        After every epoch the learning rate will be lowered by the learning_rate_decay.
     progress_logger: bool
         If True, the training progress will be printed every epoch.
 

@@ -1,18 +1,21 @@
 from typing import Union
 import numpy
+from gensim.models.basemodel import BaseTopicModel
+from spec2vec.Document import Document
 
 
-def calc_vector(model, document, intensity_weighting_power=0,
-                allowed_missing_percentage: Union[float, int] = 0) -> numpy.array:
+def calc_vector(model: BaseTopicModel, document: Document,
+                intensity_weighting_power: Union[float, int] = 0,
+                allowed_missing_percentage: Union[float, int] = 0) -> numpy.ndarray:
     """Compute document vector form individual word vectors (and weights).
 
     Parameters
     ----------
-    model : gensim word2vec model
+    model
         Pretrained word2vec model to convert words into vectors.
-    document : DocumentType
+    document
         Document containing document.words and document.weights.
-    intensity_weighting_power : float
+    intensity_weighting_power
         Specify to what power weights should be raised. The default is 0, which
         means that no weighing will be done.
     allowed_missing_percentage:
@@ -23,7 +26,7 @@ def calc_vector(model, document, intensity_weighting_power=0,
 
     Returns
     -------
-    vector:
+    vector
         Vector representing the input document in latent space. Will return None
         if the missing percentage of the document in the model is > allowed_missing_percentage.
     """

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ...
 
 ### Changed
+- Extend spec2vec similarity calculation to handle missing words [#9](https://github.com/iomega/spec2vec/issues/9)
 - Updated the integration test [#7](https://github.com/iomega/spec2vec/issues/7)
 
 ### Fixed

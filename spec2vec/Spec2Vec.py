@@ -40,7 +40,8 @@ class Spec2Vec:
 
         sorted_by_score = sorted(filtered, key=lambda elem: elem[2], reverse=True)
     """
-    def __init__(self, model: BaseTopicModel, intensity_weighting_power: Union[float, int] = 0):
+    def __init__(self, model: BaseTopicModel, intensity_weighting_power: Union[float, int] = 0,
+                 allowed_missing_percentage: Union[float, int] = 0):
         """
 
         Parameters
@@ -52,9 +53,15 @@ class Spec2Vec:
             Spectrum vectors are a weighted sum of the word vectors. The given
             word intensities will be raised to the given power.
             The default is 0, which means that no weighing will be done.
+        allowed_missing_percentage:
+            Set the maximum allowed percentage of the document that may be missing
+            from the input model. This is measured as percentage of the weighted, missing
+            words compared to all word vectors of the document. Default is 0, which
+            means no missing words are allowed.
         """
         self.model = model
         self.intensity_weighting_power = intensity_weighting_power
+        self.allowed_missing_percentage = allowed_missing_percentage
         self.vector_size = model.wv.vector_size
 
     def __call__(self, reference: SpectrumDocument, query: SpectrumDocument) -> float:
@@ -72,8 +79,10 @@ class Spec2Vec:
         spec2vec_similarity
             Spec2vec similarity score.
         """
-        reference_vector = calc_vector(self.model, reference, self.intensity_weighting_power)
-        query_vector = calc_vector(self.model, query, self.intensity_weighting_power)
+        reference_vector = calc_vector(self.model, reference, self.intensity_weighting_power,
+                                       self.allowed_missing_percentage)
+        query_vector = calc_vector(self.model, query, self.intensity_weighting_power,
+                                   self.allowed_missing_percentage)
         cdist = scipy.spatial.distance.cosine(reference_vector, query_vector)
 
         return 1 - cdist

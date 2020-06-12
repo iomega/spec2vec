@@ -32,7 +32,6 @@ def test_user_workflow_spec2vec():
         s = select_by_mz(s, mz_from=0, mz_to=1000)
         s = add_losses(s, loss_mz_from=10.0, loss_mz_to=200.0)
         s = require_minimum_number_of_peaks(s, n_required=5)
-        s = add_losses(s)
         return s
 
     repository_root = os.path.join(os.path.dirname(__file__), "..")

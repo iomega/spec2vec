@@ -1,5 +1,16 @@
 class Document:
+    """Parent class for documents as required by spec2vec.
+
+    Use this as parent class to build your own document class. An example used for
+    mass spectra is SpectrumDocument."""
     def __init__(self, obj):
+        """
+
+        Parameters
+        ----------
+        obj:
+            Input object of desired class.
+        """
         self._obj = obj
         self._index = 0
         self._make_words()

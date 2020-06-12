@@ -1,28 +1,36 @@
 import os
 import gensim
 import pytest
-from matchms import calculate_scores
+from matchms import calculate_scores_parallel
 from matchms.filtering import add_losses
 from matchms.filtering import add_parent_mass
 from matchms.filtering import default_filters
 from matchms.filtering import normalize_intensities
+from matchms.filtering import reduce_to_number_of_peaks
 from matchms.filtering import require_minimum_number_of_peaks
 from matchms.filtering import select_by_mz
-from matchms.filtering import select_by_relative_intensity
 from matchms.importing import load_from_mgf
 from spec2vec import Spec2Vec
 from spec2vec import SpectrumDocument
 
 
 def test_user_workflow_spec2vec():
+    """Test typical user workflow to get from mass spectra to spec2vec similarities.
 
+    This test will run a typical workflow example using a small dataset and a
+    pretrained word2vec model. One main aspect of this is to test if users will
+    get exactly the same spec2vec similarity scores when starting from a word2vec
+    model that was trained and saved elsewhere.
+    """
     def apply_my_filters(s):
+        """This is how a user would typically design his own pre- and post-
+        processing pipeline."""
         s = default_filters(s)
         s = add_parent_mass(s)
-        s = add_losses(s)
         s = normalize_intensities(s)
-        s = select_by_relative_intensity(s, intensity_from=0.01, intensity_to=1.0)
+        s = reduce_to_number_of_peaks(s, n_required=10, ratio_desired=0.5)
         s = select_by_mz(s, mz_from=0, mz_to=1000)
+        s = add_losses(s, loss_mz_from=10.0, loss_mz_to=200.0)
         s = require_minimum_number_of_peaks(s, n_required=5)
         return s
 
@@ -63,16 +71,16 @@ def test_user_workflow_spec2vec():
     actual_top10 = sorted_by_score[:10]
 
     expected_top10 = [
-        (documents[16], documents[60], pytest.approx(0.9935195969996696, rel=1e-9)),
-        (documents[23], documents[60], pytest.approx(0.992661570331129, rel=1e-9)),
-        (documents[18], documents[60], pytest.approx(0.9924692432977384, rel=1e-9)),
-        (documents[14], documents[25], pytest.approx(0.9886931987943378, rel=1e-9)),
-        (documents[18], documents[38], pytest.approx(0.9881353517077364, rel=1e-9)),
-        (documents[9], documents[25], pytest.approx(0.9877818678604277, rel=1e-9)),
-        (documents[23], documents[25], pytest.approx(0.9874236876997894, rel=1e-9)),
-        (documents[16], documents[25], pytest.approx(0.987079830965373, rel=1e-9)),
-        (documents[4], documents[60], pytest.approx(0.9868979695558827, rel=1e-9)),
-        (documents[8], documents[25], pytest.approx(0.9868160586006788, rel=1e-9))
+        (documents[19], documents[25], pytest.approx(0.9999121928249473, rel=1e-9)),
+        (documents[20], documents[25], pytest.approx(0.9998846890269892, rel=1e-9)),
+        (documents[20], documents[45], pytest.approx(0.9998756073673759, rel=1e-9)),
+        (documents[25], documents[45], pytest.approx(0.9998750427994474, rel=1e-9)),
+        (documents[19], documents[27], pytest.approx(0.9998722768460854, rel=1e-9)),
+        (documents[22], documents[27], pytest.approx(0.9998633023352553, rel=1e-9)),
+        (documents[18], documents[27], pytest.approx(0.9998616961532616, rel=1e-9)),
+        (documents[19], documents[45], pytest.approx(0.9998528723697396, rel=1e-9)),
+        (documents[14], documents[71], pytest.approx(0.9998404364805897, rel=1e-9)),
+        (documents[20], documents[27], pytest.approx(0.9998336807761137, rel=1e-9))
     ]
 
     assert actual_top10 == expected_top10, "Expected different top 10 table."

@@ -1,6 +1,9 @@
+from typing import List
 from typing import Union
 import numpy
 import scipy
+from gensim.models.basemodel import BaseTopicModel
+from spec2vec.SpectrumDocument import SpectrumDocument
 from .calc_vector import calc_vector
 
 
@@ -10,17 +13,45 @@ class Spec2VecParallel:
     Using a trained model, spectrum documents will be converted into spectrum
     vectors. The spec2vec similarity is then the cosine similarity score between
     two spectrum vectors.
+
+    Example code to calcualte spec2vec similarities between query and reference
+    spectrums:
+
+    .. code-block:: python
+
+        import gensim
+        from spec2vec import Spec2VecParallel
+        from spec2vec import SpectrumDocument
+
+        # reference_spectrums & query_spectrums loaded from files using https://matchms.readthedocs.io/en/latest/api/matchms.importing.load_from_mgf.html
+        references = [SpectrumDocument(s, n_decimals=2) for s in reference_spectrums]
+        queries = [SpectrumDocument(s, n_decimals=2) for s in query_spectrums]
+
+        # Import pre-trained word2vec model (alternative: train new model)
+        model_file = "path and filename"
+        model = gensim.models.Word2Vec.load(model_file)
+
+        # Define similarity_function
+        spec2vec = Spec2VecParallel(model=model, intensity_weighting_power=0.5)
+
+        # Calculate scores on all combinations of references and queries
+        scores = list(calculate_scores(references, queries, spec2vec))
+
+        # Filter out self-comparisons
+        filtered = [(reference, query, score) for (reference, query, score) in scores if reference != query]
+
+        sorted_by_score = sorted(filtered, key=lambda elem: elem[2], reverse=True)
     """
-    def __init__(self, model, intensity_weighting_power=0,
+    def __init__(self, model: BaseTopicModel, intensity_weighting_power: Union[float, int] = 0,
                  allowed_missing_percentage: Union[float, int] = 0):
         """
 
         Parameters
         ----------
-        model : gensim word2vec model
-            Expecgted input is a gensim word2vec model that has been trained on
+        model:
+            Expected input is a gensim word2vec model that has been trained on
             the desired set of spectrum documents.
-        intensity_weighting_power : float, optional
+        intensity_weighting_power:
             Spectrum vectors are a weighted sum of the word vectors. The given
             word intensities will be raised to the given power.
             The default is 0, which means that no weighing will be done.
@@ -35,14 +66,15 @@ class Spec2VecParallel:
         self.allowed_missing_percentage = allowed_missing_percentage
         self.vector_size = model.wv.vector_size
 
-    def __call__(self, references, queries) -> numpy.array:
+    def __call__(self, references: List[SpectrumDocument],
+                 queries: List[SpectrumDocument]) -> numpy.ndarray:
         """Calculate the spec2vec similarities between all references and queries.
 
         Parameters
         ----------
-        references : list of SpectrumDocuments
+        references:
             Reference spectrum documents.
-        queries : list of SpectrumDocuments
+        queries:
             Query spectrum documents.
 
         Returns
@@ -65,6 +97,6 @@ class Spec2VecParallel:
                                                                          self.intensity_weighting_power,
                                                                          self.allowed_missing_percentage)
 
-        cdist = scipy.spatial.distance.cdist(reference_vectors, query_vectors, "cosine")
+        spec2vec_similarity = 1 - scipy.spatial.distance.cdist(reference_vectors, query_vectors, "cosine")
 
-        return 1 - cdist
+        return spec2vec_similarity

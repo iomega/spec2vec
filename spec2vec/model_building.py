@@ -6,7 +6,9 @@ from spec2vec.utils import ModelSaver
 from spec2vec.utils import TrainingProgressLogger
 
 
-def train_new_word2vec_model(documents: List, iterations: Union[List, int], filename: str = None, **kwargs):
+def train_new_word2vec_model(documents: List, iterations: Union[List, int], filename: str = None,
+                             learning_rate_initial: float = 0.025, learning_rate_decay: float = 0.00025,
+                             progress_logger: bool = True, **settings):
     """Train a new Word2Vec model (using gensim). Save to file if filename is given.
 
     Parameters
@@ -22,6 +24,15 @@ def train_new_word2vec_model(documents: List, iterations: Union[List, int], file
         using the name: file_model_word2ve + "_TEMP_#epoch.model".
     filename: str,
         Filename to save model. Default is None, which means no model will be saved.
+    learning_rate_initial:
+        Set initial learning rate. Default is 0.025.
+    learning_rate_decay:
+        After every epoch the learning rate will be lowered by the learning_rate_decay.
+        Default is 0.00025.
+    progress_logger:
+        If True, the training progress will be printed every epoch. Default is True.
+    **settings
+        See py:class:gensim.models.word2vec.Word2Vec.
     sg: int (0,1)
         For sg = 0 --> CBOW model, for sg = 1 --> skip gram model
         (see Gensim documentation). Default for Spec2Vec is 0.
@@ -41,44 +52,47 @@ def train_new_word2vec_model(documents: List, iterations: Union[List, int], file
     workers: int,
         Number of threads to run the training on (should not be more than
         number of cores/threads. Default is 4.
-    learning_rate_initial: float
-        Set initial learning rate.
-    learning_rate_decay: float
-        After every epoch the learning rate will be lowered by the learning_rate_decay.
-    progress_logger: bool
-        If True, the training progress will be printed every epoch.
+
 
     Returns
     -------
     word2vec_model
         Gensim word2vec model.
     """
-
-    settings = {
+    # Spec2vec default argument values
+    defaults = {
         "sg": 0,
         "negative": 5,
         "size": 300,
         "window": 500,
         "min_count": 1,
         "workers": 4,
-        "learning_rate_initial": 0.025,
-        "learning_rate_decay": 0.00025,
-        "progress_logger": True,
+        "compute_loss": True,
     }
 
-    # Replace default parameters with input
-    for key, value in kwargs.items():
-        if key in settings:
-            print("The value of {} is set from {} (default) to {}".format(key, settings[key], value))
-            settings[key] = value
+    message = ("Unlike in gensim, the learning rate is here set by defining",
+               " 'learning_rate_initial' and 'learning_rate_decay'.")
+    assert "min_alpha" not in settings, message
+    assert "alpha" not in settings, message
 
+    # Set default parameters or replace by **settings input
+    for key in defaults:
+        if key in settings:
+            print("The value of {} is set from {} (default) to {}".format(key, defaults[key], settings[key]))
+        else:
+            settings[key] = defaults[key]
+
+    # Convert learning rate initial and decay to gensim "alpha" and "min_alpha"
     num_of_epochs = max(iterations) if isinstance(iterations, list) else iterations
-    alpha, min_alpha = set_learning_rate_decay(settings["learning_rate_initial"],
-                                               settings["learning_rate_decay"], num_of_epochs)
+    alpha, min_alpha = set_learning_rate_decay(learning_rate_initial,
+                                               learning_rate_decay, num_of_epochs)
+    settings["alpha"] = alpha
+    settings["min_alpha"] = min_alpha
+    settings["iter"] = num_of_epochs
 
     # Set callbacks
     callbacks = []
-    if settings["progress_logger"]:
+    if progress_logger:
         training_progress_logger = TrainingProgressLogger(num_of_epochs)
         callbacks.append(training_progress_logger)
     if filename:
@@ -88,11 +102,7 @@ def train_new_word2vec_model(documents: List, iterations: Union[List, int], file
         callbacks.append(model_saver)
 
     # Train word2vec model
-    model = gensim.models.Word2Vec(documents, sg=settings["sg"], negative=settings["negative"],
-                                   size=settings["size"], window=settings["window"],
-                                   min_count=settings["min_count"], workers=settings["workers"],
-                                   iter=num_of_epochs, alpha=alpha, min_alpha=min_alpha,
-                                   seed=321, compute_loss=True, callbacks=callbacks)
+    model = gensim.models.Word2Vec(documents, callbacks=callbacks, **settings)
 
     return model
 

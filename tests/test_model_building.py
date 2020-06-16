@@ -1,6 +1,7 @@
 import os
 import gensim
 import numpy
+import pytest
 from matchms import Spectrum
 from spec2vec import SpectrumDocument
 from spec2vec.model_building import set_learning_rate_decay
@@ -71,3 +72,21 @@ def test_train_new_word2vec_model_with_logger_and_saving(tmp_path):
     assert model.wv.vector_size == 20, "Expected differnt vector size."
     assert len(model.wv.vocab) == 109, "Expected different number of words in vocab."
     assert model.wv.get_vector(documents[0].words[1]).shape[0] == 20, "Expected differnt vector size."
+
+
+def test_train_new_word2vec_model_wrong_entry():
+    """Test training of a dummy model with not-accepted gensim argument entry."""
+    # Create fake corpus
+    documents = []
+    for i in range(10):
+        spectrum = Spectrum(mz=numpy.linspace(i, 9+i, 10),
+                            intensities=numpy.ones((10)).astype("float"),
+                            metadata={})
+        documents.append(SpectrumDocument(spectrum, n_decimals=1))
+
+    with pytest.raises(AssertionError) as msg:
+        _ = train_new_word2vec_model(documents, iterations=20, alpha=0.01,
+                                     progress_logger=False)
+
+    expected_message_part = "Unlike in gensim, the learning rate is here set by defining"
+    assert expected_message_part in str(msg.value), "Expected particular error message."

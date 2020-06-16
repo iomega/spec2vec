@@ -8,7 +8,7 @@ from spec2vec.utils import TrainingProgressLogger
 
 def train_new_word2vec_model(documents: List, iterations: Union[List, int], filename: str = None,
                              learning_rate_initial: float = 0.025, learning_rate_decay: float = 0.00025,
-                             progress_logger: bool = True, **settings):
+                             progress_logger: bool = True, **settings) -> gensim.models.Word2Vec:
     """Train a new Word2Vec model (using gensim). Save to file if filename is given.
 
     Parameters

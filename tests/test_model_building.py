@@ -88,5 +88,5 @@ def test_train_new_word2vec_model_wrong_entry():
         _ = train_new_word2vec_model(documents, iterations=20, alpha=0.01,
                                      progress_logger=False)
 
-    expected_message_part = "Unlike in gensim, the learning rate is here set by defining"
+    expected_message_part = "Expect 'learning_rate_initial' instead of 'alpha'."
     assert expected_message_part in str(msg.value), "Expected particular error message."

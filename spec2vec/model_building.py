@@ -9,7 +9,7 @@ from spec2vec.utils import ModelSaver
 from spec2vec.utils import TrainingProgressLogger
 
 
-def train_new_word2vec_model(documents: List, iterations: Union[List, int], filename: str = None,
+def train_new_word2vec_model(documents: List, iterations: Union[List[int], int], filename: str = None,
                              progress_logger: bool = True, **settings) -> gensim.models.Word2Vec:
     """Train a new Word2Vec model (using gensim). Save to file if filename is given.
 
@@ -35,9 +35,12 @@ def train_new_word2vec_model(documents: List, iterations: Union[List, int], file
         or by passing a list of iterations (e.g. "iterations=[5,10,15]") which will
         also led to a total training of max(iterations) epochs, but will save the
         model for every iteration in the list. Temporary models will be saved
-        using the name: file_model_word2ve + "_TEMP_#epoch.model".
+        using the name: filename_TEMP_{#iteration}epoch.model".
     filename: str,
         Filename to save model. Default is None, which means no model will be saved.
+        If a list of iterations is passed (e.g. "iterations=[5,10,15]"), then
+        intermediate models will be saved during training (here after 5, 10
+        iterations) using the pattern: filename_TEMP_{#iteration}epoch.model
     learning_rate_initial:
         Set initial learning rate. Default is 0.025.
     learning_rate_decay:

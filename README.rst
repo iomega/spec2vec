@@ -91,7 +91,11 @@ Install spec2vec from Anaconda Cloud with
 Examples
 ========
 Below a code example of how to process a large set of reference spectra and then
-train a word2vec model on documents generated of those spectrums.
+train a word2vec model on documents generated of those spectrums. Word2Vec models
+learn from co-occurences of peaks ("words") across many different spectra.
+To get a model that can give a meaningful representation of a set of
+given spectra it is desirable to train the model on a large and representative
+dataset.
 
 .. code-block:: python
 
@@ -131,10 +135,14 @@ train a word2vec model on documents generated of those spectrums.
 
     model_file = "references.model"
     model = train_new_word2vec_model(documents, model_file, iterations=[10, 20, 30],
-                                         workers=2, progress_logger=True)
+                                     workers=2, progress_logger=True)
 
-Below is a small example of using spec2vec to calculate the similarities between mass spectrums
-using a pre-trained word2vec model.
+Once a word2vec model has been trained, spec2vec allows to calculate the similarities
+between mass spectrums based on this model. In cases where the word2vec model was
+trained on data different than the data it is applied for, a number of peaks ("words")
+might be unknown to the model (if they weren't part of the training dataset). To
+account for those cases it is important to specify the "allowed_missing_percentage",
+as in the example below.
 
 .. code-block:: python
 
@@ -149,7 +157,8 @@ using a pre-trained word2vec model.
     model = gensim.models.Word2Vec.load(model_file)
 
     # Define similarity_function
-    spec2vec = Spec2VecParallel(model=model, intensity_weighting_power=0.5)
+    spec2vec = Spec2VecParallel(model=model, intensity_weighting_power=0.5,
+                                allowed_missing_percentage=5.0)
 
     # Calculate scores on all combinations of reference spectrums and queries
     scores = list(calculate_scores(spectrums, query_spectrums, spec2vec))

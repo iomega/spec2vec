@@ -90,9 +90,8 @@ Install spec2vec from Anaconda Cloud with
 
 Examples
 ========
-Below a code example of how to process a large set of reference spectra and then
-train a word2vec model on documents generated of those spectrums. Word2Vec models
-learn from co-occurences of peaks ("words") across many different spectra.
+Below a code example of how to process a large data set of reference spectra to
+train a word2vec model from scratch. Spectra are converted to documents using ``SpectrumDocument`` which converts spectrum peaks into "words" according to their m/z ratio (for instance "peak@100.39"). A new word2vec model can then trained using ``train_new_word2vec_model`` which will set the training parameters to spec2vec defaults unless specified otherwise. Word2Vec models learn from co-occurences of peaks ("words") across many different spectra.
 To get a model that can give a meaningful representation of a set of
 given spectra it is desirable to train the model on a large and representative
 dataset.
@@ -141,7 +140,7 @@ Once a word2vec model has been trained, spec2vec allows to calculate the similar
 between mass spectrums based on this model. In cases where the word2vec model was
 trained on data different than the data it is applied for, a number of peaks ("words")
 might be unknown to the model (if they weren't part of the training dataset). To
-account for those cases it is important to specify the "allowed_missing_percentage",
+account for those cases it is important to specify the ``allowed_missing_percentage``,
 as in the example below.
 
 .. code-block:: python

@@ -88,34 +88,77 @@ Install spec2vec from Anaconda Cloud with
 
   conda install --channel nlesc --channel bioconda --channel conda-forge spec2vec
 
-Example
-=======
-Below is a small example of using spec2vec to calculate the similarities between mass Spectrums.
+Examples
+========
+Below a code example of how to process a large set of reference spectra and then
+train a word2vec model on documents generated of those spectrums.
 
 .. code-block:: python
 
+    import os
     import gensim
+    from matchms import calculate_scores_parallel
+    from matchms.filtering import add_losses
+    from matchms.filtering import add_parent_mass
+    from matchms.filtering import default_filters
+    from matchms.filtering import normalize_intensities
+    from matchms.filtering import reduce_to_number_of_peaks
+    from matchms.filtering import require_minimum_number_of_peaks
+    from matchms.filtering import select_by_mz
+    from matchms.importing import load_from_mgf
     from spec2vec import Spec2VecParallel
     from spec2vec import SpectrumDocument
 
-    # reference_spectrums & query_spectrums loaded from files using https://matchms.readthedocs.io/en/latest/api/matchms.importing.load_from_mgf.html
-    references = [SpectrumDocument(s, n_decimals=2) for s in reference_spectrums]
-    queries = [SpectrumDocument(s, n_decimals=2) for s in query_spectrums]
+    def apply_my_filters(s):
+        """This is how a user would typically design his own pre- and post-
+        processing pipeline."""
+        s = default_filters(s)
+        s = add_parent_mass(s)
+        s = normalize_intensities(s)
+        s = reduce_to_number_of_peaks(s, n_required=10, ratio_desired=0.5)
+        s = select_by_mz(s, mz_from=0, mz_to=1000)
+        s = add_losses(s, loss_mz_from=10.0, loss_mz_to=200.0)
+        s = require_minimum_number_of_peaks(s, n_required=10)
+        return s
 
-    # Import pre-trained word2vec model (alternative: train new model)
-    model_file = "path and filename"
+    # Load data from MGF file and apply filters
+    spectrums = [spectrum_processing(s) for s in load_from_mgf("reference_spectrums.mgf")]
+
+    # Omit spectrums that didn't qualify for analysis
+    spectrums = [s for s in spectrums if s is not None]
+
+    documents = [SpectrumDocument(s) for s in spectrums]
+
+    model_file = "references.model"
+    model = train_new_word2vec_model(documents, model_file, iterations=[10, 20, 30],
+                                         workers=2, progress_logger=True)
+
+Below is a small example of using spec2vec to calculate the similarities between mass spectrums
+using a pre-trained word2vec model.
+
+.. code-block:: python
+
+    # query_spectrums loaded from files using https://matchms.readthedocs.io/en/latest/api/matchms.importing.load_from_mgf.html
+    query_spectrums = [spectrum_processing(s) for s in load_from_mgf("query_spectrums.mgf")]
+
+    # Omit spectrums that didn't qualify for analysis
+    query_spectrums = [s for s in query_spectrums if s is not None]
+
+    # Import pre-trained word2vec model (see code example above)
+    model_file = "references.model"
     model = gensim.models.Word2Vec.load(model_file)
 
     # Define similarity_function
     spec2vec = Spec2VecParallel(model=model, intensity_weighting_power=0.5)
 
-    # Calculate scores on all combinations of references and queries
-    scores = list(calculate_scores(references, queries, spec2vec))
+    # Calculate scores on all combinations of reference spectrums and queries
+    scores = list(calculate_scores(spectrums, query_spectrums, spec2vec))
 
     # Filter out self-comparisons
     filtered = [(reference, query, score) for (reference, query, score) in scores if reference != query]
 
     sorted_by_score = sorted(filtered, key=lambda elem: elem[2], reverse=True)
+
 
 Glossary of terms
 =================

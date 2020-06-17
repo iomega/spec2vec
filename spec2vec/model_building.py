@@ -1,3 +1,6 @@
+"""This module contains functions that will help users to train a word2vec model
+through gensim.
+"""
 from typing import List
 from typing import Tuple
 from typing import Union
@@ -7,9 +10,20 @@ from spec2vec.utils import TrainingProgressLogger
 
 
 def train_new_word2vec_model(documents: List, iterations: Union[List, int], filename: str = None,
-                             learning_rate_initial: float = 0.025, learning_rate_decay: float = 0.00025,
                              progress_logger: bool = True, **settings) -> gensim.models.Word2Vec:
     """Train a new Word2Vec model (using gensim). Save to file if filename is given.
+
+    Example code on how to train a word2vec model on a corpus (=list of documents)
+    that is derived from a given set of spectrums (list of matchms.Spectrum instances):
+
+    .. code-block:: python
+
+        from matchms import SpectrumDocument
+        from spec2vec.model_building import train_new_word2vec_model
+
+        documents = [SpectrumDocument(s, n_decimals=1) for s in spectrums]
+        model = train_new_word2vec_model(documents, iterations=20, size=200,
+                                         workers=1, progress_logger=False)
 
     Parameters
     ----------
@@ -42,7 +56,7 @@ def train_new_word2vec_model(documents: List, iterations: Union[List, int], file
         between 5-20). If set to 0, no negative sampling is used.
         Default for Spec2Vec is 5.
     size: int,
-        Dimensions of word vectors Default is 300.
+        Dimensions of word vectors. Default is 300.
     window: int,
         Window size for context words (small for local context, larger for
         global context). Spec2Vec expects large windwos. Default is 500.
@@ -53,42 +67,17 @@ def train_new_word2vec_model(documents: List, iterations: Union[List, int], file
         Number of threads to run the training on (should not be more than
         number of cores/threads. Default is 4.
 
-
     Returns
     -------
     word2vec_model
         Gensim word2vec model.
     """
-    # Spec2vec default argument values
-    defaults = {
-        "sg": 0,
-        "negative": 5,
-        "size": 300,
-        "window": 500,
-        "min_count": 1,
-        "workers": 4,
-        "compute_loss": True,
-    }
+    settings = set_spec2vec_defaults(**settings)
 
-    message = ("Unlike in gensim, the learning rate is here set by defining",
-               " 'learning_rate_initial' and 'learning_rate_decay'.")
-    assert "min_alpha" not in settings, message
-    assert "alpha" not in settings, message
-
-    # Set default parameters or replace by **settings input
-    for key in defaults:
-        if key in settings:
-            print("The value of {} is set from {} (default) to {}".format(key, defaults[key], settings[key]))
-        else:
-            settings[key] = defaults[key]
-
-    # Convert learning rate initial and decay to gensim "alpha" and "min_alpha"
     num_of_epochs = max(iterations) if isinstance(iterations, list) else iterations
-    alpha, min_alpha = set_learning_rate_decay(learning_rate_initial,
-                                               learning_rate_decay, num_of_epochs)
-    settings["alpha"] = alpha
-    settings["min_alpha"] = min_alpha
-    settings["iter"] = num_of_epochs
+
+    # Convert spec2vec style arguments to gensim style arguments
+    settings = learning_rates_to_gensim_style(num_of_epochs, **settings)
 
     # Set callbacks
     callbacks = []
@@ -105,6 +94,47 @@ def train_new_word2vec_model(documents: List, iterations: Union[List, int], file
     model = gensim.models.Word2Vec(documents, callbacks=callbacks, **settings)
 
     return model
+
+
+def set_spec2vec_defaults(**settings):
+    """Set spec2vec default argument values"(where no user input is give)"."""
+    defaults = {
+        "sg": 0,
+        "negative": 5,
+        "size": 300,
+        "window": 500,
+        "min_count": 1,
+        "learning_rate_initial": 0.025,
+        "learning_rate_decay": 0.00025,
+        "workers": 4,
+        "compute_loss": True,
+    }
+    assert "min_alpha" not in settings, "Expect 'learning_rate_decay' to describe learning rate decrease."
+    assert "alpha" not in settings, "Expect 'learning_rate_initial' instead of 'alpha'."
+
+    # Set default parameters or replace by **settings input
+    for key in defaults:
+        if key in settings:
+            print("The value of {} is set from {} (default) to {}".format(key, defaults[key],
+                                                                          settings[key]))
+        else:
+            settings[key] = defaults[key]
+    return settings
+
+
+def learning_rates_to_gensim_style(num_of_epochs, **settings):
+    """Convert "learning_rate_initial" and "learning_rate_decay" to gensim
+    "alpha" and "min_alpha"."""
+    alpha, min_alpha = set_learning_rate_decay(settings["learning_rate_initial"],
+                                               settings["learning_rate_decay"], num_of_epochs)
+    settings["alpha"] = alpha
+    settings["min_alpha"] = min_alpha
+    settings["iter"] = num_of_epochs
+
+    # Remove non-Gensim arguments from settings
+    del settings["learning_rate_initial"]
+    del settings["learning_rate_decay"]
+    return settings
 
 
 def set_learning_rate_decay(learning_rate_initial: float, learning_rate_decay: float,

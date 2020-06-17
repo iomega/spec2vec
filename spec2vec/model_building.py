@@ -49,7 +49,7 @@ def train_new_word2vec_model(documents: List, iterations: Union[List[int], int],
     progress_logger:
         If True, the training progress will be printed every epoch. Default is True.
     **settings
-        See py:class:gensim.models.word2vec.Word2Vec.
+        All other named arguments will be passed to the :py:class:`gensim.models.word2vec.Word2Vec` constructor.
     sg: int (0,1)
         For sg = 0 --> CBOW model, for sg = 1 --> skip gram model
         (see Gensim documentation). Default for Spec2Vec is 0.

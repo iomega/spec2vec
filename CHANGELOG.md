@@ -44,5 +44,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fossa configuration
 - Flowchart
 
-[Unreleased]: https://github.com/iomega/spec2vec/compare/0.1.0...HEAD
+[Unreleased]: https://github.com/iomega/spec2vec/compare/0.2.0...HEAD
+[0.2.0]: https://github.com/iomega/spec2vec/releases/tag/0.2.0
 [0.1.0]: https://github.com/iomega/spec2vec/releases/tag/0.1.0

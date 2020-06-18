@@ -7,22 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2020-06-18
+
 ### Added
 
 - Wrapper for training a gensim word2vec model [#13](https://github.com/iomega/spec2vec/tree/13-gensim-wrapper)
+- Basic logger for word2vec model training [#11](https://github.com/iomega/spec2vec/issues/11)
 
 ### Changed
 
 - Extend spec2vec similarity calculation to handle missing words [#9](https://github.com/iomega/spec2vec/issues/9)
-- Updated the integration test [#7](https://github.com/iomega/spec2vec/issues/7)
-
-### Fixed
-
-- ...
-
-### Removed
-
-- ...
+- Extend documentation and given code examples [#15](https://github.com/iomega/spec2vec/issues/15)
+- Updated the integration test to work with matchms 0.4.0 [#7](https://github.com/iomega/spec2vec/issues/7)
 
 ## [0.1.0] - 2020-06-02
 

@@ -96,7 +96,7 @@ as in the example below.
                                 allowed_missing_percentage=5.0)
 
     # Calculate scores on all combinations of reference spectrums and queries
-    scores = list(calculate_scores(reference_documents, query_documents, spec2vec))
+    scores = list(calculate_scores_parallel(reference_documents, query_documents, spec2vec))
 
     # Filter out self-comparisons
     filtered = [(reference, query, score) for (reference, query, score) in scores if reference != query]

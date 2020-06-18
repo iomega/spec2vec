@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to spec2vec's documentation!
-===================================
+====================================
 
 Word2Vec based similarity measure of mass spectrometry data.
 
@@ -20,7 +20,7 @@ Examples
 Train a word2vec model
 **********************
 Below a code example of how to process a large data set of reference spectra to
-train a word2vec model from scratch. Spectra are converted to documents using ``SpectrumDocument`` which converts spectrum peaks into "words" according to their m/z ratio (for instance "peak@100.39"). A new word2vec model can then trained using ``train_new_word2vec_model`` which will set the training parameters to spec2vec defaults unless specified otherwise. Word2Vec models learn from co-occurences of peaks ("words") across many different spectra.
+train a word2vec model from scratch. Spectra are converted to documents using :py:class:`~spec2vec.SpectrumDocument` which converts spectrum peaks into "words" according to their m/z ratio (for instance ``peak@100.39``). A new word2vec model can then trained using :py:func:`~spec2vec.model_building.train_new_word2vec_model` which will set the training parameters to spec2vec defaults unless specified otherwise. Word2Vec models learn from co-occurences of peaks ("words") across many different spectra.
 To get a model that can give a meaningful representation of a set of
 given spectra it is desirable to train the model on a large and representative
 dataset.

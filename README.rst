@@ -101,8 +101,6 @@ dataset.
 .. code-block:: python
 
     import os
-    import gensim
-    from matchms import calculate_scores_parallel
     from matchms.filtering import add_losses
     from matchms.filtering import add_parent_mass
     from matchms.filtering import default_filters
@@ -111,11 +109,10 @@ dataset.
     from matchms.filtering import require_minimum_number_of_peaks
     from matchms.filtering import select_by_mz
     from matchms.importing import load_from_mgf
-    from spec2vec import Spec2VecParallel
     from spec2vec import SpectrumDocument
 
     def apply_my_filters(s):
-        """This is how a user would typically design his own pre- and post-
+        """This is how one would typically design a desired pre- and post-
         processing pipeline."""
         s = default_filters(s)
         s = add_parent_mass(s)
@@ -132,10 +129,11 @@ dataset.
     # Omit spectrums that didn't qualify for analysis
     spectrums = [s for s in spectrums if s is not None]
 
-    documents = [SpectrumDocument(s) for s in spectrums]
+    # Create spectrum documents
+    reference_documents = [SpectrumDocument(s) for s in spectrums]
 
     model_file = "references.model"
-    model = train_new_word2vec_model(documents, model_file, iterations=[10, 20, 30],
+    model = train_new_word2vec_model(reference_documents, model_file, iterations=[10, 20, 30],
                                      workers=2, progress_logger=True)
 
 Once a word2vec model has been trained, spec2vec allows to calculate the similarities
@@ -147,11 +145,18 @@ as in the example below.
 
 .. code-block:: python
 
+    import gensim
+    from matchms import calculate_scores_parallel
+    from spec2vec import Spec2VecParallel
+
     # query_spectrums loaded from files using https://matchms.readthedocs.io/en/latest/api/matchms.importing.load_from_mgf.html
     query_spectrums = [spectrum_processing(s) for s in load_from_mgf("query_spectrums.mgf")]
 
     # Omit spectrums that didn't qualify for analysis
     query_spectrums = [s for s in query_spectrums if s is not None]
+
+    # Create spectrum documents
+    query_documents = [SpectrumDocument(s) for s in query_spectrums]
 
     # Import pre-trained word2vec model (see code example above)
     model_file = "references.model"
@@ -162,7 +167,7 @@ as in the example below.
                                 allowed_missing_percentage=5.0)
 
     # Calculate scores on all combinations of reference spectrums and queries
-    scores = list(calculate_scores(spectrums, query_spectrums, spec2vec))
+    scores = list(calculate_scores_parallel(reference_documents, query_documents, spec2vec))
 
     # Filter out self-comparisons
     filtered = [(reference, query, score) for (reference, query, score) in scores if reference != query]

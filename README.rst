@@ -110,6 +110,7 @@ dataset.
     from matchms.filtering import select_by_mz
     from matchms.importing import load_from_mgf
     from spec2vec import SpectrumDocument
+    from spec2vec.model_building import train_new_word2vec_model
 
     def apply_my_filters(s):
         """This is how one would typically design a desired pre- and post-

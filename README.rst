@@ -46,8 +46,8 @@ Word2Vec based similarity measure of mass spectrometry data.
    :target: https://www.research-software.nl/software/spec2vec
    :alt: Research Software Directory Badge
 
-.. |Zenodo Badge| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3716378.svg
-   :target: https://doi.org/10.5281/zenodo.3716378
+.. |Zenodo Badge| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.3873169.svg
+   :target: https://doi.org/10.5281/zenodo.3873169
    :alt: Zenodo Badge
 
 .. |CII Best Practices Badge| image:: https://bestpractices.coreinfrastructure.org/projects/3967/badge

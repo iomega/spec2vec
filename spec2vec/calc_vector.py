@@ -41,7 +41,7 @@ def calc_vector(model: BaseTopicModel, document: Document,
             missing_percentage = 100 * weights_missing_raised.sum() / (weights_raised.sum()
                                                                        + weights_missing_raised.sum())
             print("Found {} word(s) missing in the model.".format(len(idx_not_in_model)),
-                  "Weighted fraction not covered is {:.2f}%.".format(missing_percentage))
+                  "Weighted missing percentage not covered by the given model is {:.2f}%.".format(missing_percentage))
 
             message = ("Missing percentage is larger than set maximum.",
                        "Consider retraining the used model or increasing the allowed percentage.")

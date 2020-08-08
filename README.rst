@@ -78,9 +78,11 @@ Word2Vec based similarity measure of mass spectrometry data.
 ***********************
 Documentation for users
 ***********************
+For more extensive documentation `see our readthedocs <https://spec2vec.readthedocs.io/en/latest/>`_.
 
 Installation
 ============
+
 
 Prerequisites:  
 

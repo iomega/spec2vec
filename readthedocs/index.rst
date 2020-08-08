@@ -14,6 +14,23 @@ Word2Vec based similarity measure of mass spectrometry data.
 
    API <api/spec2vec.rst>
 
+Installation
+============
+
+Prerequisites:  
+
+- Python 3.7  
+- Anaconda
+
+Install spec2vec from Anaconda Cloud with
+
+.. code-block:: console
+
+  # install spec2vec in a new virtual environment to avoid dependency clashes
+  conda create --name spec2vec python=3.7
+  conda activate spec2vec
+  conda install --channel nlesc --channel bioconda --channel conda-forge spec2vec
+
 Examples
 ========
 

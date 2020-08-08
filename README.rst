@@ -82,6 +82,11 @@ Documentation for users
 Installation
 ============
 
+Prerequisites:  
+
+- Python 3.7  
+- Anaconda
+
 Install spec2vec from Anaconda Cloud with
 
 .. code-block:: console

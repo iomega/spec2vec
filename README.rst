@@ -1,7 +1,11 @@
 ################################################################################
 spec2vec
 ################################################################################
-Word2Vec based similarity measure of mass spectrometry data.
+*Spec2vec* is a novel spectral similarity score inspired by a natural language processing
+algorithm -- Word2Vec. Where Word2Vec learns relationships between words in sentences,
+*spec2vec* does so for mass fragments and neutral losses in MS/MS spectra.
+The spectral similarity score is based on spectral embeddings learnt
+from the fragmental relationships within a large set of spectral data. 
 
 |
 

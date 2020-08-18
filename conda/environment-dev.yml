@@ -21,6 +21,7 @@ dependencies:
     - pytest-runner
     - recommonmark
     - ruamel.yaml
+    - smart_open>=2.0.0
     - sphinx
     - sphinx_rtd_theme
     - sphinxcontrib-apidoc

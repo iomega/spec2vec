@@ -1,6 +1,6 @@
+from typing import List
 import numba
 import numpy
-from typing import List
 from gensim.models.callbacks import CallbackAny2Vec
 
 

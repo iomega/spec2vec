@@ -6,6 +6,7 @@ from matchms import Spectrum
 from spec2vec import SpectrumDocument
 from spec2vec.vector_operations import calc_vector
 from spec2vec.vector_operations import cosine_similarity
+from spec2vec.vector_operations import cosine_similarity_matrix
 
 
 def test_calc_vector():

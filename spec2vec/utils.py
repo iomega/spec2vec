@@ -1,4 +1,5 @@
 import numba
+import numpy
 from typing import List
 from gensim.models.callbacks import CallbackAny2Vec
 
@@ -79,13 +80,13 @@ def cosine_similarity_matrix(vectors_1: numpy.ndarray, vectors_2: numpy.ndarray)
     """
     vectors_1 = vectors_1.copy()
     vectors_2 = vectors_2.copy()
-    norm_1 = np.sum(vectors1**2, axis=1) ** (1/2)
-    norm_2 = np.sum(vectors2**2, axis=1) ** (1/2)
+    norm_1 = numpy.sum(vectors1**2, axis=1) ** (1/2)
+    norm_2 = numpy.sum(vectors2**2, axis=1) ** (1/2)
     for i in range(vectors_1.shape[0]):
         vectors_1[i] = vectors_1[i] / norm_1[i]
     for i in range(vectors_2.shape[0]):
         vectors_2[i] = vectors_2[i] / norm_2[i]
-    return np.dot(vectors_1, vectors_2.T)
+    return numpy.dot(vectors_1, vectors_2.T)
 
 
 @numba.njit

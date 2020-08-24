@@ -1,10 +1,10 @@
 from typing import List
 from typing import Union
 import numpy
-import scipy
 from gensim.models.basemodel import BaseTopicModel
 from spec2vec.SpectrumDocument import SpectrumDocument
 from .calc_vector import calc_vector
+from spec2vec.utils import cosine_similarity_matrix
 
 
 class Spec2VecParallel:
@@ -97,6 +97,6 @@ class Spec2VecParallel:
                                                                          self.intensity_weighting_power,
                                                                          self.allowed_missing_percentage)
 
-        spec2vec_similarity = 1 - scipy.spatial.distance.cdist(reference_vectors, query_vectors, "cosine")
+        spec2vec_similarity = cosine_similarity_matrix(reference_vectors, query_vectors)
 
         return spec2vec_similarity

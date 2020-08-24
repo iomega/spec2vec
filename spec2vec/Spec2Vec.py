@@ -1,8 +1,8 @@
 from typing import Union
 from gensim.models.basemodel import BaseTopicModel
 from spec2vec.SpectrumDocument import SpectrumDocument
-from spec2vec.utils import cosine_similarity
-from .calc_vector import calc_vector
+from spec2vec.vector_operations import calc_vector
+from spec2vec.vector_operations import cosine_similarity
 
 
 class Spec2Vec:

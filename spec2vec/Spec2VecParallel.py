@@ -3,8 +3,8 @@ from typing import Union
 import numpy
 from gensim.models.basemodel import BaseTopicModel
 from spec2vec.SpectrumDocument import SpectrumDocument
-from spec2vec.utils import cosine_similarity_matrix
-from .calc_vector import calc_vector
+from spec2vec.vector_operations import calc_vector
+from spec2vec.vector_operations import cosine_similarity_matrix
 
 
 class Spec2VecParallel:

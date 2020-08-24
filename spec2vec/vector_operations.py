@@ -1,4 +1,5 @@
 from typing import Union
+import numba
 import numpy
 from gensim.models.basemodel import BaseTopicModel
 from spec2vec.Document import Document
@@ -60,3 +61,57 @@ def calc_vector(model: BaseTopicModel, document: Document,
     weights_raised_tiled = numpy.tile(weights_raised, (1, model.wv.vector_size))
     vector = numpy.sum(word_vectors * weights_raised_tiled, 0)
     return vector
+
+
+@numba.njit
+def cosine_similarity_matrix(vectors_1: numpy.ndarray, vectors_2: numpy.ndarray) -> numpy.ndarray:
+    """Fast implementation of cosine similarity between two arrays of vectors.
+
+    Parameters
+    ----------
+    vectors_1
+        Numpy array of vectors. vectors_1.shape[0] is number of vectors, vectors_1.shape[1]
+        is vector dimension.
+    vectors_2
+        Numpy array of vectors. vectors_2.shape[0] is number of vectors, vectors_2.shape[1]
+        is vector dimension.
+    """
+    vectors_1 = vectors_1.copy()
+    vectors_2 = vectors_2.copy()
+    norm_1 = numpy.sum(vectors_1**2, axis=1) ** (1/2)
+    norm_2 = numpy.sum(vectors_2**2, axis=1) ** (1/2)
+    for i in range(vectors_1.shape[0]):
+        vectors_1[i] = vectors_1[i] / norm_1[i]
+    for i in range(vectors_2.shape[0]):
+        vectors_2[i] = vectors_2[i] / norm_2[i]
+    return numpy.dot(vectors_1, vectors_2.T)
+
+
+@numba.njit
+def cosine_similarity(u: numpy.ndarray, v: numpy.ndarray) -> numpy.float64:
+    """Calculate cosine similarity score.
+
+    Parameters
+    ----------
+    u
+        Input vector.
+    v
+        Input vector.
+
+    Returns
+    -------
+    cosine_similarity
+        The Cosine similarity score between vectors `u` and `v`.
+    """
+    assert u.shape[0] == v.shape[0], "Input vector must have same shape."
+    uv = 0
+    uu = 0
+    vv = 0
+    for i in range(u.shape[0]):
+        uv += u[i] * v[i]
+        uu += u[i] * u[i]
+        vv += v[i] * v[i]
+    cosine_score = 0
+    if uu != 0 and vv != 0:
+        cosine_score = uv / numpy.sqrt(uu * vv)
+    return numpy.float64(cosine_score)

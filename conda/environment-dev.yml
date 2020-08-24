@@ -10,7 +10,6 @@ dependencies:
   - numpy
   - pip
   - python >=3.7,<3.8
-  - scipy
   - pip:
     - bump2version
     - isort>=4.2.5,<5

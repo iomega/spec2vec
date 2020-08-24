@@ -1,8 +1,8 @@
 from typing import Union
-import scipy
 from gensim.models.basemodel import BaseTopicModel
 from spec2vec.SpectrumDocument import SpectrumDocument
 from .calc_vector import calc_vector
+from spec2vec.utils import cosine_similarity
 
 
 class Spec2Vec:
@@ -83,6 +83,5 @@ class Spec2Vec:
                                        self.allowed_missing_percentage)
         query_vector = calc_vector(self.model, query, self.intensity_weighting_power,
                                    self.allowed_missing_percentage)
-        cdist = scipy.spatial.distance.cosine(reference_vector, query_vector)
 
-        return 1 - cdist
+        return cosine_similarity(reference_vector, query_vector)

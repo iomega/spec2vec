@@ -86,3 +86,33 @@ def cosine_similarity_matrix(vectors_1: numpy.ndarray, vectors_2: numpy.ndarray)
     for i in range(vectors_2.shape[0]):
         vectors_2[i] = vectors_2[i] / norm_2[i]
     return np.dot(vectors_1, vectors_2.T)
+
+
+@numba.njit
+def cosine_similarity(u: numpy.ndarray, v: numpy.ndarray) -> numpy.float64:
+    """Calculate cosine similarity score.
+
+    Parameters
+    ----------
+    u
+        Input vector.
+    v
+        Input vector.
+
+    Returns
+    -------
+    cosine_similarity
+        The Cosine similarity score between vectors `u` and `v`.
+    """
+    assert u.shape[0] == v.shape[0], "Input vector must have same shape."
+    uv = 0
+    uu = 0
+    vv = 0
+    for i in range(u.shape[0]):
+        uv += u[i] * v[i]
+        uu += u[i] * u[i]
+        vv += v[i] * v[i]
+    cosine_score = 0
+    if uu != 0 and vv != 0:
+        cosine_score = uv / numpy.sqrt(uu * vv)
+    return numpy.float64(cosine_score)

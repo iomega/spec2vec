@@ -67,6 +67,20 @@ def calc_vector(model: BaseTopicModel, document: Document,
 def cosine_similarity_matrix(vectors_1: numpy.ndarray, vectors_2: numpy.ndarray) -> numpy.ndarray:
     """Fast implementation of cosine similarity between two arrays of vectors.
 
+    For example:
+
+    .. code-block:: python
+
+        import numpy as np
+        from spec2vec.vector_operations import cosine_similarity_matrix
+
+        vectors_1 = np.array([[1, 1, 0, 0],
+                              [1, 0, 1, 1]])
+        vectors_2 = np.array([[0, 1, 1, 0],
+                              [0, 0, 1, 1]])
+        similarity_matrix = cosine_similarity_matrix(vectors_1, vectors_2)
+
+
     Parameters
     ----------
     vectors_1
@@ -89,19 +103,31 @@ def cosine_similarity_matrix(vectors_1: numpy.ndarray, vectors_2: numpy.ndarray)
 
 @numba.njit
 def cosine_similarity(u: numpy.ndarray, v: numpy.ndarray) -> numpy.float64:
-    """Calculate cosine similarity score.
+    """Calculate cosine similarity between two input vectors.
+
+    For example:
+
+    .. testcode::
+
+        import numpy as np
+        from spec2vec.vector_operations import cosine_similarity
+
+        vector_1 = np.array([1, 1, 0, 0])
+        vector_2 = np.array([1, 1, 1, 1])
+        print("Cosine similarity: {:.3f}".format(cosine_similarity(vector_1, vector_2)))
+
+    Should output
+
+    .. testoutput::
+
+        Cosine similarity: 0.707
 
     Parameters
     ----------
     u
-        Input vector.
+        Input vector. Can be array of integers or floats.
     v
-        Input vector.
-
-    Returns
-    -------
-    cosine_similarity
-        The Cosine similarity score between vectors `u` and `v`.
+        Input vector. Can be array of integers or floats.
     """
     assert u.shape[0] == v.shape[0], "Input vector must have same shape."
     uv = 0

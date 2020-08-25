@@ -76,10 +76,10 @@ def cosine_similarity_matrix(vectors_1: numpy.ndarray, vectors_2: numpy.ndarray)
         Numpy array of vectors. vectors_2.shape[0] is number of vectors, vectors_2.shape[1]
         is vector dimension.
     """
-    vectors_1 = vectors_1.copy()
-    vectors_2 = vectors_2.copy()
-    norm_1 = numpy.sum(vectors_1**2, axis=1) ** (1/2)
-    norm_2 = numpy.sum(vectors_2**2, axis=1) ** (1/2)
+    vectors_1 = vectors_1.astype(numpy.float64) # Numba dot only accepts float or complex arrays
+    vectors_2 = vectors_2.astype(numpy.float64)
+    norm_1 = numpy.sqrt(numpy.sum(vectors_1**2, axis=1))
+    norm_2 = numpy.sqrt(numpy.sum(vectors_2**2, axis=1))
     for i in range(vectors_1.shape[0]):
         vectors_1[i] = vectors_1[i] / norm_1[i]
     for i in range(vectors_2.shape[0]):

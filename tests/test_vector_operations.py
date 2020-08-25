@@ -110,11 +110,11 @@ def test_cosine_similarity_all_zeros_compiled():
 
 
 def test_cosine_similarity_matrix():
-    """Test cosine similarity scores calculation."""
+    """Test cosine similarity scores calculation using int32 input.."""
     vectors1 = numpy.array([[1, 1, 0, 0],
-                            [1, 0, 1, 1]])
+                            [1, 0, 1, 1]], dtype=numpy.int32)
     vectors2 = numpy.array([[0, 1, 1, 0],
-                            [0, 0, 1, 1]])
+                            [0, 0, 1, 1]], dtype=numpy.int32)
 
     scores = cosine_similarity_matrix.py_func(vectors1, vectors2)
     expected_scores = numpy.array([[0.5, 0.],
@@ -123,13 +123,52 @@ def test_cosine_similarity_matrix():
 
 
 def test_cosine_similarity_matrix_compiled():
-    """Test cosine similarity scores calculation."""
+    """Test cosine similarity scores calculation using int32 input."""
     vectors1 = numpy.array([[1, 1, 0, 0],
-                            [1, 0, 1, 1]])
+                            [1, 0, 1, 1]], dtype=numpy.int32)
     vectors2 = numpy.array([[0, 1, 1, 0],
-                            [0, 0, 1, 1]])
+                            [0, 0, 1, 1]], dtype=numpy.int32)
 
     scores = cosine_similarity_matrix(vectors1, vectors2)
     expected_scores = numpy.array([[0.5, 0.],
                                    [0.40824829, 0.81649658]])
     assert scores == pytest.approx(expected_scores, 1e-7), "Expected different scores."
+
+
+def test_cosine_similarity_floats_matrix():
+    """Test cosine similarity scores calculation using float64 input.."""
+    vectors1 = numpy.array([[1, 1, 0, 0],
+                            [1, 0, 1, 1]], dtype=numpy.float64)
+    vectors2 = numpy.array([[0, 1, 1, 0],
+                            [0, 0, 1, 1]], dtype=numpy.float64)
+
+    scores = cosine_similarity_matrix.py_func(vectors1, vectors2)
+    expected_scores = numpy.array([[0.5, 0.],
+                                   [0.40824829, 0.81649658]])
+    assert scores == pytest.approx(expected_scores, 1e-7), "Expected different scores."
+
+
+def test_cosine_similarity_matrix_floats_compiled():
+    """Test cosine similarity scores calculation using float64 input."""
+    vectors1 = numpy.array([[1, 1, 0, 0],
+                            [1, 0, 1, 1]], dtype=numpy.float64)
+    vectors2 = numpy.array([[0, 1, 1, 0],
+                            [0, 0, 1, 1]], dtype=numpy.float64)
+
+    scores = cosine_similarity_matrix(vectors1, vectors2)
+    expected_scores = numpy.array([[0.5, 0.],
+                                   [0.40824829, 0.81649658]])
+    assert scores == pytest.approx(expected_scores, 1e-7), "Expected different scores."
+
+
+def test_cosine_similarity_matrix_input_cloned_compiled():
+    """Test if score implementation clones the input correctly."""
+    vectors1 = numpy.array([[2, 2, 0, 0],
+                            [2, 0, 2, 2]])
+    vectors2 = numpy.array([[0, 2, 2, 0],
+                            [0, 0, 2, 2]])
+
+    scores = cosine_similarity_matrix(vectors1, vectors2)
+
+    assert numpy.all(vectors1 == numpy.array([[2, 2, 0, 0],
+                                              [2, 0, 2, 2]])), "Expected unchanged input."

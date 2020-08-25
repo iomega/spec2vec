@@ -168,7 +168,7 @@ def test_cosine_similarity_matrix_input_cloned_compiled():
     vectors2 = numpy.array([[0, 2, 2, 0],
                             [0, 0, 2, 2]])
 
-    scores = cosine_similarity_matrix(vectors1, vectors2)
+    cosine_similarity_matrix(vectors1, vectors2)
 
     assert numpy.all(vectors1 == numpy.array([[2, 2, 0, 0],
                                               [2, 0, 2, 2]])), "Expected unchanged input."

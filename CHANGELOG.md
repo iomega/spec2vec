@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Implement faster, numba-based cosine similarity function [#29](https://github.com/iomega/spec2vec/pull/29)
+
 ## [0.2.0] - 2020-06-18
 
 ### Added

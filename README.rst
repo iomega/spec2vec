@@ -12,8 +12,7 @@ If you use **spec2vec** for your research, please cite the following references:
 F Huber, L Ridder, S Rogers, JJJ van der Hooft, "Spec2Vec: Improved mass spectral similarity scoring through learning of structural relationships", bioRxiv, https://doi.org/10.1101/2020.08.11.245928 
 
 (and if you use **matchms** as well:
-F. Huber, S. Verhoeven, C. Meijer, H. Spreeuw, E. M. Villanueva Castilla, C. Geng, J.J.J. van der Hooft, S. Rogers, A. Belloum, F. Diblen, J.H. Spaaks,
-"matchms - processing and similarity evaluation of mass spectrometry data", bioRxiv, https://doi.org/10.1101/2020.08.06.239244 )
+F. Huber, S. Verhoeven, C. Meijer, H. Spreeuw, E. M. Villanueva Castilla, C. Geng, J.J.J. van der Hooft, S. Rogers, A. Belloum, F. Diblen, J.H. Spaaks, (2020). matchms - processing and similarity evaluation of mass spectrometry data. Journal of Open Source Software, 5(52), 2411, https://doi.org/10.21105/joss.02411 )
 
 Thanks!
 

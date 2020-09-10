@@ -9,7 +9,7 @@ dependencies:
   - matchms>=0.5.0
   - numpy
   - pip
-  - python >=3.7,<3.8
+  - python >=3.7,<3.9
   - scipy
   - pip:
     - bump2version

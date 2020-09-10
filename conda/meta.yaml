@@ -29,7 +29,7 @@ requirements:
     - numpy {{ numpy }}
     - setuptools
   host:
-    - python >=3.7,<3.8
+    - python >=3.7,<3.9
     - pip
     - pytest-runner
     - setuptools
@@ -37,7 +37,7 @@ requirements:
     - gensim >=3.8.0
     - numpy
     - pip
-    - python >=3.7,<3.8
+    - python >=3.7,<3.9
     - scipy
 
 test:

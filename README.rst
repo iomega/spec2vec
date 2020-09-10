@@ -99,14 +99,14 @@ Installation
 
 Prerequisites:  
 
-- Python 3.7  
+- Python 3.7or 3.8  
 - Anaconda
 
 Install spec2vec from Anaconda Cloud with
 
 .. code-block:: console
 
-  conda env create --name spec2vec python=3.7
+  conda env create --name spec2vec python=3.8
   conda activate spec2vec
   conda install --channel nlesc --channel bioconda --channel conda-forge spec2vec
 

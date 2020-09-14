@@ -35,7 +35,6 @@ requirements:
     - setuptools
   run:
     - gensim >=3.8.0
-    - matchms >=0.6.0
     - numpy
     - pip
     - python >=3.7,<3.9

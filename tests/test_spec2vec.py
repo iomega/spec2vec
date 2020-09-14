@@ -2,6 +2,7 @@ import os
 import gensim
 import pytest
 import numpy
+from matchms import Spectrum
 from spec2vec import Spec2Vec
 from spec2vec import SpectrumDocument
 
@@ -21,7 +22,7 @@ def test_spec2vec_pair_method():
     score01 = spec2vec.pair(documents[0], documents[1])
     assert score01 == pytest.approx(0.9936808, 1e-6)
     score11 = spec2vec.pair(documents[1], documents[1])
-    assert score == pytest.approx(1.0, 1e-9)
+    assert score11 == pytest.approx(1.0, 1e-9)
 
 
 def test_spec2vec_matrix_method():

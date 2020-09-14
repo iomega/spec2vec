@@ -99,7 +99,7 @@ Installation
 
 Prerequisites:  
 
-- Python 3.7or 3.8  
+- Python 3.7 or 3.8  
 - Anaconda
 
 Install spec2vec from Anaconda Cloud with

@@ -10,9 +10,9 @@ source:
 
 extra:
   channels:
+    - nlesc
     - conda-forge
     - bioconda
-    - nlesc
 
 build:
   noarch: python
@@ -27,6 +27,7 @@ requirements:
     - conda-verify
     - pytest-runner
     - python
+    - matchms >=0.6.0
     - numpy {{ numpy }}
     - setuptools
   host:

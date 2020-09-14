@@ -129,7 +129,7 @@ jobs:
           [ "$RUNNING_OS" = "Windows" ] && export BUILDDIR=$RUNNER_TEMP\\spec2vec\\_build\\
           conda config --set anaconda_upload no
           conda build --numpy 1.18.1 --no-include-recipe \
-            --channel bioconda --channel conda-forge \
+            --channel nlesc --channel bioconda --channel conda-forge \
             --croot ${BUILDDIR} \
             ./conda
       - name: Upload package artifact from build

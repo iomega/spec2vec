@@ -198,10 +198,13 @@ jobs:
           export BUILDDIR=$RUNNER_TEMP/spec2vec/_build/noarch/
           [ "$RUNNING_OS" = "Windows" ] && export BUILDDIR=$RUNNER_TEMP\\spec2vec\\_build\\noarch\\
           conda install \
+            --channel nlesc \
             --channel bioconda \
             --channel conda-forge \
             --channel $BUILDDIR \
             spec2vec
+          conda update \
+            --channel $BUILDDIR --override-channels spec2vec 
       - name: List conda packages
         shell: bash -l {0}
         run: |

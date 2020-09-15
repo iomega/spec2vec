@@ -17,7 +17,7 @@ extra:
 build:
   noarch: python
   preserve_egg_dir: True
-  number: 0
+  number: 999
   skip: True # [py2k]
   script: {{ PYTHON }} -m pip install --no-deps --ignore-installed . -vv
 

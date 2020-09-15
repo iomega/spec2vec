@@ -192,6 +192,10 @@ jobs:
           export BUILDDIR=$RUNNER_TEMP/spec2vec/_build/noarch/
           [ "$RUNNING_OS" = "Windows" ] && export BUILDDIR=$RUNNER_TEMP\\spec2vec\\_build\\noarch\\
           ls -al ${RUNNER_TEMP}/spec2vec/_build
+      - name: List build folder content
+        shell: bash -l {0}
+        run: |
+          ls -al ${RUNNER_TEMP}/spec2vec/_build/noarch/
       - name: Test locally published conda package
         shell: bash -l {0}
         run: |

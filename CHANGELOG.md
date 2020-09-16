@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Support for Python 3.8 [#35](https://github.com/iomega/spec2vec/pull/35)
+
+### Changed
+
+- Refactored Spec2Vec class to provide .pair() and .matrix() methods [#35](https://github.com/iomega/spec2vec/pull/35)
+
+### Removed
+
+- Spec2VecParallel (is now included as Spec2Vec.matrix()) [#35](https://github.com/iomega/spec2vec/pull/35)
+
 ## [0.2.0] - 2020-06-18
 
 ### Added

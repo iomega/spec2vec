@@ -206,6 +206,7 @@ jobs:
             --channel conda-forge \
             --channel nlesc \
             matchms
+          # Install spec2vec without nlesc channel to prevent package to be installed from nlesc channel instead of wanted $BUILDDIR channel 
           conda install \
             --channel bioconda \
             --channel conda-forge \

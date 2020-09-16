@@ -205,6 +205,10 @@ jobs:
             --channel bioconda \
             --channel conda-forge \
             --channel nlesc \
+            matchms
+          conda install \
+            --channel bioconda \
+            --channel conda-forge \
             --channel $BUILDDIR -v \
             spec2vec
       - name: List conda packages

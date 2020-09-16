@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2020-09-16
+
 ### Added
 
 - Support for Python 3.8 [#35](https://github.com/iomega/spec2vec/pull/35)
@@ -56,6 +58,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fossa configuration
 - Flowchart
 
-[Unreleased]: https://github.com/iomega/spec2vec/compare/0.2.0...HEAD
+[Unreleased]: https://github.com/iomega/spec2vec/compare/0.3.0...HEAD
+[0.3.0]: https://github.com/iomega/spec2vec/releases/tag/0.3.0
 [0.2.0]: https://github.com/iomega/spec2vec/releases/tag/0.2.0
 [0.1.0]: https://github.com/iomega/spec2vec/releases/tag/0.1.0

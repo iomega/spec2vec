@@ -32,8 +32,8 @@ Thanks!
      - |Conda Badge| |Research Software Directory Badge|
    * - \4. Enable Citation
      - |Zenodo Badge|
-   * - \5. Checklist
-     - |CII Best Practices Badge|
+   * - \5. Checklists
+     - |CII Best Practices Badge| |Howfairis Badge|
    * - **Other best practices**
      -
    * - Continuous integration
@@ -66,6 +66,10 @@ Thanks!
 .. |CII Best Practices Badge| image:: https://bestpractices.coreinfrastructure.org/projects/3967/badge
    :target: https://bestpractices.coreinfrastructure.org/projects/3967
    :alt: CII Best Practices Badge
+   
+.. |Howfairis Badge| image:: https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green
+   :target: https://fair-software.eu
+   :alt: Howfairis Badge
 
 .. |ReadTheDocs Badge| image:: https://readthedocs.org/projects/spec2vec/badge/?version=latest
     :alt: Documentation Status

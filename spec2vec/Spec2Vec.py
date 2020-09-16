@@ -21,6 +21,7 @@ class Spec2Vec(BaseSimilarity):
     .. code-block:: python
 
         import gensim
+        from matchms import calculate_scores
         from spec2vec import Spec2Vec
         from spec2vec import SpectrumDocument
 

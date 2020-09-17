@@ -22,8 +22,10 @@ Thanks!
    :widths: 25 25
    :header-rows: 1
 
-   * - fair-software.nl recommendations
+   * - 
      - Badges
+   * - **fair-software.nl recommendations**
+     - 
    * - \1. Code repository
      - |GitHub Badge|
    * - \2. License
@@ -34,7 +36,7 @@ Thanks!
      - |Zenodo Badge|
    * - \5. Checklists
      - |CII Best Practices Badge| |Howfairis Badge|
-   * - **Other best practices**
+   * - **Code quality checks**
      -
    * - Continuous integration
      - |Anaconda Build| |Anaconda Publish|

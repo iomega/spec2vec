@@ -6,6 +6,7 @@ from matchms.similarity.BaseSimilarity import BaseSimilarity
 from spec2vec.SpectrumDocument import SpectrumDocument
 from spec2vec.vector_operations import calc_vector
 from spec2vec.vector_operations import cosine_similarity
+from spec2vec.vector_operations import cosine_similarity_matrix
 
 
 class Spec2Vec(BaseSimilarity):
@@ -121,6 +122,6 @@ class Spec2Vec(BaseSimilarity):
                                                                          self.intensity_weighting_power,
                                                                          self.allowed_missing_percentage)
 
-        spec2vec_similarity = 1 - scipy.spatial.distance.cdist(reference_vectors, query_vectors, "cosine")
+        spec2vec_similarity = cosine_similarity_matrix(reference_vectors, query_vectors)
 
         return spec2vec_similarity

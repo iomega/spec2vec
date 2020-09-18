@@ -36,7 +36,9 @@ jobs:
           export BUILD_FOLDER=/tmp/spec2vec/_build
           mkdir -p $BUILD_FOLDER
           conda build --numpy 1.18.1 --no-include-recipe \
-            --channel bioconda --channel conda-forge \
+            --channel nlesc \
+            --channel bioconda \
+            --channel conda-forge \
             --croot $BUILD_FOLDER \
             ./conda
       - name: Push the package to anaconda cloud

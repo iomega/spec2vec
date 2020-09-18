@@ -1,11 +1,14 @@
+from typing import List
 from typing import Union
+import numpy
 from gensim.models.basemodel import BaseTopicModel
+from matchms.similarity.BaseSimilarity import BaseSimilarity
 from spec2vec.SpectrumDocument import SpectrumDocument
 from spec2vec.vector_operations import calc_vector
 from spec2vec.vector_operations import cosine_similarity
 
 
-class Spec2Vec:
+class Spec2Vec(BaseSimilarity):
     """Calculate spec2vec similarity scores between a reference and a query.
 
     Using a trained model, spectrum documents will be converted into spectrum
@@ -18,6 +21,7 @@ class Spec2Vec:
     .. code-block:: python
 
         import gensim
+        from matchms import calculate_scores
         from spec2vec import Spec2Vec
         from spec2vec import SpectrumDocument
 
@@ -64,7 +68,7 @@ class Spec2Vec:
         self.allowed_missing_percentage = allowed_missing_percentage
         self.vector_size = model.wv.vector_size
 
-    def __call__(self, reference: SpectrumDocument, query: SpectrumDocument) -> float:
+    def pair(self, reference: SpectrumDocument, query: SpectrumDocument) -> float:
         """Calculate the spec2vec similaritiy between a reference and a query.
 
         Parameters
@@ -85,3 +89,38 @@ class Spec2Vec:
                                    self.allowed_missing_percentage)
 
         return cosine_similarity(reference_vector, query_vector)
+
+    def matrix(self, references: List[SpectrumDocument], queries: List[SpectrumDocument],
+               is_symmetric: bool = False) -> numpy.ndarray:
+        """Calculate the spec2vec similarities between all references and queries.
+
+        Parameters
+        ----------
+        references:
+            Reference spectrum documents.
+        queries:
+            Query spectrum documents.
+
+        Returns
+        -------
+        spec2vec_similarity
+            Array of spec2vec similarity scores.
+        """
+        n_rows = len(references)
+        reference_vectors = numpy.empty((n_rows, self.vector_size), dtype="float")
+        for index_reference, reference in enumerate(references):
+            reference_vectors[index_reference, 0:self.vector_size] = calc_vector(self.model,
+                                                                                 reference,
+                                                                                 self.intensity_weighting_power,
+                                                                                 self.allowed_missing_percentage)
+        n_cols = len(queries)
+        query_vectors = numpy.empty((n_cols, self.vector_size), dtype="float")
+        for index_query, query in enumerate(queries):
+            query_vectors[index_query, 0:self.vector_size] = calc_vector(self.model,
+                                                                         query,
+                                                                         self.intensity_weighting_power,
+                                                                         self.allowed_missing_percentage)
+
+        spec2vec_similarity = 1 - scipy.spatial.distance.cdist(reference_vectors, query_vectors, "cosine")
+
+        return spec2vec_similarity

@@ -19,7 +19,7 @@ Installation
 
 Prerequisites:  
 
-- Python 3.7  
+- Python 3.7 or 3.8  
 - Anaconda
 
 Install spec2vec from Anaconda Cloud with
@@ -27,7 +27,7 @@ Install spec2vec from Anaconda Cloud with
 .. code-block:: console
 
   # install spec2vec in a new virtual environment to avoid dependency clashes
-  conda create --name spec2vec python=3.7
+  conda create --name spec2vec python=3.8
   conda activate spec2vec
   conda install --channel nlesc --channel bioconda --channel conda-forge spec2vec
 
@@ -93,8 +93,8 @@ as in the example below.
 .. code-block:: python
 
     import gensim
-    from matchms import calculate_scores_parallel
-    from spec2vec import Spec2VecParallel
+    from matchms import calculate_scores
+    from spec2vec import Spec2Vec
 
     # query_spectrums loaded from files using https://matchms.readthedocs.io/en/latest/api/matchms.importing.load_from_mgf.html
     query_spectrums = [spectrum_processing(s) for s in load_from_mgf("query_spectrums.mgf")]
@@ -110,11 +110,11 @@ as in the example below.
     model = gensim.models.Word2Vec.load(model_file)
 
     # Define similarity_function
-    spec2vec = Spec2VecParallel(model=model, intensity_weighting_power=0.5,
-                                allowed_missing_percentage=5.0)
+    spec2vec = Spec2Vec(model=model, intensity_weighting_power=0.5,
+                        allowed_missing_percentage=5.0)
 
     # Calculate scores on all combinations of reference spectrums and queries
-    scores = list(calculate_scores_parallel(reference_documents, query_documents, spec2vec))
+    scores = list(calculate_scores(reference_documents, query_documents, spec2vec))
 
     # Filter out self-comparisons
     filtered = [(reference, query, score) for (reference, query, score) in scores if reference != query]

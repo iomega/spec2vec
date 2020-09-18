@@ -12,8 +12,7 @@ If you use **spec2vec** for your research, please cite the following references:
 F Huber, L Ridder, S Rogers, JJJ van der Hooft, "Spec2Vec: Improved mass spectral similarity scoring through learning of structural relationships", bioRxiv, https://doi.org/10.1101/2020.08.11.245928 
 
 (and if you use **matchms** as well:
-F. Huber, S. Verhoeven, C. Meijer, H. Spreeuw, E. M. Villanueva Castilla, C. Geng, J.J.J. van der Hooft, S. Rogers, A. Belloum, F. Diblen, J.H. Spaaks,
-"matchms - processing and similarity evaluation of mass spectrometry data", bioRxiv, https://doi.org/10.1101/2020.08.06.239244 )
+F. Huber, S. Verhoeven, C. Meijer, H. Spreeuw, E. M. Villanueva Castilla, C. Geng, J.J.J. van der Hooft, S. Rogers, A. Belloum, F. Diblen, J.H. Spaaks, (2020). matchms - processing and similarity evaluation of mass spectrometry data. Journal of Open Source Software, 5(52), 2411, https://doi.org/10.21105/joss.02411 )
 
 Thanks!
 
@@ -23,8 +22,10 @@ Thanks!
    :widths: 25 25
    :header-rows: 1
 
-   * - fair-software.nl recommendations
+   * - 
      - Badges
+   * - **fair-software.nl recommendations**
+     - 
    * - \1. Code repository
      - |GitHub Badge|
    * - \2. License
@@ -33,9 +34,9 @@ Thanks!
      - |Conda Badge| |Research Software Directory Badge|
    * - \4. Enable Citation
      - |Zenodo Badge|
-   * - \5. Checklist
-     - |CII Best Practices Badge|
-   * - **Other best practices**
+   * - \5. Checklists
+     - |CII Best Practices Badge| |Howfairis Badge|
+   * - **Code quality checks**
      -
    * - Continuous integration
      - |Anaconda Build| |Anaconda Publish|
@@ -67,6 +68,10 @@ Thanks!
 .. |CII Best Practices Badge| image:: https://bestpractices.coreinfrastructure.org/projects/3967/badge
    :target: https://bestpractices.coreinfrastructure.org/projects/3967
    :alt: CII Best Practices Badge
+   
+.. |Howfairis Badge| image:: https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8F-green
+   :target: https://fair-software.eu
+   :alt: Howfairis Badge
 
 .. |ReadTheDocs Badge| image:: https://readthedocs.org/projects/spec2vec/badge/?version=latest
     :alt: Documentation Status
@@ -100,14 +105,14 @@ Installation
 
 Prerequisites:  
 
-- Python 3.7  
+- Python 3.7 or 3.8  
 - Anaconda
 
 Install spec2vec from Anaconda Cloud with
 
 .. code-block:: console
 
-  conda env create --name spec2vec python=3.7
+  conda env create --name spec2vec python=3.8
   conda activate spec2vec
   conda install --channel nlesc --channel bioconda --channel conda-forge spec2vec
 
@@ -168,8 +173,8 @@ as in the example below.
 .. code-block:: python
 
     import gensim
-    from matchms import calculate_scores_parallel
-    from spec2vec import Spec2VecParallel
+    from matchms import calculate_scores
+    from spec2vec import Spec2Vec
 
     # query_spectrums loaded from files using https://matchms.readthedocs.io/en/latest/api/matchms.importing.load_from_mgf.html
     query_spectrums = [spectrum_processing(s) for s in load_from_mgf("query_spectrums.mgf")]
@@ -185,11 +190,11 @@ as in the example below.
     model = gensim.models.Word2Vec.load(model_file)
 
     # Define similarity_function
-    spec2vec = Spec2VecParallel(model=model, intensity_weighting_power=0.5,
-                                allowed_missing_percentage=5.0)
+    spec2vec = Spec2Vec(model=model, intensity_weighting_power=0.5,
+                        allowed_missing_percentage=5.0)
 
     # Calculate scores on all combinations of reference spectrums and queries
-    scores = list(calculate_scores_parallel(reference_documents, query_documents, spec2vec))
+    scores = list(calculate_scores(reference_documents, query_documents, spec2vec))
 
     # Filter out self-comparisons
     filtered = [(reference, query, score) for (reference, query, score) in scores if reference != query]

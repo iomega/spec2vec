@@ -5,12 +5,13 @@ channels:
   - defaults
   - nlesc
 dependencies:
-  - gensim>=3.8.0
-  - matchms>=0.5.0
-  - numba>=0.47
+  - gensim >=3.8.0
+  - matchms >=0.6.0
+  - numba >=0.47
   - numpy
   - pip
-  - python >=3.7,<3.8
+  - python >=3.7,<3.9
+  - scipy
   - pip:
     - bump2version
     - isort>=4.2.5,<5

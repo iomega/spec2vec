@@ -102,7 +102,7 @@ def cosine_similarity_matrix(vectors_1: numpy.ndarray, vectors_2: numpy.ndarray)
 
 
 @numba.njit
-def cosine_similarity(vector_1: numpy.ndarray, vector_2: numpy.ndarray) -> numpy.float64:
+def cosine_similarity(vector1: numpy.ndarray, vector2: numpy.ndarray) -> numpy.float64:
     """Calculate cosine similarity between two input vectors.
 
     For example:
@@ -112,9 +112,9 @@ def cosine_similarity(vector_1: numpy.ndarray, vector_2: numpy.ndarray) -> numpy
         import numpy as np
         from spec2vec.vector_operations import cosine_similarity
 
-        vector_1 = np.array([1, 1, 0, 0])
-        vector_2 = np.array([1, 1, 1, 1])
-        print("Cosine similarity: {:.3f}".format(cosine_similarity(vector_1, vector_2)))
+        vector1 = np.array([1, 1, 0, 0])
+        vector2 = np.array([1, 1, 1, 1])
+        print("Cosine similarity: {:.3f}".format(cosine_similarity(vector1, vector2)))
 
     Should output
 
@@ -124,9 +124,9 @@ def cosine_similarity(vector_1: numpy.ndarray, vector_2: numpy.ndarray) -> numpy
 
     Parameters
     ----------
-    vector_1
+    vector1
         Input vector. Can be array of integers or floats.
-    vector_2
+    vector2
         Input vector. Can be array of integers or floats.
     """
     assert vector1.shape[0] == vector2.shape[0], "Input vector must have same shape."

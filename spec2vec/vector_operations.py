@@ -102,7 +102,7 @@ def cosine_similarity_matrix(vectors_1: numpy.ndarray, vectors_2: numpy.ndarray)
 
 
 @numba.njit
-def cosine_similarity(u: numpy.ndarray, v: numpy.ndarray) -> numpy.float64:
+def cosine_similarity(vector_1: numpy.ndarray, vector_2: numpy.ndarray) -> numpy.float64:
     """Calculate cosine similarity between two input vectors.
 
     For example:
@@ -124,20 +124,20 @@ def cosine_similarity(u: numpy.ndarray, v: numpy.ndarray) -> numpy.float64:
 
     Parameters
     ----------
-    u
+    vector_1
         Input vector. Can be array of integers or floats.
-    v
+    vector_2
         Input vector. Can be array of integers or floats.
     """
-    assert u.shape[0] == v.shape[0], "Input vector must have same shape."
-    uv = 0
-    uu = 0
-    vv = 0
-    for i in range(u.shape[0]):
-        uv += u[i] * v[i]
-        uu += u[i] * u[i]
-        vv += v[i] * v[i]
+    assert vector1.shape[0] == vector2.shape[0], "Input vector must have same shape."
+    prod12 = 0
+    prod11 = 0
+    prod22 = 0
+    for i in range(vector1.shape[0]):
+        prod12 += vector1[i] * vector2[i]
+        prod11 += vector1[i] * vector1[i]
+        prod22 += vector2[i] * vector2[i]
     cosine_score = 0
-    if uu != 0 and vv != 0:
-        cosine_score = uv / numpy.sqrt(uu * vv)
+    if prod11 != 0 and prod22 != 0:
+        cosine_score = prod12 / numpy.sqrt(prod11 * prod22)
     return numpy.float64(cosine_score)

@@ -92,7 +92,7 @@ def cosine_similarity_matrix(vectors_1: numpy.ndarray, vectors_2: numpy.ndarray)
     """
     assert vectors_1.shape[1] == vectors_2.shape[1], "Input vectors must have same shape."
     vectors_1 = vectors_1.astype(numpy.float64)  # Numba dot only accepts float or complex arrays
-    vectors_2 = vectors_2.astype(numpy.float64)
+    vectors_2 = vectors_2.astype(numpy.float64, copy=False, casting='safe')
     norm_1 = numpy.sqrt(numpy.sum(vectors_1**2, axis=1))
     norm_2 = numpy.sqrt(numpy.sum(vectors_2**2, axis=1))
     for i in range(vectors_1.shape[0]):

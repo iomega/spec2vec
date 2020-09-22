@@ -1,11 +1,12 @@
 from typing import List
 from typing import Union
 import numpy
-import scipy
 from gensim.models.basemodel import BaseTopicModel
 from matchms.similarity.BaseSimilarity import BaseSimilarity
 from spec2vec.SpectrumDocument import SpectrumDocument
-from .calc_vector import calc_vector
+from spec2vec.vector_operations import calc_vector
+from spec2vec.vector_operations import cosine_similarity
+from spec2vec.vector_operations import cosine_similarity_matrix
 
 
 class Spec2Vec(BaseSimilarity):
@@ -87,9 +88,8 @@ class Spec2Vec(BaseSimilarity):
                                        self.allowed_missing_percentage)
         query_vector = calc_vector(self.model, query, self.intensity_weighting_power,
                                    self.allowed_missing_percentage)
-        cdist = scipy.spatial.distance.cosine(reference_vector, query_vector)
 
-        return 1 - cdist
+        return cosine_similarity(reference_vector, query_vector)
 
     def matrix(self, references: List[SpectrumDocument], queries: List[SpectrumDocument],
                is_symmetric: bool = False) -> numpy.ndarray:
@@ -122,6 +122,6 @@ class Spec2Vec(BaseSimilarity):
                                                                          self.intensity_weighting_power,
                                                                          self.allowed_missing_percentage)
 
-        spec2vec_similarity = 1 - scipy.spatial.distance.cdist(reference_vectors, query_vectors, "cosine")
+        spec2vec_similarity = cosine_similarity_matrix(reference_vectors, query_vectors)
 
         return spec2vec_similarity

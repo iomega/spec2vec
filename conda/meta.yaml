@@ -42,7 +42,6 @@ requirements:
     - numpy
     - pip
     - python >=3.7,<3.9
-    - scipy
 
 test:
   imports:

@@ -148,3 +148,15 @@ def test_cosine_similarity_matrix_input_cloned(numba_compiled):
 
     assert numpy.all(vectors1 == numpy.array([[2, 2, 0, 0],
                                               [2, 0, 2, 2]])), "Expected unchanged input."
+
+
+def test_differnt_input_vector_lengths():
+    """Test if correct error is raised."""
+    vector1 = numpy.array([0, 0, 0, 0])
+    vector2 = numpy.array([1, 1, 1, 1, 1])
+
+    with pytest.raises(AssertionError) as msg:
+        _ = cosine_similarity(vector1, vector2)
+
+    expected_message = "Input vector must have same shape."
+    assert expected_message == str(msg.value), "Expected particular error message."

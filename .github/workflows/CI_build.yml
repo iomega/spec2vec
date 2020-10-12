@@ -20,12 +20,11 @@ jobs:
         run: |
           which python
           python --version
-      - name: Test
+      - name: Build package and create dev environment
         run: |
           python -m pip install --upgrade pip
           python setup.py build
           pip install -e .[dev]
-          pytest
       - name: Test with coverage
         run: |
           pytest --cov --cov-report term --cov-report xml --junitxml=xunit-result.xml

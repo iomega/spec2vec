@@ -43,14 +43,21 @@ setup(
         "Programming Language :: Python :: 3.8"
     ],
     test_suite="tests",
+    python_requires='>=3.7',
     install_requires=[
-        # see conda/environment.yml
+        "gensim >=3.8.0",
+        "matchms >=0.6.0",
+        "numba >=0.47",
+        "numpy",
     ],
-    setup_requires=[
-    ],
-    tests_require=[
-        # see conda/environment-dev.yml
-    ],
-    extras_require={
+    extras_require={"dev": ["bump2version",
+                            "isort>=4.2.5,<5",
+                            "prospector[with_pyroma]",
+                            "pytest",
+                            "pytest-cov",
+                            "sphinx>=3.0.0,!=3.2.0,<4.0.0",
+                            "sphinx_rtd_theme",
+                            "sphinxcontrib-apidoc",
+                            "yapf",],
     }
 )

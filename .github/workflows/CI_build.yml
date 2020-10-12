@@ -31,11 +31,12 @@ jobs:
           pytest --cov --cov-report term --cov-report xml --junitxml=xunit-result.xml
       - name: Correct coverage paths
         run: sed -i "s+$PWD/++g" coverage.xml
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
+      - name: Check style against standards using prospector
+        shell: bash -l {0}
+        run: prospector -o grouped -o pylint:pylint-report.txt
+      - name: Check whether import statements are used consistently
+        shell: bash -l {0}
+        run: isort --check-only --diff --conda-env spec2vec-dev --recursive --wrap-length 79 --lines-after-imports 2 --force-single-line --no-lines-before FUTURE --no-lines-before STDLIB --no-lines-before THIRDPARTY --no-lines-before FIRSTPARTY --no-lines-before LOCALFOLDER spec2vec/ tests/ integration-tests/
           
   build_pypi:
     name: Pypi build / python-${{ matrix.python-version }} / ${{ matrix.os }}
@@ -69,9 +70,14 @@ jobs:
         run: |
           pip install -e .[dev]
           pytest
+      - name: SonarCloud Scan
+        if: ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.8' }}
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-
-  analyze:
+  anaconda_analyze:
     name: Anaconda analyze / python-${{ matrix.python-version }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     needs: first_check
@@ -109,12 +115,6 @@ jobs:
         shell: bash -l {0}
         run: |
           env | sort
-      - name: Check style against standards using prospector
-        shell: bash -l {0}
-        run: prospector -o grouped -o pylint:pylint-report.txt
-      - name: Check whether import statements are used consistently
-        shell: bash -l {0}
-        run: isort --check-only --diff --conda-env spec2vec-dev --recursive --wrap-length 79 --lines-after-imports 2 --force-single-line --no-lines-before FUTURE --no-lines-before STDLIB --no-lines-before THIRDPARTY --no-lines-before FIRSTPARTY --no-lines-before LOCALFOLDER spec2vec/ tests/ integration-tests/
       - name: Build documentation
         shell: bash -l {0}
         run: |
@@ -127,11 +127,11 @@ jobs:
         run: |
           cat readthedocs/_build/coverage/python.txt
           UNCOVERED_MEMBERS=$(grep '*' readthedocs/_build/coverage/python.txt | wc -l)
-          UNCOVERED_MEMBERS_ALLOWED=25
+          UNCOVERED_MEMBERS_ALLOWED=10
           if (( $UNCOVERED_MEMBERS > $UNCOVERED_MEMBERS_ALLOWED )) ; then echo "There are currently ${UNCOVERED_MEMBERS} uncovered members in the documentation, which is more than the ${UNCOVERED_MEMBERS_ALLOWED} allowed." && exit 1;fi
           echo "The code is sufficiently documented with ${UNCOVERED_MEMBERS} uncovered members out of ${UNCOVERED_MEMBERS_ALLOWED} allowed.";
 
-  build:
+  anaconda_build:
     name: Anaconda build / python-${{ matrix.python-version }} / ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -139,7 +139,7 @@ jobs:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
         python-version: ["3.7"]
     runs-on: ${{ matrix.os }}
-    needs: analyze
+    needs: anaconda_analyze
     steps:
       - uses: actions/checkout@v2
         with:
@@ -185,7 +185,7 @@ jobs:
           name: conda-package-artifact
           path: ${{ runner.temp }}/spec2vec/_build
 
-  verify:
+  anaconda_verify:
     name: Anaconda verify / python-${{ matrix.python-version }} / ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -193,7 +193,7 @@ jobs:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
         python-version: ['3.7', '3.8']
     runs-on: ${{ matrix.os }}
-    needs: build
+    needs: anaconda_build
     steps:
       - uses: actions/checkout@v2
         with:

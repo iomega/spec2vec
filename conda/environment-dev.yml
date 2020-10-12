@@ -12,17 +12,4 @@ dependencies:
   - pip
   - python >=3.7,<3.9
   - pip:
-    - bump2version
-    - isort>=4.2.5,<5
-    - prospector[with_pyroma]
-    - pycodestyle>=2.0.0,<=2.4.0
-    - pytest
-    - pytest-cov
-    - pytest-runner
-    - recommonmark
-    - ruamel.yaml
-    - smart_open>=2.0.0
-    - sphinx
-    - sphinx_rtd_theme
-    - sphinxcontrib-apidoc
-    - yapf
+    - -e ..[dev]

@@ -45,7 +45,7 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        python-version: ['3.7', '3.8']
+        python-version: ['3.7', '3.8', '3.9']
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
@@ -88,6 +88,8 @@ jobs:
         include:
           - os: 'ubuntu-latest'
             python-version: "3.7"
+          - os: 'ubuntu-latest'
+            python-version: "3.9"
     steps:
       - uses: actions/checkout@v2
         with:
@@ -138,7 +140,7 @@ jobs:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
         python-version: ["3.7"]
     runs-on: ${{ matrix.os }}
-    needs: anaconda_analyze
+    needs: first_check
     steps:
       - uses: actions/checkout@v2
         with:

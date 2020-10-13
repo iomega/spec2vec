@@ -104,6 +104,7 @@ jobs:
 
   anaconda_build:
     name: Anaconda build / python-3.7 / ubuntu-latest
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
     needs: first_check

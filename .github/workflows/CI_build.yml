@@ -80,7 +80,7 @@ jobs:
           pip install -e .[dev]
           pytest
 
-doctest:
+  doctest:
     name: Test documentation / python-${{ matrix.python-version }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     needs: first_check

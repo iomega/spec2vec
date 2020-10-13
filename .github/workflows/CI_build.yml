@@ -149,7 +149,6 @@ jobs:
             --croot ${BUILDDIR} \
             ./conda
       - name: Upload package artifact from build
-        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v2
         with:
           name: conda-package-artifact

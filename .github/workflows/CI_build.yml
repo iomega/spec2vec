@@ -36,7 +36,13 @@ jobs:
       - name: Check whether import statements are used consistently
         shell: bash -l {0}
         run: isort --check-only --diff --conda-env spec2vec-dev --recursive --wrap-length 79 --lines-after-imports 2 --force-single-line --no-lines-before FUTURE --no-lines-before STDLIB --no-lines-before THIRDPARTY --no-lines-before FIRSTPARTY --no-lines-before LOCALFOLDER spec2vec/ tests/ integration-tests/
-          
+      - name: SonarCloud Scan
+        if: github.repository == ‘iomega/spec2vec’
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        
   build_pypi:
     name: Pypi build / python-${{ matrix.python-version }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -73,12 +79,6 @@ jobs:
         run: |
           pip install -e .[dev]
           pytest
-      - name: SonarCloud Scan
-        if: ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.8' }}
-        uses: sonarsource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   anaconda_analyze:
     name: Anaconda analyze / python-${{ matrix.python-version }} / ${{ matrix.os }}

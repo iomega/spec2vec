@@ -112,7 +112,7 @@ We recommend installing spec2vec from Anaconda Cloud with
 
 .. code-block:: console
 
-  conda env create --name spec2vec python=3.8
+  conda create --name spec2vec python=3.8
   conda activate spec2vec
   conda install --channel nlesc --channel bioconda --channel conda-forge spec2vec
 

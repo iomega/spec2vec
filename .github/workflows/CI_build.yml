@@ -106,10 +106,6 @@ jobs:
     name: Anaconda build / python-3.7 / ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        os: 'ubuntu-latest'
-        python-version: 3.7
-    runs-on: ${{ matrix.os }}
     needs: first_check
     steps:
       - uses: actions/checkout@v2
@@ -121,7 +117,7 @@ jobs:
           activate-environment: spec2vec-build
           auto-update-conda: true
           environment-file: conda/environment-build.yml
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.8
       - name: Show conda config
         shell: bash -l {0}
         run: |

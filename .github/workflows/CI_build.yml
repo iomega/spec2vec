@@ -74,9 +74,11 @@ jobs:
       - name: Show pip list
         run: |
           pip list
-      - name: Test
+      - name: Install development dependencies
         run: |
           pip install -e .[dev]
+      - name: Test
+        run: |
           pytest
       - name: Show environment variables
         shell: bash -l {0}

@@ -31,7 +31,7 @@ Thanks!
    * - \2. License
      - |License Badge|
    * - \3. Community Registry
-     - |Conda Badge| |Research Software Directory Badge|
+     - |Conda Badge| |Pypi Badge| |Research Software Directory Badge|
    * - \4. Enable Citation
      - |Zenodo Badge|
    * - \5. Checklists
@@ -57,6 +57,11 @@ Thanks!
 .. |Conda Badge| image:: https://anaconda.org/nlesc/spec2vec/badges/installer/conda.svg
    :target: https://conda.anaconda.org/nlesc
    :alt: Conda Badge
+
+.. |Pypi Badge| image:: https://img.shields.io/pypi/v/spec2vec?color=blue
+   :target: https://pypi.org/project/spec2vec/
+   :alt: spec2vec on PyPI
+
 .. |Research Software Directory Badge| image:: https://img.shields.io/badge/rsd-spec2vec-00a3e3.svg
    :target: https://www.research-software.nl/software/spec2vec
    :alt: Research Software Directory Badge

@@ -66,28 +66,23 @@ jobs:
           auto-update-conda: true
           python-version: "3.7"
       - name: Show conda config
-        shell: bash -l {0}
         run: |
           conda info
           conda list
           conda config --show-sources
           conda config --show
       - name: Install the conda package from anaconda repository
-        shell: bash -l {0}
         run: |
           conda install --channel bioconda --channel conda-forge --channel nlesc spec2vec
       - name: List conda packages
-        shell: bash -l {0}
         run: |
           conda list
       - name: Install dev dependencies to run the tests
-        shell: bash -l {0}
         run: |
           conda env update --name spec2vec-test --file conda/environment-dev.yml
           conda info
           conda list
       - name: Run tests after installing the package
-        shell: bash -l {0}
         run: |
           export TESTDIR=$RUNNER_TEMP/spec2vec/_test
           [ "$RUNNING_OS" = "Windows" ] && export TESTDIR=$RUNNER_TEMP\\spec2vec\\_test\\

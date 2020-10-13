@@ -106,15 +106,21 @@ Installation
 Prerequisites:  
 
 - Python 3.7 or 3.8  
-- Anaconda
+- Recommended: Anaconda
 
-Install spec2vec from Anaconda Cloud with
+We recommend installing spec2vec from Anaconda Cloud with
 
 .. code-block:: console
 
-  conda env create --name spec2vec python=3.8
+  conda create --name spec2vec python=3.8
   conda activate spec2vec
   conda install --channel nlesc --channel bioconda --channel conda-forge spec2vec
+
+Alternatively, spec2vec can also be installed using ``pip``. When using spec2vec together with ``matchms`` it is important to note that only the Anaconda install will make sure that also ``rdkit`` is installed properly, which is requried for a few matchms filter functions (it is not required for any spec2vec related functionalities though).
+
+.. code-block:: console
+
+  pip install spec2vec
 
 Examples
 ========

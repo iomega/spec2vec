@@ -70,7 +70,9 @@ jobs:
           python -m pip install --upgrade pip
       - name: Build
         run: |
-          python setup.py build
+          pip install wheel twine
+          python setup.py sdist bdist_wheel
+          python -m twine check dist/*
       - name: Show pip list
         run: |
           pip list
@@ -101,12 +103,12 @@ jobs:
           echo "The code is sufficiently documented with ${UNCOVERED_MEMBERS} uncovered members out of ${UNCOVERED_MEMBERS_ALLOWED} allowed.";
 
   anaconda_build:
-    name: Anaconda build / python-${{ matrix.python-version }} / ${{ matrix.os }}
+    name: Anaconda build / python-3.7 / ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        python-version: ["3.7"]
+        os: 'ubuntu-latest'
+        python-version: 3.7
     runs-on: ${{ matrix.os }}
     needs: first_check
     steps:

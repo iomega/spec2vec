@@ -1,9 +1,9 @@
 from typing import List
 from typing import Union
-from tqdm import tqdm
 import numpy
 from gensim.models.basemodel import BaseTopicModel
 from matchms.similarity.BaseSimilarity import BaseSimilarity
+from tqdm import tqdm
 from spec2vec.SpectrumDocument import SpectrumDocument
 from spec2vec.vector_operations import calc_vector
 from spec2vec.vector_operations import cosine_similarity

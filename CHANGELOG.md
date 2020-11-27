@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Add optional progress bar for spec2vec.matrix() calculations (default is =False) [#43](https://github.com/iomega/spec2vec/pull/43)
+
 ## [0.3.1] - 2020-09-23
 
 ### Changed

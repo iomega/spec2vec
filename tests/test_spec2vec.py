@@ -39,8 +39,8 @@ def test_spec2vec_matrix_method(progress_bar):
 
     documents = [SpectrumDocument(s) for s in [spectrum_1, spectrum_2]]
     model = load_test_model()
-    spec2vec = Spec2Vec(model=model, intensity_weighting_power=0.5)
-    scores = spec2vec.matrix(documents, documents, progress_bar=progress_bar)
+    spec2vec = Spec2Vec(model=model, intensity_weighting_power=0.5, progress_bar=progress_bar)
+    scores = spec2vec.matrix(documents, documents)
     assert scores[0, 0] == pytest.approx(1.0, 1e-9), "Expected different score."
     assert scores[1, 1] == pytest.approx(1.0, 1e-9), "Expected different score."
     assert scores[1, 0] == pytest.approx(0.9936808, 1e-6), "Expected different score."

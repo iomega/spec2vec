@@ -47,7 +47,7 @@ class Spec2Vec(BaseSimilarity):
         sorted_by_score = sorted(filtered, key=lambda elem: elem[2], reverse=True)
     """
     def __init__(self, model: BaseTopicModel, intensity_weighting_power: Union[float, int] = 0,
-                 allowed_missing_percentage: Union[float, int] = 0):
+                 allowed_missing_percentage: Union[float, int] = 0, progress_bar: bool = False):
         """
 
         Parameters
@@ -64,6 +64,9 @@ class Spec2Vec(BaseSimilarity):
             from the input model. This is measured as percentage of the weighted, missing
             words compared to all word vectors of the document. Default is 0, which
             means no missing words are allowed.
+        progress_bar:
+            Set to True to monitor the embedding creating with a progress bar.
+            Default is False.
         """
         self.model = model
         self.intensity_weighting_power = intensity_weighting_power
@@ -93,7 +96,7 @@ class Spec2Vec(BaseSimilarity):
         return cosine_similarity(reference_vector, query_vector)
 
     def matrix(self, references: List[SpectrumDocument], queries: List[SpectrumDocument],
-               is_symmetric: bool = False, progress_bar: bool = False) -> numpy.ndarray:
+               is_symmetric: bool = False) -> numpy.ndarray:
         """Calculate the spec2vec similarities between all references and queries.
 
         Parameters
@@ -105,9 +108,6 @@ class Spec2Vec(BaseSimilarity):
         is_symmetric:
             Set to True if references == queries to speed up calculation about 2x.
             Uses the fact that in this case score[i, j] = score[j, i]. Default is False.
-        progress_bar:
-            Set to True to monitor the embedding creating with a progress bar.
-            Default is False.
 
         Returns
         -------

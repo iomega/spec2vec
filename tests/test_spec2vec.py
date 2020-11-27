@@ -25,8 +25,11 @@ def test_spec2vec_pair_method():
     assert score11 == pytest.approx(1.0, 1e-9)
 
 
-def test_spec2vec_matrix_method():
-    """Test if matrix of 2x2 SpectrumDocuments is handled correctly"""
+@pytest.mark.parametrize("progress_bar", [True, False])
+def test_spec2vec_matrix_method(progress_bar):
+    """Test if matrix of 2x2 SpectrumDocuments is handled correctly.
+    Run with and without progress bar.
+    """
     spectrum_1 = Spectrum(mz=numpy.array([100, 150, 200.]),
                           intensities=numpy.array([0.7, 0.2, 0.1]),
                           metadata={'id': 'spectrum1'})
@@ -37,7 +40,7 @@ def test_spec2vec_matrix_method():
     documents = [SpectrumDocument(s) for s in [spectrum_1, spectrum_2]]
     model = load_test_model()
     spec2vec = Spec2Vec(model=model, intensity_weighting_power=0.5)
-    scores = spec2vec.matrix(documents, documents)
+    scores = spec2vec.matrix(documents, documents, progress_bar=progress_bar)
     assert scores[0, 0] == pytest.approx(1.0, 1e-9), "Expected different score."
     assert scores[1, 1] == pytest.approx(1.0, 1e-9), "Expected different score."
     assert scores[1, 0] == pytest.approx(0.9936808, 1e-6), "Expected different score."

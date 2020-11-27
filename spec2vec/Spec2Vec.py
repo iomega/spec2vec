@@ -1,5 +1,6 @@
 from typing import List
 from typing import Union
+from tqdm import tqdm
 import numpy
 from gensim.models.basemodel import BaseTopicModel
 from matchms.similarity.BaseSimilarity import BaseSimilarity
@@ -92,7 +93,7 @@ class Spec2Vec(BaseSimilarity):
         return cosine_similarity(reference_vector, query_vector)
 
     def matrix(self, references: List[SpectrumDocument], queries: List[SpectrumDocument],
-               is_symmetric: bool = False) -> numpy.ndarray:
+               is_symmetric: bool = False, progress_bar: bool = False) -> numpy.ndarray:
         """Calculate the spec2vec similarities between all references and queries.
 
         Parameters
@@ -101,6 +102,12 @@ class Spec2Vec(BaseSimilarity):
             Reference spectrum documents.
         queries:
             Query spectrum documents.
+        is_symmetric:
+            Set to True if references == queries to speed up calculation about 2x.
+            Uses the fact that in this case score[i, j] = score[j, i]. Default is False.
+        progress_bar:
+            Set to True to monitor the embedding creating with a progress bar.
+            Default is False.
 
         Returns
         -------
@@ -109,14 +116,14 @@ class Spec2Vec(BaseSimilarity):
         """
         n_rows = len(references)
         reference_vectors = numpy.empty((n_rows, self.vector_size), dtype="float")
-        for index_reference, reference in enumerate(references):
+        for index_reference, reference in enumerate(tqdm(references, disable=progress_bar)):
             reference_vectors[index_reference, 0:self.vector_size] = calc_vector(self.model,
                                                                                  reference,
                                                                                  self.intensity_weighting_power,
                                                                                  self.allowed_missing_percentage)
         n_cols = len(queries)
         query_vectors = numpy.empty((n_cols, self.vector_size), dtype="float")
-        for index_query, query in enumerate(queries):
+        for index_query, query in enumerate(tqdm(queries, disable=progress_bar)):
             query_vectors[index_query, 0:self.vector_size] = calc_vector(self.model,
                                                                          query,
                                                                          self.intensity_weighting_power,

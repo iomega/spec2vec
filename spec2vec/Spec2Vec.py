@@ -124,7 +124,7 @@ class Spec2Vec(BaseSimilarity):
                                                                                  self.allowed_missing_percentage)
         n_cols = len(queries)
         query_vectors = numpy.empty((n_cols, self.vector_size), dtype="float")
-        for index_query, query in enumerate(tqdm(queries, disable=progress_bar)):
+        for index_query, query in enumerate(tqdm(queries, disable=self.disable_progress_bar)):
             query_vectors[index_query, 0:self.vector_size] = calc_vector(self.model,
                                                                          query,
                                                                          self.intensity_weighting_power,

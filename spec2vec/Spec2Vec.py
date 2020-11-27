@@ -72,6 +72,7 @@ class Spec2Vec(BaseSimilarity):
         self.intensity_weighting_power = intensity_weighting_power
         self.allowed_missing_percentage = allowed_missing_percentage
         self.vector_size = model.wv.vector_size
+        self.progress_bar = progress_bar
 
     def pair(self, reference: SpectrumDocument, query: SpectrumDocument) -> float:
         """Calculate the spec2vec similaritiy between a reference and a query.
@@ -116,7 +117,7 @@ class Spec2Vec(BaseSimilarity):
         """
         n_rows = len(references)
         reference_vectors = numpy.empty((n_rows, self.vector_size), dtype="float")
-        for index_reference, reference in enumerate(tqdm(references, disable=progress_bar)):
+        for index_reference, reference in enumerate(tqdm(references, disable=self.progress_bar)):
             reference_vectors[index_reference, 0:self.vector_size] = calc_vector(self.model,
                                                                                  reference,
                                                                                  self.intensity_weighting_power,

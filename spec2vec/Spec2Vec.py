@@ -117,7 +117,7 @@ class Spec2Vec(BaseSimilarity):
         """
         n_rows = len(references)
         reference_vectors = numpy.empty((n_rows, self.vector_size), dtype="float")
-        for index_reference, reference in enumerate(tqdm(references, disable=self.disable_progress_bar)):
+        for index_reference, reference in enumerate(tqdm(references, desc='Calculating vectors of reference spectrums', disable=self.disable_progress_bar)):
             reference_vectors[index_reference, 0:self.vector_size] = calc_vector(self.model,
                                                                                  reference,
                                                                                  self.intensity_weighting_power,

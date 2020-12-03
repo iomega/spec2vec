@@ -27,7 +27,7 @@ requirements:
     - conda-verify
     - pytest-runner
     - python
-    - matchms >=0.6.0
+    - matchms >=0.6.2
     - numpy {{ numpy }}
     - setuptools
   host:

@@ -51,6 +51,7 @@ setup(
         "matchms >=0.6.0",
         "numba >=0.47",
         "numpy",
+        "tqdm",
     ],
     extras_require={"dev": ["bump2version",
                             "isort>=4.2.5,<5",

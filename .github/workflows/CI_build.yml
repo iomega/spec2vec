@@ -115,7 +115,7 @@ jobs:
         with:
           fetch-depth: "0"
       - name: Create spec2vec-build environment
-        uses: goanpeca/setup-miniconda@v1
+        uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: spec2vec-build
           auto-update-conda: true
@@ -168,7 +168,7 @@ jobs:
         with:
           fetch-depth: '0'
       - name: Create an environment to test the locally published package
-        uses: goanpeca/setup-miniconda@v1
+        uses: conda-incubator/setup-miniconda@v2
         with:
           activate-environment: spec2vec-test
           auto-update-conda: true

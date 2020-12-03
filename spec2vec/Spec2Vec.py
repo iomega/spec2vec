@@ -3,6 +3,7 @@ from typing import Union
 import numpy
 from gensim.models.basemodel import BaseTopicModel
 from matchms.similarity.BaseSimilarity import BaseSimilarity
+from tqdm import tqdm
 from spec2vec.SpectrumDocument import SpectrumDocument
 from spec2vec.vector_operations import calc_vector
 from spec2vec.vector_operations import cosine_similarity
@@ -46,7 +47,7 @@ class Spec2Vec(BaseSimilarity):
         sorted_by_score = sorted(filtered, key=lambda elem: elem[2], reverse=True)
     """
     def __init__(self, model: BaseTopicModel, intensity_weighting_power: Union[float, int] = 0,
-                 allowed_missing_percentage: Union[float, int] = 0):
+                 allowed_missing_percentage: Union[float, int] = 0, progress_bar: bool = False):
         """
 
         Parameters
@@ -63,11 +64,15 @@ class Spec2Vec(BaseSimilarity):
             from the input model. This is measured as percentage of the weighted, missing
             words compared to all word vectors of the document. Default is 0, which
             means no missing words are allowed.
+        progress_bar:
+            Set to True to monitor the embedding creating with a progress bar.
+            Default is False.
         """
         self.model = model
         self.intensity_weighting_power = intensity_weighting_power
         self.allowed_missing_percentage = allowed_missing_percentage
         self.vector_size = model.wv.vector_size
+        self.disable_progress_bar = not progress_bar
 
     def pair(self, reference: SpectrumDocument, query: SpectrumDocument) -> float:
         """Calculate the spec2vec similaritiy between a reference and a query.
@@ -101,6 +106,9 @@ class Spec2Vec(BaseSimilarity):
             Reference spectrum documents.
         queries:
             Query spectrum documents.
+        is_symmetric:
+            Set to True if references == queries to speed up calculation about 2x.
+            Uses the fact that in this case score[i, j] = score[j, i]. Default is False.
 
         Returns
         -------
@@ -109,14 +117,14 @@ class Spec2Vec(BaseSimilarity):
         """
         n_rows = len(references)
         reference_vectors = numpy.empty((n_rows, self.vector_size), dtype="float")
-        for index_reference, reference in enumerate(references):
+        for index_reference, reference in enumerate(tqdm(references, desc='Calculating vectors of reference spectrums', disable=self.disable_progress_bar)):
             reference_vectors[index_reference, 0:self.vector_size] = calc_vector(self.model,
                                                                                  reference,
                                                                                  self.intensity_weighting_power,
                                                                                  self.allowed_missing_percentage)
         n_cols = len(queries)
         query_vectors = numpy.empty((n_cols, self.vector_size), dtype="float")
-        for index_query, query in enumerate(queries):
+        for index_query, query in enumerate(tqdm(queries, desc='Calculating vectors of query spectrums', disable=self.disable_progress_bar)):
             query_vectors[index_query, 0:self.vector_size] = calc_vector(self.model,
                                                                          query,
                                                                          self.intensity_weighting_power,

@@ -201,14 +201,14 @@ as in the example below.
     model = gensim.models.Word2Vec.load(model_file)
 
     # Define similarity_function
-    spec2vec = Spec2Vec(model=model, intensity_weighting_power=0.5,
-                        allowed_missing_percentage=5.0)
+    spec2vec_similarity = Spec2Vec(model=model, intensity_weighting_power=0.5,
+                                   allowed_missing_percentage=5.0)
 
     # Calculate scores on all combinations of reference spectrums and queries
-    scores = list(calculate_scores(reference_documents, query_documents, spec2vec))
+    scores = calculate_scores(reference_documents, query_documents, spec2vec_similarity)
 
     # Filter out self-comparisons
-    filtered = [(reference, query, score) for (reference, query, score) in scores if reference != query]
+    filtered = [(reference, query, score) for (reference, query, score) in list(scores) if reference != query]
 
     sorted_by_score = sorted(filtered, key=lambda elem: elem[2], reverse=True)
 

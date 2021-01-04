@@ -39,7 +39,7 @@ Thanks!
    * - **Code quality checks**
      -
    * - Continuous integration
-     - |Anaconda Build| |Anaconda Publish|
+     - |GitHub Workflow Status| |Anaconda Publish|
    * - Documentation
      - |ReadTheDocs Badge|
    * - Code Quality
@@ -91,9 +91,9 @@ Thanks!
    :target: https://sonarcloud.io/component_measures?id=iomega_spec2vec&metric=Coverage&view=list
    :alt: Sonarcloud Coverage
 
-.. |Anaconda Build| image:: https://github.com/iomega/spec2vec/workflows/Anaconda%20Build/badge.svg
-   :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Anaconda%20Build%22
-   :alt: Anaconda Build
+.. |GitHub Workflow Status| image:: https://img.shields.io/github/workflow/status/iomega/spec2vec/CI%20Build
+   :target: https://img.shields.io/github/workflow/status/iomega/spec2vec/CI%20Build
+   :alt: GitHub Workflow Status
 
 .. |Anaconda Publish| image:: https://github.com/iomega/spec2vec/workflows/Anaconda%20Publish/badge.svg
    :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Anaconda%20Publish%22

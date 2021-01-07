@@ -171,7 +171,7 @@ dataset.
     reference_documents = [SpectrumDocument(s) for s in spectrums]
 
     model_file = "references.model"
-    model = train_new_word2vec_model(reference_documents, model_file, iterations=[10, 20, 30],
+    model = train_new_word2vec_model(reference_documents, iterations=[10, 20, 30], filename=model_file,
                                      workers=2, progress_logger=True)
 
 Once a word2vec model has been trained, spec2vec allows to calculate the similarities

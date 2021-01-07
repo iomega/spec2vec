@@ -50,3 +50,14 @@ class SpectrumDocument(Document):
             loss_intensities = []
         self.weights = peak_intensities + loss_intensities
         return self
+
+    def get(self, key: str, default=None):
+        """Retrieve value from Spectrum metadata dict. Shorthand for
+
+        .. code-block:: python
+
+            val = self._obj.metadata[key]
+
+        """
+        assert not hasattr(self, key), "Key cannot be attribute of SpectrumDocument class"
+        return self._obj.metadata.copy().get(key, default)

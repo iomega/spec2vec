@@ -207,10 +207,11 @@ as in the example below.
     # Calculate scores on all combinations of reference spectrums and queries
     scores = calculate_scores(reference_documents, query_documents, spec2vec_similarity)
 
-    # Filter out self-comparisons
-    filtered = [(reference, query, score) for (reference, query, score) in list(scores) if reference != query]
+    # Find the highest scores for a query spectrum of interest
+    best_matches = scores.scores_by_query(query_documents[0], sort=True)[:10]
 
-    sorted_by_score = sorted(filtered, key=lambda elem: elem[2], reverse=True)
+    # Return highest scores
+    print([x[1] for x in best_matches])
 
 
 Glossary of terms

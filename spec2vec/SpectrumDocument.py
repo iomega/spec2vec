@@ -60,4 +60,19 @@ class SpectrumDocument(Document):
 
         """
         assert not hasattr(self, key), "Key cannot be attribute of SpectrumDocument class"
-        return self._obj.metadata.copy().get(key, default)
+        return self._obj._metadata.copy().get(key, default)
+
+    @property
+    def metadata(self):
+        """Return metadata of original spectrum."""
+        return self._obj._metadata.copy()
+
+    @property
+    def losses(self) -> Optional[Spikes]:
+        """Return losses of original spectrum."""
+        return self._obj._losses.clone() if self._losses is not None else None
+
+    @property
+    def peaks(self) -> Spikes:
+        """Return peaks of original spectrum."""
+        return self._obj._peaks.clone()

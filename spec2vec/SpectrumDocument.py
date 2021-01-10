@@ -1,3 +1,5 @@
+from typing import Optional
+from matchms.Spikes import Spikes
 from .Document import Document
 
 

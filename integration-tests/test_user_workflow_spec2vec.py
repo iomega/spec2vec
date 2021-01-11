@@ -43,7 +43,7 @@ def test_user_workflow_spec2vec():
     # omit spectrums that didn't qualify for analysis
     spectrums = [s for s in spectrums if s is not None]
 
-    documents = [SpectrumDocument(s) for s in spectrums]
+    documents = [SpectrumDocument(s, n_decimals=1) for s in spectrums]
 
     model_file = os.path.join(repository_root, "integration-tests", "test_user_workflow_spec2vec.model")
     if os.path.isfile(model_file):

@@ -16,7 +16,7 @@ def test_spec2vec_pair_method():
                           intensities=numpy.array([0.4, 0.2, 0.1]),
                           metadata={'id': 'spectrum2'})
 
-    documents = [SpectrumDocument(s) for s in [spectrum_1, spectrum_2]]
+    documents = [SpectrumDocument(s, n_decimals=1) for s in [spectrum_1, spectrum_2]]
     model = load_test_model()
     spec2vec = Spec2Vec(model=model, intensity_weighting_power=0.5)
     score01 = spec2vec.pair(documents[0], documents[1])
@@ -37,7 +37,7 @@ def test_spec2vec_matrix_method(progress_bar):
                           intensities=numpy.array([0.4, 0.2, 0.1]),
                           metadata={'id': 'spectrum2'})
 
-    documents = [SpectrumDocument(s) for s in [spectrum_1, spectrum_2]]
+    documents = [SpectrumDocument(s, n_decimals=1) for s in [spectrum_1, spectrum_2]]
     model = load_test_model()
     spec2vec = Spec2Vec(model=model, intensity_weighting_power=0.5, progress_bar=progress_bar)
     scores = spec2vec.matrix(documents, documents)

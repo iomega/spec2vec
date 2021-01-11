@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Metadata getter method for `SpectrumDocument` [#50](https://github.com/iomega/spec2vec/pull/50)
+
+### Changed
+
+- Change default for `n_decimals` parameter from 1 to 2 [#50](https://github.com/iomega/spec2vec/pull/50)
+
 ## [0.3.2] - 2020-12-03
 
 ### Changed

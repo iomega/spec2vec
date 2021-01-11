@@ -12,7 +12,7 @@ class SpectrumDocument(Document):
     Peaks with identical resulting strings will not be merged, hence same words can
     exist multiple times in a document (e.g. peaks at 100.31 and 100.29 would lead to
     two words "peak@100.3" when using n_decimals=1).
-    
+
     For example:
 
     .. testcode::
@@ -25,7 +25,7 @@ class SpectrumDocument(Document):
                             intensities=np.array([0.7, 0.2, 0.1]),
                             metadata={'compound_name': 'substance1'})
         spectrum_document = SpectrumDocument(spectrum, n_decimals=2)
-        
+
         print(spectrum_document.words)
         print(spectrum_document.peaks.mz)
         print(spectrum_document.get("compound_name"))

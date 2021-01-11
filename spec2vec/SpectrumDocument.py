@@ -24,7 +24,7 @@ class SpectrumDocument(Document):
         spectrum = Spectrum(mz=np.array([100.0, 150.0, 200.51]),
                             intensities=np.array([0.7, 0.2, 0.1]),
                             metadata={'compound_name': 'substance1'})
-        spectrum_document = SpectrumDocument(spectrum, n_decimals=2)
+        spectrum_document = SpectrumDocument(spectrum, n_decimals=1)
 
         print(spectrum_document.words)
         print(spectrum_document.peaks.mz)

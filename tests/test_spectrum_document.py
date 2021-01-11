@@ -16,9 +16,9 @@ def test_spectrum_document_init_n_decimals_default_value_no_losses():
     assert spectrum_document.n_decimals == 2, "Expected different default for n_decimals"
     assert len(spectrum_document) == 4
     assert spectrum_document.words == [
-        "peak@10.0", "peak@20.0", "peak@30.0", "peak@40.0"
+        "peak@10.00", "peak@20.00", "peak@30.00", "peak@40.00"
     ]
-    assert next(spectrum_document) == "peak@10.0"
+    assert next(spectrum_document) == "peak@10.00"
 
 
 def test_spectrum_document_init_n_decimals_1_no_losses():
@@ -28,7 +28,7 @@ def test_spectrum_document_init_n_decimals_1_no_losses():
     spectrum = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
     spectrum_document = SpectrumDocument(spectrum, n_decimals=1)
 
-    assert spectrum_document.n_decimals == 2
+    assert spectrum_document.n_decimals == 1
     assert len(spectrum_document) == 4
     assert spectrum_document.words == [
         "peak@10.0", "peak@20.0", "peak@30.0", "peak@40.0"

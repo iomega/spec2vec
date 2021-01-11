@@ -35,7 +35,7 @@ class SpectrumDocument(Document):
     .. testoutput::
 
         ['peak@100.0', 'peak@150.0', 'peak@200.5']
-        [100.  150.  200.51]
+        [100.   150.   200.51]
         substance1
     """
     def __init__(self, spectrum, n_decimals: int = 2):

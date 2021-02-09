@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Metadata getter method for `SpectrumDocument` [#50](https://github.com/iomega/spec2vec/pull/50)
+- Implement `is_symmetric=True` option for `Spec2Vec.matrix` method [#53](https://github.com/iomega/spec2vec/pull/53)
 
 ### Changed
 

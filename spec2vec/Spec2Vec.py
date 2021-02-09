@@ -1,7 +1,7 @@
 from typing import List
 from typing import Union
 import numpy
-from gensim.models.basemodel import BaseTopicModel
+from gensim.models import Word2Vec
 from matchms.similarity.BaseSimilarity import BaseSimilarity
 from tqdm import tqdm
 from spec2vec.SpectrumDocument import SpectrumDocument
@@ -46,7 +46,7 @@ class Spec2Vec(BaseSimilarity):
 
         sorted_by_score = sorted(filtered, key=lambda elem: elem[2], reverse=True)
     """
-    def __init__(self, model: BaseTopicModel, intensity_weighting_power: Union[float, int] = 0,
+    def __init__(self, model: Word2Vec, intensity_weighting_power: Union[float, int] = 0,
                  allowed_missing_percentage: Union[float, int] = 0, progress_bar: bool = False):
         """
 
@@ -117,18 +117,25 @@ class Spec2Vec(BaseSimilarity):
         """
         n_rows = len(references)
         reference_vectors = numpy.empty((n_rows, self.vector_size), dtype="float")
-        for index_reference, reference in enumerate(tqdm(references, desc='Calculating vectors of reference spectrums', disable=self.disable_progress_bar)):
+        for index_reference, reference in enumerate(tqdm(references, desc='Calculating vectors of reference spectrums',
+                                                         disable=self.disable_progress_bar)):
             reference_vectors[index_reference, 0:self.vector_size] = calc_vector(self.model,
                                                                                  reference,
                                                                                  self.intensity_weighting_power,
                                                                                  self.allowed_missing_percentage)
         n_cols = len(queries)
-        query_vectors = numpy.empty((n_cols, self.vector_size), dtype="float")
-        for index_query, query in enumerate(tqdm(queries, desc='Calculating vectors of query spectrums', disable=self.disable_progress_bar)):
-            query_vectors[index_query, 0:self.vector_size] = calc_vector(self.model,
-                                                                         query,
-                                                                         self.intensity_weighting_power,
-                                                                         self.allowed_missing_percentage)
+        if is_symmetric:
+            assert numpy.all(references == queries), \
+                "Expected references to be equal to queries for is_symmetric=True"
+            query_vectors = reference_vectors
+        else:
+            query_vectors = numpy.empty((n_cols, self.vector_size), dtype="float")
+            for index_query, query in enumerate(tqdm(queries, desc='Calculating vectors of query spectrums',
+                                                     disable=self.disable_progress_bar)):
+                query_vectors[index_query, 0:self.vector_size] = calc_vector(self.model,
+                                                                             query,
+                                                                             self.intensity_weighting_power,
+                                                                             self.allowed_missing_percentage)
 
         spec2vec_similarity = cosine_similarity_matrix(reference_vectors, query_vectors)
 

@@ -1,7 +1,7 @@
 from typing import List
 from typing import Union
 import numpy
-from gensim.models.basemodel import BaseTopicModel
+from gensim.models import Word2Vec
 from matchms.similarity.BaseSimilarity import BaseSimilarity
 from tqdm import tqdm
 from spec2vec.SpectrumDocument import SpectrumDocument
@@ -46,7 +46,7 @@ class Spec2Vec(BaseSimilarity):
 
         sorted_by_score = sorted(filtered, key=lambda elem: elem[2], reverse=True)
     """
-    def __init__(self, model: BaseTopicModel, intensity_weighting_power: Union[float, int] = 0,
+    def __init__(self, model: Word2Vec, intensity_weighting_power: Union[float, int] = 0,
                  allowed_missing_percentage: Union[float, int] = 0, progress_bar: bool = False):
         """
 

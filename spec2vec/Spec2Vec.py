@@ -3,6 +3,7 @@ from typing import Union
 import numpy
 from gensim.models import Word2Vec
 from matchms.similarity.BaseSimilarity import BaseSimilarity
+from matchms.typing import SpectrumType
 from tqdm import tqdm
 from spec2vec.SpectrumDocument import SpectrumDocument
 from spec2vec.vector_operations import calc_vector
@@ -74,15 +75,16 @@ class Spec2Vec(BaseSimilarity):
         self.vector_size = model.wv.vector_size
         self.disable_progress_bar = not progress_bar
 
-    def pair(self, reference: SpectrumDocument, query: SpectrumDocument) -> float:
+    def pair(self, reference: Union(SpectrumDocument, SpectrumType),
+             query: Union(SpectrumDocument, SpectrumType)) -> float:
         """Calculate the spec2vec similaritiy between a reference and a query.
 
         Parameters
         ----------
         reference:
-            Reference spectrum document.
+            Reference spectrum or spectrum document.
         query:
-            Query spectrum document.
+            Query spectrum or spectrum document.
 
         Returns
         -------
@@ -96,16 +98,17 @@ class Spec2Vec(BaseSimilarity):
 
         return cosine_similarity(reference_vector, query_vector)
 
-    def matrix(self, references: List[SpectrumDocument], queries: List[SpectrumDocument],
+    def matrix(self, references: Union(List[SpectrumDocument], List[SpectrumType]),
+               queries: Union(List[SpectrumDocument], List[SpectrumType]),
                is_symmetric: bool = False) -> numpy.ndarray:
         """Calculate the spec2vec similarities between all references and queries.
 
         Parameters
         ----------
         references:
-            Reference spectrum documents.
+            Reference spectrum or spectrum documents 
         queries:
-            Query spectrum documents.
+            Query spectrum or spectrum documents.
         is_symmetric:
             Set to True if references == queries to speed up calculation about 2x.
             Uses the fact that in this case score[i, j] = score[j, i]. Default is False.

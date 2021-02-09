@@ -49,7 +49,7 @@ setup(
     install_requires=[
         "gensim >=3.8.0",
         "matchms >=0.6.0",
-        "numba >=0.52",
+        "numba >=0.51",
         "numpy",
         "tqdm",
     ],

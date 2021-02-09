@@ -35,7 +35,7 @@ jobs:
           conda config --set anaconda_upload no
           export BUILD_FOLDER=/tmp/spec2vec/_build
           mkdir -p $BUILD_FOLDER
-          conda build --numpy 1.18.1 --no-include-recipe \
+          conda build --no-include-recipe \
             --channel nlesc \
             --channel bioconda \
             --channel conda-forge \

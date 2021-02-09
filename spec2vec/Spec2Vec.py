@@ -75,8 +75,8 @@ class Spec2Vec(BaseSimilarity):
         self.vector_size = model.wv.vector_size
         self.disable_progress_bar = not progress_bar
 
-    def pair(self, reference: Union(SpectrumDocument, SpectrumType),
-             query: Union(SpectrumDocument, SpectrumType)) -> float:
+    def pair(self, reference: Union[SpectrumDocument, SpectrumType],
+             query: Union[SpectrumDocument, SpectrumType]) -> float:
         """Calculate the spec2vec similaritiy between a reference and a query.
 
         Parameters
@@ -98,8 +98,8 @@ class Spec2Vec(BaseSimilarity):
 
         return cosine_similarity(reference_vector, query_vector)
 
-    def matrix(self, references: Union(List[SpectrumDocument], List[SpectrumType]),
-               queries: Union(List[SpectrumDocument], List[SpectrumType]),
+    def matrix(self, references: Union[List[SpectrumDocument], List[SpectrumType]],
+               queries: Union[List[SpectrumDocument], List[SpectrumType]],
                is_symmetric: bool = False) -> numpy.ndarray:
         """Calculate the spec2vec similarities between all references and queries.
 

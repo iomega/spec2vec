@@ -6,7 +6,7 @@ channels:
 dependencies:
   - gensim >=3.8.0
   - matchms >=0.6.2
-  - numba >=0.47
+  - numba >=0.52
   - numpy
   - python >=3.7,<3.9
   - tqdm

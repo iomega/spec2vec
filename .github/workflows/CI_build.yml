@@ -144,7 +144,7 @@ jobs:
           export BUILDDIR=$RUNNER_TEMP/spec2vec/_build
           [ "$RUNNING_OS" = "Windows" ] && export BUILDDIR=$RUNNER_TEMP\\spec2vec\\_build\\
           conda config --set anaconda_upload no
-          conda build --numpy 1.18.1 --no-include-recipe \
+          conda build --no-include-recipe \
             --channel nlesc --channel bioconda --channel conda-forge \
             --croot ${BUILDDIR} \
             ./conda

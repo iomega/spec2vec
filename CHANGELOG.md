@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- update required numba version to >=0.51 to avoid issues between numba and numpy [#55](https://github.com/iomega/spec2vec/pull/55)
+
 ## [0.3.3] - 2021-02-09
 
 ### Added

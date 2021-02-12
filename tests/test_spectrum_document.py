@@ -60,7 +60,7 @@ def test_spectrum_document_init_default_peaks_outside_mz_range():
     intensities = numpy.array([1, 0.01, 0.1, 1], dtype="float")
     metadata = dict(precursor_mz=100.0)
     spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
-    spectrum_document = SpectrumDocument(spectrum, mz_to=500.0)
+    spectrum_document = SpectrumDocument(spectrum_in, mz_to=500.0)
 
     assert spectrum_document.n_decimals == 2, "Expected different default for n_decimals"
     assert len(spectrum_document) == 3

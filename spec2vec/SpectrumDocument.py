@@ -66,7 +66,7 @@ class SpectrumDocument(Document):
 
     def _make_words(self):
         """Create word from peaks (and losses)."""
-        mz_array_selected = self._obj.peaks.mz[(self._obj.peaks.mz >= mz_from) & (self._obj.peaks.mz <= mz_to)]
+        mz_array_selected = self._obj.peaks.mz[(self._obj.peaks.mz >= self.mz_from) & (self._obj.peaks.mz <= self.mz_to)]
         format_string = "{}@{:." + "{}".format(self.n_decimals) + "f}"
         peak_words = [format_string.format("peak", mz) for mz in mz_array_selected]
         if self._obj.losses is not None:

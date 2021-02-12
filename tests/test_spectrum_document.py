@@ -67,7 +67,7 @@ def test_spectrum_document_init_default_peaks_outside_mz_range():
     assert spectrum_document.words == [
         "peak@310.00", "peak@320.00", "peak@330.00"
     ]
-    assert next(spectrum_document) == "peak@10.00"
+    assert next(spectrum_document) == "peak@310.00"
 
 
 def test_spectrum_document_init_n_decimals_1():

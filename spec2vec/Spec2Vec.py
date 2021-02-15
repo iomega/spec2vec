@@ -23,31 +23,50 @@ class Spec2Vec(BaseSimilarity):
     Example code to calcualte spec2vec similarities between query and reference
     spectrums:
 
-    .. code-block:: python
+    .. testcode::
 
-        import gensim
         from matchms import calculate_scores
+        from matchms.filtering import add_losses
+        from matchms.filtering import default_filters
+        from matchms.filtering import normalize_intensities
+        from matchms.filtering import require_minimum_number_of_peaks
+        from matchms.filtering import select_by_intensity
+        from matchms.filtering import select_by_mz
+        from matchms.importing import load_from_mgf
         from spec2vec import Spec2Vec
-        from spec2vec import SpectrumDocument
 
-        # reference_spectrums & query_spectrums loaded from files using https://matchms.readthedocs.io/en/latest/api/matchms.importing.load_from_mgf.html
-        references = [SpectrumDocument(s, n_decimals=2) for s in reference_spectrums]
-        queries = [SpectrumDocument(s, n_decimals=2) for s in query_spectrums]
+        def apply_my_filters(s):
+            '''This is how a user would typically design his own pre- and post-
+            processing pipeline.'''
+            s = default_filters(s)
+            s = normalize_intensities(s)
+            s = select_by_mz(s, mz_from=0, mz_to=1000)
+            s = select_by_intensity(s, intensity_from=0.01)
+            s = add_losses(s, loss_mz_from=10.0, loss_mz_to=200.0)
+            s = require_minimum_number_of_peaks(s, n_required=5)
+            return s
 
-        # Import pre-trained word2vec model (alternative: train new model)
-        model_file = "path and filename"
+        spectrums_file = os.path.join(os.getcwd(), "tests", "pesticides.mgf")
+
+        # Load data and apply my filters to the data
+        spectrums = [apply_my_filters(s) for s in load_from_mgf(spectrums_file)]
+
+        # Omit spectrums that didn't qualify for analysis
+        spectrums = [s for s in spectrums if s is not None]
+
+        # Load pretrained model (here dummy model)
+        model_file = os.path.join(os.getcwd(), "integration-tests", "test_user_workflow_spec2vec.model")
         model = gensim.models.Word2Vec.load(model_file)
 
         # Define similarity_function
         spec2vec = Spec2Vec(model=model, intensity_weighting_power=0.5)
 
         # Calculate scores on all combinations of references and queries
-        scores = list(calculate_scores(references, queries, spec2vec))
+        scores = calculate_scores(spectrums[10:], spectrums[:10], spec2vec)
 
-        # Filter out self-comparisons
-        filtered = [(reference, query, score) for (reference, query, score) in scores if reference != query]
+        # Select top-10 candidates for first query spectrum
+        spectrum0_top10 = scores.scores_by_query(spectrums[0], sort=True)[:10]
 
-        sorted_by_score = sorted(filtered, key=lambda elem: elem[2], reverse=True)
     """
     def __init__(self, model: Word2Vec, intensity_weighting_power: Union[float, int] = 0,
                  allowed_missing_percentage: Union[float, int] = 0, progress_bar: bool = False):
@@ -107,9 +126,9 @@ class Spec2Vec(BaseSimilarity):
         Parameters
         ----------
         references:
-            Reference spectrum or spectrum documents
+            Reference spectrums or spectrum documents
         queries:
-            Query spectrum or spectrum documents.
+            Query spectrums or spectrum documents.
         is_symmetric:
             Set to True if references == queries to speed up calculation about 2x.
             Uses the fact that in this case score[i, j] = score[j, i]. Default is False.

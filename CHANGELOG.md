@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Changed
+
+- refactored `Spec2Vec` to now accept both `Spectrum` and `SpectrumDocument` input [#51](https://github.com/iomega/spec2vec/issues/51)
+
+## Fixed
+
+- updated and fixed code examples  [#51](https://github.com/iomega/spec2vec/issues/51)
+- updated and fixed attribute typing [#51](https://github.com/iomega/spec2vec/issues/51)
+
 ## [0.3.4] - 2021-02-10
 
 ### Changed

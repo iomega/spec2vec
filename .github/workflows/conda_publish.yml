@@ -35,7 +35,7 @@ jobs:
           conda config --set anaconda_upload no
           export BUILD_FOLDER=/tmp/spec2vec/_build
           mkdir -p $BUILD_FOLDER
-          conda build --numpy 1.18.1 --no-include-recipe \
+          conda build --no-include-recipe \
             --channel nlesc \
             --channel bioconda \
             --channel conda-forge \
@@ -83,6 +83,7 @@ jobs:
           conda info
           conda list
       - name: Run tests after installing the package
+        shell: bash -l {0}
         run: |
           export TESTDIR=$RUNNER_TEMP/spec2vec/_test
           [ "$RUNNING_OS" = "Windows" ] && export TESTDIR=$RUNNER_TEMP\\spec2vec\\_test\\

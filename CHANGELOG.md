@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.4] - 2021-02-10
+
+### Changed
+
+- update required numba version to >=0.51 to avoid issues between numba and numpy [#55](https://github.com/iomega/spec2vec/pull/55)
+
+## [0.3.3] - 2021-02-09
+
 ### Added
 
 - Metadata getter method for `SpectrumDocument` [#50](https://github.com/iomega/spec2vec/pull/50)
@@ -79,7 +87,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fossa configuration
 - Flowchart
 
-[Unreleased]: https://github.com/iomega/spec2vec/compare/0.3.2...HEAD
+[Unreleased]: https://github.com/iomega/spec2vec/compare/0.3.4...HEAD
+[0.3.4]: https://github.com/iomega/spec2vec/compare/0.3.3...0.3.4
+[0.3.3]: https://github.com/iomega/spec2vec/compare/0.3.2...0.3.3
 [0.3.2]: https://github.com/iomega/spec2vec/compare/0.3.1...0.3.2
 [0.3.1]: https://github.com/iomega/spec2vec/compare/0.3.0...0.3.1
 [0.3.0]: https://github.com/iomega/spec2vec/compare/0.2.0...0.3.0

@@ -149,13 +149,13 @@ dataset.
     from spec2vec import SpectrumDocument
     from spec2vec.model_building import train_new_word2vec_model
 
-    def apply_my_filters(s):
+    def spectrum_processing(s):
         """This is how one would typically design a desired pre- and post-
         processing pipeline."""
         s = default_filters(s)
         s = add_parent_mass(s)
         s = normalize_intensities(s)
-        s = reduce_to_number_of_peaks(s, n_required=10, ratio_desired=0.5)
+        s = reduce_to_number_of_peaks(s, n_required=10, ratio_desired=0.5, n_max=500)
         s = select_by_mz(s, mz_from=0, mz_to=1000)
         s = add_losses(s, loss_mz_from=10.0, loss_mz_to=200.0)
         s = require_minimum_number_of_peaks(s, n_required=10)
@@ -168,7 +168,7 @@ dataset.
     spectrums = [s for s in spectrums if s is not None]
 
     # Create spectrum documents
-    reference_documents = [SpectrumDocument(s) for s in spectrums]
+    reference_documents = [SpectrumDocument(s, n_decimals=2) for s in spectrums]
 
     model_file = "references.model"
     model = train_new_word2vec_model(reference_documents, iterations=[10, 20, 30], filename=model_file,

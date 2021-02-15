@@ -37,7 +37,7 @@ class Spec2Vec(BaseSimilarity):
         from matchms.importing import load_from_mgf
         from spec2vec import Spec2Vec
 
-        def apply_my_filters(s):
+        def spectrum_processing(s):
             '''This is how a user would typically design his own pre- and post-
             processing pipeline.'''
             s = default_filters(s)
@@ -48,16 +48,16 @@ class Spec2Vec(BaseSimilarity):
             s = require_minimum_number_of_peaks(s, n_required=5)
             return s
 
-        spectrums_file = os.path.join(os.getcwd(), "tests", "pesticides.mgf")
+        spectrums_file = os.path.join(os.getcwd(), "..", "tests", "pesticides.mgf")
 
-        # Load data and apply my filters to the data
-        spectrums = [apply_my_filters(s) for s in load_from_mgf(spectrums_file)]
+        # Load data and apply the above defined filters to the data
+        spectrums = [spectrum_processing(s) for s in load_from_mgf(spectrums_file)]
 
         # Omit spectrums that didn't qualify for analysis
         spectrums = [s for s in spectrums if s is not None]
 
         # Load pretrained model (here dummy model)
-        model_file = os.path.join(os.getcwd(), "integration-tests", "test_user_workflow_spec2vec.model")
+        model_file = os.path.join(os.getcwd(), "..", "integration-tests", "test_user_workflow_spec2vec.model")
         model = gensim.models.Word2Vec.load(model_file)
 
         # Define similarity_function

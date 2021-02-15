@@ -25,6 +25,8 @@ class Spec2Vec(BaseSimilarity):
 
     .. testcode::
 
+        import os
+        import gensim
         from matchms import calculate_scores
         from matchms.filtering import add_losses
         from matchms.filtering import default_filters

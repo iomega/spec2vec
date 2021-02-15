@@ -1,7 +1,9 @@
+import re
 from typing import List
 from typing import Union
 import numpy
 from gensim.models import Word2Vec
+from matchms import Spectrum
 from matchms.similarity.BaseSimilarity import BaseSimilarity
 from matchms.typing import SpectrumType
 from tqdm import tqdm
@@ -70,6 +72,7 @@ class Spec2Vec(BaseSimilarity):
             Default is False.
         """
         self.model = model
+        self.n_decimals = self._get_word_decimals(self.model)
         self.intensity_weighting_power = intensity_weighting_power
         self.allowed_missing_percentage = allowed_missing_percentage
         self.vector_size = model.wv.vector_size
@@ -91,10 +94,8 @@ class Spec2Vec(BaseSimilarity):
         spec2vec_similarity
             Spec2vec similarity score.
         """
-        reference_vector = calc_vector(self.model, reference, self.intensity_weighting_power,
-                                       self.allowed_missing_percentage)
-        query_vector = calc_vector(self.model, query, self.intensity_weighting_power,
-                                   self.allowed_missing_percentage)
+        reference_vector = self._calculate_embedding(reference)
+        query_vector = self._calculate_embedding(query)
 
         return cosine_similarity(reference_vector, query_vector)
 
@@ -106,7 +107,7 @@ class Spec2Vec(BaseSimilarity):
         Parameters
         ----------
         references:
-            Reference spectrum or spectrum documents 
+            Reference spectrum or spectrum documents
         queries:
             Query spectrum or spectrum documents.
         is_symmetric:
@@ -122,10 +123,8 @@ class Spec2Vec(BaseSimilarity):
         reference_vectors = numpy.empty((n_rows, self.vector_size), dtype="float")
         for index_reference, reference in enumerate(tqdm(references, desc='Calculating vectors of reference spectrums',
                                                          disable=self.disable_progress_bar)):
-            reference_vectors[index_reference, 0:self.vector_size] = calc_vector(self.model,
-                                                                                 reference,
-                                                                                 self.intensity_weighting_power,
-                                                                                 self.allowed_missing_percentage)
+            reference_vectors[index_reference, 0:self.vector_size] = self._calculate_embedding(reference)
+
         n_cols = len(queries)
         if is_symmetric:
             assert numpy.all(references == queries), \
@@ -135,11 +134,26 @@ class Spec2Vec(BaseSimilarity):
             query_vectors = numpy.empty((n_cols, self.vector_size), dtype="float")
             for index_query, query in enumerate(tqdm(queries, desc='Calculating vectors of query spectrums',
                                                      disable=self.disable_progress_bar)):
-                query_vectors[index_query, 0:self.vector_size] = calc_vector(self.model,
-                                                                             query,
-                                                                             self.intensity_weighting_power,
-                                                                             self.allowed_missing_percentage)
+                query_vectors[index_query, 0:self.vector_size] = self._calculate_embedding(query)
 
         spec2vec_similarity = cosine_similarity_matrix(reference_vectors, query_vectors)
 
         return spec2vec_similarity
+
+    @staticmethod
+    def _get_word_decimals(model):
+        """Read the decimal rounding that was used to train the model"""
+        word_regex = r"[a-z]{4}@[0-9]{1,5}."
+        example_word = next(iter(model.wv.vocab))
+        return len(re.split(word_regex, example_word)[-1])
+
+    def _calculate_embedding(self, spectrum_in: Union[SpectrumDocument, SpectrumType]):
+        """Generate Spec2Vec embedding vectors from input spectrum (or SpectrumDocument)"""
+        if isinstance(spectrum_in, Spectrum):
+            spectrum_in = SpectrumDocument(spectrum_in, n_decimals=self.n_decimals)
+        assert spectrum_in.n_decimals == self.n_decimals, \
+            "Decimal rounding of input data does not agree with model vocabulary."
+        return calc_vector(self.model,
+                           spectrum_in,
+                           self.intensity_weighting_power,
+                           self.allowed_missing_percentage)

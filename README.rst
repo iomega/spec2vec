@@ -193,9 +193,6 @@ as in the example below.
     # Omit spectrums that didn't qualify for analysis
     query_spectrums = [s for s in query_spectrums if s is not None]
 
-    # Create spectrum documents
-    query_documents = [SpectrumDocument(s) for s in query_spectrums]
-
     # Import pre-trained word2vec model (see code example above)
     model_file = "references.model"
     model = gensim.models.Word2Vec.load(model_file)
@@ -205,7 +202,7 @@ as in the example below.
                                    allowed_missing_percentage=5.0)
 
     # Calculate scores on all combinations of reference spectrums and queries
-    scores = calculate_scores(reference_documents, query_documents, spec2vec_similarity)
+    scores = calculate_scores(reference_documents, query_spectrums, spec2vec_similarity)
 
     # Find the highest scores for a query spectrum of interest
     best_matches = scores.scores_by_query(query_documents[0], sort=True)[:10]

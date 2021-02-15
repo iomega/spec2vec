@@ -69,6 +69,13 @@ class Spec2Vec(BaseSimilarity):
         # Select top-10 candidates for first query spectrum
         spectrum0_top10 = scores.scores_by_query(spectrums[0], sort=True)[:10]
 
+    Should output
+
+    .. testoutput::
+
+        Removed adduct M-H from compound name.
+        ...
+
     """
     def __init__(self, model: Word2Vec, intensity_weighting_power: Union[float, int] = 0,
                  allowed_missing_percentage: Union[float, int] = 0, progress_bar: bool = False):

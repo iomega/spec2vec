@@ -135,7 +135,7 @@ class Spec2Vec(BaseSimilarity):
         Parameters
         ----------
         references:
-            Reference spectrums or spectrum documents
+            Reference spectrums or spectrum documents.
         queries:
             Query spectrums or spectrum documents.
         is_symmetric:
@@ -179,8 +179,9 @@ class Spec2Vec(BaseSimilarity):
         """Generate Spec2Vec embedding vectors from input spectrum (or SpectrumDocument)"""
         if isinstance(spectrum_in, Spectrum):
             spectrum_in = SpectrumDocument(spectrum_in, n_decimals=self.n_decimals)
-        assert spectrum_in.n_decimals == self.n_decimals, \
-            "Decimal rounding of input data does not agree with model vocabulary."
+        else:
+            assert spectrum_in.n_decimals == self.n_decimals, \
+                "Decimal rounding of input data does not agree with model vocabulary."
         return calc_vector(self.model,
                            spectrum_in,
                            self.intensity_weighting_power,

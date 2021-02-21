@@ -72,7 +72,7 @@ class Spec2Vec(BaseSimilarity):
         spectrum0_top10 = scores.scores_by_query(spectrums[0], sort=True)[:10]
 
         # Display spectrum IDs for top-10 matches
-        [s[0].metadata['spectrumid'] for s in spectrum0_top10]
+        print([s[0].metadata['spectrumid'] for s in spectrum0_top10])
 
     Should output
 
@@ -80,16 +80,7 @@ class Spec2Vec(BaseSimilarity):
 
         Removed adduct M-H from compound name.
         ...
-        ['CCMSLIB00001058300',
-         'CCMSLIB00001058289',
-         'CCMSLIB00001058303',
-         'CCMSLIB00001058433',
-         'CCMSLIB00001058430',
-         'CCMSLIB00001058313',
-         'CCMSLIB00001058426',
-         'CCMSLIB00001058394',
-         'CCMSLIB00001058298',
-         'CCMSLIB00001058317']
+        ['CCMSLIB00001058300', 'CCMSLIB00001058289', 'CCMSLIB00001058303', ...
 
     """
     def __init__(self, model: Word2Vec, intensity_weighting_power: Union[float, int] = 0,

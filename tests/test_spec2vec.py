@@ -42,6 +42,21 @@ def test_spec2vec_pair_method_spectrumdocument_entry():
     assert score11 == pytest.approx(1.0, 1e-9)
 
 
+def test_spec2vec_pair_method_None_entry():
+    """Test if wrong input data raises expected exception"""
+    spectrum_1 = Spectrum(mz=numpy.array([100, 150, 200.]),
+                          intensities=numpy.array([0.7, 0.2, 0.1]),
+                          metadata={'id': 'spectrum1'})
+    spectrum_2 = None
+    model = load_test_model()
+    spec2vec = Spec2Vec(model=model)
+    with pytest.raises(ValueError) as msg:
+        _ = spec2vec.pair(spectrum_1, spectrum_2)
+
+    expected_msg = "Expected input type to be Spectrum or SpectrumDocument"
+    assert expected_msg in str(msg), "Expected different exception"
+
+
 def test_spec2vec_pair_method_wrong_spectrumdocument_entry():
     """Test if SpectrumDocuments with different decimal rounding is handled correctly"""
     spectrum_1 = Spectrum(mz=numpy.array([100, 150, 200.]),

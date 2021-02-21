@@ -42,7 +42,7 @@ def test_spec2vec_pair_method_spectrumdocument_entry():
     assert score11 == pytest.approx(1.0, 1e-9)
 
 
-def test_spec2vec_pair_method_None_entry():
+def test_spec2vec_pair_method_none_entry():
     """Test if wrong input data raises expected exception"""
     spectrum_1 = Spectrum(mz=numpy.array([100, 150, 200.]),
                           intensities=numpy.array([0.7, 0.2, 0.1]),

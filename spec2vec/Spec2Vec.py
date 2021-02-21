@@ -19,8 +19,11 @@ class Spec2Vec(BaseSimilarity):
     vectors. The spec2vec similarity is then the cosine similarity score between
     two spectrum vectors.
 
-    Example code to calcualte spec2vec similarities between query and reference
-    spectrums:
+    The following code example shows how to calculate spec2vec similarities
+    between query and reference spectrums. It uses a dummy model that can be found at
+    :download:`../integration-tests/test_user_workflow_spec2vec.model </../integration-tests/test_user_workflow_spec2vec.model>`
+    and a small test dataset that can be found at
+    :download:`../tests/pesticides.mgf </../tests/pesticides.mgf>`.
 
     .. testcode::
 
@@ -68,12 +71,25 @@ class Spec2Vec(BaseSimilarity):
         # Select top-10 candidates for first query spectrum
         spectrum0_top10 = scores.scores_by_query(spectrums[0], sort=True)[:10]
 
+        # Display spectrum IDs for top-10 matches
+        [s[0].metadata['spectrumid'] for s in spectrum0_top10]
+
     Should output
 
     .. testoutput::
 
         Removed adduct M-H from compound name.
         ...
+        ['CCMSLIB00001058300',
+         'CCMSLIB00001058289',
+         'CCMSLIB00001058303',
+         'CCMSLIB00001058433',
+         'CCMSLIB00001058430',
+         'CCMSLIB00001058313',
+         'CCMSLIB00001058426',
+         'CCMSLIB00001058394',
+         'CCMSLIB00001058298',
+         'CCMSLIB00001058317']
 
     """
     def __init__(self, model: Word2Vec, intensity_weighting_power: Union[float, int] = 0,

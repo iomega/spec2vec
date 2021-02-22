@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2021-02-10
+
 ## Changed
 
 - refactored `Spec2Vec` to now accept `Spectrum` or `SpectrumDocument` as input [#51](https://github.com/iomega/spec2vec/issues/51)
@@ -96,7 +98,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fossa configuration
 - Flowchart
 
-[Unreleased]: https://github.com/iomega/spec2vec/compare/0.3.4...HEAD
+[Unreleased]: https://github.com/iomega/spec2vec/compare/0.4.0...HEAD
+[0.4.0]: https://github.com/iomega/spec2vec/compare/0.3.4...0.4.0
 [0.3.4]: https://github.com/iomega/spec2vec/compare/0.3.3...0.3.4
 [0.3.3]: https://github.com/iomega/spec2vec/compare/0.3.2...0.3.3
 [0.3.2]: https://github.com/iomega/spec2vec/compare/0.3.1...0.3.2

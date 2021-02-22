@@ -1,7 +1,9 @@
+import re
 from typing import List
 from typing import Union
 import numpy
 from gensim.models import Word2Vec
+from matchms import Spectrum
 from matchms.similarity.BaseSimilarity import BaseSimilarity
 from tqdm import tqdm
 from spec2vec.SpectrumDocument import SpectrumDocument
@@ -17,34 +19,69 @@ class Spec2Vec(BaseSimilarity):
     vectors. The spec2vec similarity is then the cosine similarity score between
     two spectrum vectors.
 
-    Example code to calcualte spec2vec similarities between query and reference
-    spectrums:
+    The following code example shows how to calculate spec2vec similarities
+    between query and reference spectrums. It uses a dummy model that can be found at
+    :download:`../integration-tests/test_user_workflow_spec2vec.model </../integration-tests/test_user_workflow_spec2vec.model>`
+    and a small test dataset that can be found at
+    :download:`../tests/pesticides.mgf </../tests/pesticides.mgf>`.
 
-    .. code-block:: python
+    .. testcode::
 
+        import os
         import gensim
         from matchms import calculate_scores
+        from matchms.filtering import add_losses
+        from matchms.filtering import default_filters
+        from matchms.filtering import normalize_intensities
+        from matchms.filtering import require_minimum_number_of_peaks
+        from matchms.filtering import select_by_intensity
+        from matchms.filtering import select_by_mz
+        from matchms.importing import load_from_mgf
         from spec2vec import Spec2Vec
-        from spec2vec import SpectrumDocument
 
-        # reference_spectrums & query_spectrums loaded from files using https://matchms.readthedocs.io/en/latest/api/matchms.importing.load_from_mgf.html
-        references = [SpectrumDocument(s, n_decimals=2) for s in reference_spectrums]
-        queries = [SpectrumDocument(s, n_decimals=2) for s in query_spectrums]
+        def spectrum_processing(s):
+            '''This is how a user would typically design his own pre- and post-
+            processing pipeline.'''
+            s = default_filters(s)
+            s = normalize_intensities(s)
+            s = select_by_mz(s, mz_from=0, mz_to=1000)
+            s = select_by_intensity(s, intensity_from=0.01)
+            s = add_losses(s, loss_mz_from=10.0, loss_mz_to=200.0)
+            s = require_minimum_number_of_peaks(s, n_required=5)
+            return s
 
-        # Import pre-trained word2vec model (alternative: train new model)
-        model_file = "path and filename"
+        spectrums_file = os.path.join(os.getcwd(), "..", "tests", "pesticides.mgf")
+
+        # Load data and apply the above defined filters to the data
+        spectrums = [spectrum_processing(s) for s in load_from_mgf(spectrums_file)]
+
+        # Omit spectrums that didn't qualify for analysis
+        spectrums = [s for s in spectrums if s is not None]
+
+        # Load pretrained model (here dummy model)
+        model_file = os.path.join(os.getcwd(), "..", "integration-tests", "test_user_workflow_spec2vec.model")
         model = gensim.models.Word2Vec.load(model_file)
 
         # Define similarity_function
         spec2vec = Spec2Vec(model=model, intensity_weighting_power=0.5)
 
         # Calculate scores on all combinations of references and queries
-        scores = list(calculate_scores(references, queries, spec2vec))
+        scores = calculate_scores(spectrums[10:], spectrums[:10], spec2vec)
 
-        # Filter out self-comparisons
-        filtered = [(reference, query, score) for (reference, query, score) in scores if reference != query]
+        # Select top-10 candidates for first query spectrum
+        spectrum0_top10 = scores.scores_by_query(spectrums[0], sort=True)[:10]
 
-        sorted_by_score = sorted(filtered, key=lambda elem: elem[2], reverse=True)
+        # Display spectrum IDs for top-10 matches
+        print([s[0].metadata['spectrumid'] for s in spectrum0_top10])
+
+    Should output
+
+    .. testoutput::
+
+        Removed adduct M-H from compound name.
+        ...
+        ['CCMSLIB00001058300', 'CCMSLIB00001058289', 'CCMSLIB00001058303', ...
+
     """
     def __init__(self, model: Word2Vec, intensity_weighting_power: Union[float, int] = 0,
                  allowed_missing_percentage: Union[float, int] = 0, progress_bar: bool = False):
@@ -69,43 +106,44 @@ class Spec2Vec(BaseSimilarity):
             Default is False.
         """
         self.model = model
+        self.n_decimals = self._get_word_decimals(self.model)
         self.intensity_weighting_power = intensity_weighting_power
         self.allowed_missing_percentage = allowed_missing_percentage
         self.vector_size = model.wv.vector_size
         self.disable_progress_bar = not progress_bar
 
-    def pair(self, reference: SpectrumDocument, query: SpectrumDocument) -> float:
+    def pair(self, reference: Union[SpectrumDocument, Spectrum],
+             query: Union[SpectrumDocument, Spectrum]) -> float:
         """Calculate the spec2vec similaritiy between a reference and a query.
 
         Parameters
         ----------
         reference:
-            Reference spectrum document.
+            Reference spectrum or spectrum document.
         query:
-            Query spectrum document.
+            Query spectrum or spectrum document.
 
         Returns
         -------
         spec2vec_similarity
             Spec2vec similarity score.
         """
-        reference_vector = calc_vector(self.model, reference, self.intensity_weighting_power,
-                                       self.allowed_missing_percentage)
-        query_vector = calc_vector(self.model, query, self.intensity_weighting_power,
-                                   self.allowed_missing_percentage)
+        reference_vector = self._calculate_embedding(reference)
+        query_vector = self._calculate_embedding(query)
 
         return cosine_similarity(reference_vector, query_vector)
 
-    def matrix(self, references: List[SpectrumDocument], queries: List[SpectrumDocument],
+    def matrix(self, references: Union[List[SpectrumDocument], List[Spectrum]],
+               queries: Union[List[SpectrumDocument], List[Spectrum]],
                is_symmetric: bool = False) -> numpy.ndarray:
         """Calculate the spec2vec similarities between all references and queries.
 
         Parameters
         ----------
         references:
-            Reference spectrum documents.
+            Reference spectrums or spectrum documents.
         queries:
-            Query spectrum documents.
+            Query spectrums or spectrum documents.
         is_symmetric:
             Set to True if references == queries to speed up calculation about 2x.
             Uses the fact that in this case score[i, j] = score[j, i]. Default is False.
@@ -119,10 +157,8 @@ class Spec2Vec(BaseSimilarity):
         reference_vectors = numpy.empty((n_rows, self.vector_size), dtype="float")
         for index_reference, reference in enumerate(tqdm(references, desc='Calculating vectors of reference spectrums',
                                                          disable=self.disable_progress_bar)):
-            reference_vectors[index_reference, 0:self.vector_size] = calc_vector(self.model,
-                                                                                 reference,
-                                                                                 self.intensity_weighting_power,
-                                                                                 self.allowed_missing_percentage)
+            reference_vectors[index_reference, 0:self.vector_size] = self._calculate_embedding(reference)
+
         n_cols = len(queries)
         if is_symmetric:
             assert numpy.all(references == queries), \
@@ -132,11 +168,29 @@ class Spec2Vec(BaseSimilarity):
             query_vectors = numpy.empty((n_cols, self.vector_size), dtype="float")
             for index_query, query in enumerate(tqdm(queries, desc='Calculating vectors of query spectrums',
                                                      disable=self.disable_progress_bar)):
-                query_vectors[index_query, 0:self.vector_size] = calc_vector(self.model,
-                                                                             query,
-                                                                             self.intensity_weighting_power,
-                                                                             self.allowed_missing_percentage)
+                query_vectors[index_query, 0:self.vector_size] = self._calculate_embedding(query)
 
         spec2vec_similarity = cosine_similarity_matrix(reference_vectors, query_vectors)
 
         return spec2vec_similarity
+
+    @staticmethod
+    def _get_word_decimals(model):
+        """Read the decimal rounding that was used to train the model"""
+        word_regex = r"[a-z]{4}@[0-9]{1,5}."
+        example_word = next(iter(model.wv.vocab))
+        return len(re.split(word_regex, example_word)[-1])
+
+    def _calculate_embedding(self, spectrum_in: Union[SpectrumDocument, Spectrum]):
+        """Generate Spec2Vec embedding vectors from input spectrum (or SpectrumDocument)"""
+        if isinstance(spectrum_in, Spectrum):
+            spectrum_in = SpectrumDocument(spectrum_in, n_decimals=self.n_decimals)
+        elif isinstance(spectrum_in, SpectrumDocument):
+            assert spectrum_in.n_decimals == self.n_decimals, \
+                "Decimal rounding of input data does not agree with model vocabulary."
+        else:
+            raise ValueError("Expected input type to be Spectrum or SpectrumDocument")
+        return calc_vector(self.model,
+                           spectrum_in,
+                           self.intensity_weighting_power,
+                           self.allowed_missing_percentage)

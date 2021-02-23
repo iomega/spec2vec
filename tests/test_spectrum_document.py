@@ -54,6 +54,22 @@ def test_spectrum_document_init_default_with_losses():
     assert next(spectrum_document) == "peak@10.00"
 
 
+def test_spectrum_document_init_default_peaks_outside_mz_range():
+    """Use default n_decimal and test if peaks outside mz_range are excluded."""
+    mz = numpy.array([310, 320, 330, 540], dtype="float")
+    intensities = numpy.array([1, 0.01, 0.1, 1], dtype="float")
+    metadata = dict(precursor_mz=100.0)
+    spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
+    spectrum_document = SpectrumDocument(spectrum_in, mz_to=500.0)
+
+    assert spectrum_document.n_decimals == 2, "Expected different default for n_decimals"
+    assert len(spectrum_document) == 3
+    assert spectrum_document.words == [
+        "peak@310.00", "peak@320.00", "peak@330.00"
+    ]
+    assert next(spectrum_document) == "peak@310.00"
+
+
 def test_spectrum_document_init_n_decimals_1():
     """Use n_decimal=1 and add losses."""
     mz = numpy.array([10, 20, 30, 40], dtype="float")

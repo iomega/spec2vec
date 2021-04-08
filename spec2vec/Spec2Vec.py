@@ -178,7 +178,8 @@ class Spec2Vec(BaseSimilarity):
     def _get_word_decimals(model):
         """Read the decimal rounding that was used to train the model"""
         word_regex = r"[a-z]{4}@[0-9]{1,5}."
-        example_word = next(iter(model.wv.index_to_key))
+        example_word = next(iter(model.wv.key_to_index))
+
         return len(re.split(word_regex, example_word)[-1])
 
     def _calculate_embedding(self, spectrum_in: Union[SpectrumDocument, Spectrum]):

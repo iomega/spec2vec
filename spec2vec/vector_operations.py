@@ -48,7 +48,7 @@ def calc_vector(model: BaseTopicModel, document: Document,
                        "Consider retraining the used model or increasing the allowed percentage.")
             assert missing_percentage <= allowed_missing_percentage, message
 
-    idx_not_in_model = [i for i, x in enumerate(document.words) if x not in model.wv.vocab]
+    idx_not_in_model = [i for i, x in enumerate(document.words) if x not in model.wv]
     words_in_model = [x for i, x in enumerate(document.words) if i not in idx_not_in_model]
     weights_in_model = numpy.asarray([x for i, x in enumerate(document.weights)
                                       if i not in idx_not_in_model]).reshape(len(words_in_model), 1)

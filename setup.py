@@ -47,7 +47,7 @@ setup(
     test_suite="tests",
     python_requires='>=3.7',
     install_requires=[
-        "gensim <=3.8.3",
+        "gensim >=4.0.0",
         "matchms >=0.6.0",
         "numba >=0.51",
         "numpy",

@@ -104,7 +104,7 @@ def set_spec2vec_defaults(**settings):
     defaults = {
         "sg": 0,
         "negative": 5,
-        "size": 300,
+        "vector_size": 300,
         "window": 500,
         "min_count": 1,
         "learning_rate_initial": 0.025,
@@ -132,7 +132,7 @@ def learning_rates_to_gensim_style(num_of_epochs, **settings):
                                                settings["learning_rate_decay"], num_of_epochs)
     settings["alpha"] = alpha
     settings["min_alpha"] = min_alpha
-    settings["iter"] = num_of_epochs
+    settings["epochs"] = num_of_epochs
 
     # Remove non-Gensim arguments from settings
     del settings["learning_rate_initial"]

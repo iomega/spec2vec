@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## Fixed
+## [0.5.0] - 2021-06-18
+
+## Changed
 
 - Spec2Vec is now using gensim >= 4.0.0 [#62](https://github.com/iomega/spec2vec/pull/62)
 
@@ -102,7 +104,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fossa configuration
 - Flowchart
 
-[Unreleased]: https://github.com/iomega/spec2vec/compare/0.4.0...HEAD
+[Unreleased]: https://github.com/iomega/spec2vec/compare/0.5.0...HEAD
+[0.5.0]: https://github.com/iomega/spec2vec/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/iomega/spec2vec/compare/0.3.4...0.4.0
 [0.3.4]: https://github.com/iomega/spec2vec/compare/0.3.3...0.3.4
 [0.3.3]: https://github.com/iomega/spec2vec/compare/0.3.2...0.3.3

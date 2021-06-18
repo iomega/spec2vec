@@ -36,7 +36,6 @@ jobs:
           export BUILD_FOLDER=/tmp/spec2vec/_build
           mkdir -p $BUILD_FOLDER
           conda build --no-include-recipe \
-            --channel nlesc \
             --channel bioconda \
             --channel conda-forge \
             --croot $BUILD_FOLDER \

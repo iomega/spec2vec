@@ -104,6 +104,11 @@ Documentation for users
 ***********************
 For more extensive documentation `see our readthedocs <https://spec2vec.readthedocs.io/en/latest/>`_ or get started with our `spec2vec introduction tutorial <https://blog.esciencecenter.nl/build-a-mass-spectrometry-analysis-pipeline-in-python-using-matchms-part-ii-spec2vec-8aa639571018>`_.
 
+Versions
+========
+Since version `0.5.0` Spec2Vec uses `gensim >= 4.0.0` which should make it faster and more future proof. Model trained with older versions should still be importable without any issues. If you had scripts that used additional gensim code, however, those might occationally need some adaptation, see also the [gensim documentation on how to migrate your code](https://github.com/RaRe-Technologies/gensim/wiki/Migrating-from-Gensim-3.x-to-4).
+
+
 Installation
 ============
 

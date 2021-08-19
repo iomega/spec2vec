@@ -106,7 +106,7 @@ For more extensive documentation `see our readthedocs <https://spec2vec.readthed
 
 Versions
 ========
-Since version `0.5.0` Spec2Vec uses `gensim >= 4.0.0` which should make it faster and more future proof. Model trained with older versions should still be importable without any issues. If you had scripts that used additional gensim code, however, those might occationally need some adaptation, see also the [gensim documentation on how to migrate your code](https://github.com/RaRe-Technologies/gensim/wiki/Migrating-from-Gensim-3.x-to-4).
+Since version `0.5.0` Spec2Vec uses `gensim >= 4.0.0` which should make it faster and more future proof. Model trained with older versions should still be importable without any issues. If you had scripts that used additional gensim code, however, those might occationally need some adaptation, see also the `gensim documentation on how to migrate your code <https://github.com/RaRe-Technologies/gensim/wiki/Migrating-from-Gensim-3.x-to-4>`_.
 
 
 Installation

@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Added
 
-- Support (test runs) now includes Python 3.9 [#40](https://github.com/iomega/spec2vec/issues/40)
+- Now supports Python 3.9 (including CI test runs) [#40](https://github.com/iomega/spec2vec/issues/40)
 
 ## [0.5.0] - 2021-06-18
 

@@ -24,7 +24,7 @@ class TrainingProgressLogger(CallbackAny2Vec):
         print('\r',
               ' Epoch ' + str(self.epoch+1) + ' of ' + str(self.num_of_epochs) + '.',
               end="")
-        print('Change in loss after epoch {}: {}'.format(self.epoch+1, loss - self.loss))
+        print(f'Change in loss after epoch {self.epoch + 1}: {loss - self.loss}')
         self.epoch += 1
         self.loss = loss
 
@@ -56,7 +56,7 @@ class ModelSaver(CallbackAny2Vec):
 
         if self.filename and self.epoch in self.iterations:
             if self.epoch < self.num_of_epochs:
-                filename = self.filename.split(".model")[0] + "_iter_{}.model".format(self.epoch)
+                filename = f"{self.filename.split('.model')[0]}_iter_{self.epoch}.model"
             else:
                 filename = self.filename
             print("Saving model with name:", filename)

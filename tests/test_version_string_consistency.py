@@ -9,7 +9,7 @@ def test_version_string_consistency():
     repository_root = os.path.join(os.path.dirname(__file__), "..")
     fixture = os.path.join(repository_root, "conda", "meta.yaml")
 
-    with open(fixture, "r") as f:
+    with open(fixture, "r", encoding="utf-8") as f:
         metayaml_contents = f.read()
 
     match = re.search(r"^{% set version = \"(?P<semver>.*)\" %}$", metayaml_contents, re.MULTILINE)

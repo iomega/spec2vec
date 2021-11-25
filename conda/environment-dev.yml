@@ -10,7 +10,7 @@ dependencies:
   - numba >=0.51
   - numpy
   - pip
-  - python >=3.7,<3.9
+  - python >=3.7
   - tqdm
   - pip:
     - -e ..[dev]

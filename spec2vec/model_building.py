@@ -118,9 +118,9 @@ def set_spec2vec_defaults(**settings):
     # Set default parameters or replace by **settings input
     for key, value in defaults.items():
         if key in settings:
-            print("The value of {key} is set from {value} (default) to {settings[key]}")
+            print(f"The value of {key} is set from {value} (default) to {settings[key]}")
         else:
-            settings[key] = defaults[key]
+            settings[key] = value
     return settings
 
 

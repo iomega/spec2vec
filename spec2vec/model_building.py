@@ -116,10 +116,9 @@ def set_spec2vec_defaults(**settings):
     assert "alpha" not in settings, "Expect 'learning_rate_initial' instead of 'alpha'."
 
     # Set default parameters or replace by **settings input
-    for key in defaults:
+    for key, value in defaults.items():
         if key in settings:
-            print("The value of {} is set from {} (default) to {}".format(key, defaults[key],
-                                                                          settings[key]))
+            print("The value of {key} is set from {value} (default) to {settings[key]}")
         else:
             settings[key] = defaults[key]
     return settings
@@ -166,7 +165,7 @@ def set_learning_rate_decay(learning_rate_initial: float, learning_rate_decay: f
     min_alpha = learning_rate_initial - num_of_epochs * learning_rate_decay
     if min_alpha < 0:
         print("Warning! Number of total iterations is too high for given learning_rate decay.")
-        print("Learning_rate_decay will be set from {} to {}.".format(learning_rate_decay,
-                                                                      learning_rate_initial/num_of_epochs))
+        print("Learning_rate_decay will be set from {learning_rate_decay} ",
+              "to {learning_rate_initial/num_of_epochs}.")
         min_alpha = 0
     return learning_rate_initial, min_alpha

@@ -78,8 +78,6 @@ class Spec2Vec(BaseSimilarity):
 
     .. testoutput::
 
-        Removed adduct M-H from compound name.
-        ...
         ['CCMSLIB00001058300', 'CCMSLIB00001058289', 'CCMSLIB00001058303', ...
 
     """

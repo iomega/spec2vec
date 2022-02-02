@@ -143,13 +143,7 @@ dataset.
 .. code-block:: python
 
     import os
-    from matchms.filtering import add_losses
-    from matchms.filtering import add_parent_mass
-    from matchms.filtering import default_filters
-    from matchms.filtering import normalize_intensities
-    from matchms.filtering import reduce_to_number_of_peaks
-    from matchms.filtering import require_minimum_number_of_peaks
-    from matchms.filtering import select_by_mz
+    import matchms.filtering as msfilters
     from matchms.importing import load_from_mgf
     from spec2vec import SpectrumDocument
     from spec2vec.model_building import train_new_word2vec_model
@@ -157,13 +151,13 @@ dataset.
     def spectrum_processing(s):
         """This is how one would typically design a desired pre- and post-
         processing pipeline."""
-        s = default_filters(s)
-        s = add_parent_mass(s)
-        s = normalize_intensities(s)
-        s = reduce_to_number_of_peaks(s, n_required=10, ratio_desired=0.5, n_max=500)
-        s = select_by_mz(s, mz_from=0, mz_to=1000)
-        s = add_losses(s, loss_mz_from=10.0, loss_mz_to=200.0)
-        s = require_minimum_number_of_peaks(s, n_required=10)
+        s = msfilters.default_filters(s)
+        s = msfilters.add_parent_mass(s)
+        s = msfilters.normalize_intensities(s)
+        s = msfilters.reduce_to_number_of_peaks(s, n_required=10, ratio_desired=0.5, n_max=500)
+        s = msfilters.select_by_mz(s, mz_from=0, mz_to=1000)
+        s = msfilters.add_losses(s, loss_mz_from=10.0, loss_mz_to=200.0)
+        s = msfilters.require_minimum_number_of_peaks(s, n_required=10)
         return s
 
     # Load data from MGF file and apply filters

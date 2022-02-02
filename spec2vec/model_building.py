@@ -122,7 +122,8 @@ def set_spec2vec_defaults(**settings):
     # Set default parameters or replace by **settings input
     for key, value in defaults.items():
         if key in settings:
-            logger.info(f"The value of {key} is set from {value} (default) to {settings[key]}")
+            msg = f"The value of {key} is set from {value} (default) to {settings[key]}"
+            logger.info(msg)
         else:
             settings[key] = value
     return settings
@@ -168,8 +169,9 @@ def set_learning_rate_decay(learning_rate_initial: float, learning_rate_decay: f
     """
     min_alpha = learning_rate_initial - num_of_epochs * learning_rate_decay
     if min_alpha < 0:
-        logger.warning("Number of total iterations is too high for given learning_rate decay.",
-                       "Learning_rate_decay will be set from {learning_rate_decay} ",
-                       "to {learning_rate_initial/num_of_epochs}.")
+        msg = ("Number of total iterations is too high for given learning_rate decay.",
+               f"Learning_rate_decay will be set from {learning_rate_decay} ",
+               "to {learning_rate_initial/num_of_epochs}.")
+        logger.warning(msg)
         min_alpha = 0
     return learning_rate_initial, min_alpha

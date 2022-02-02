@@ -148,7 +148,7 @@ jobs:
           [ "$RUNNING_OS" = "Windows" ] && export BUILDDIR=$RUNNER_TEMP\\spec2vec\\_build\\
           conda config --set anaconda_upload no
           conda build --no-include-recipe \
-            --channel nlesc --channel bioconda --channel conda-forge \
+            --channel bioconda --channel conda-forge \
             --croot ${BUILDDIR} \
             ./conda
       - name: Upload package artifact from build
@@ -218,7 +218,6 @@ jobs:
           conda install \
             --channel bioconda \
             --channel conda-forge \
-            --channel nlesc \
             matchms
           # Install spec2vec without nlesc channel to prevent package to be installed from nlesc channel instead of wanted $BUILDDIR channel
           conda install \

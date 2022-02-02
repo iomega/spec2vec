@@ -1,8 +1,12 @@
+import logging
 from typing import Union
 import numba
 import numpy
 from gensim.models.basemodel import BaseTopicModel
 from spec2vec.Document import Document
+
+
+logger = logging.getLogger("spec2vec")
 
 
 def calc_vector(model: BaseTopicModel, document: Document,
@@ -41,8 +45,9 @@ def calc_vector(model: BaseTopicModel, document: Document,
             weights_missing_raised = numpy.power(weights_missing, intensity_weighting_power)
             missing_percentage = 100 * weights_missing_raised.sum() / (weights_raised.sum()
                                                                        + weights_missing_raised.sum())
-            print(f"Found {len(idx_not_in_model)} word(s) missing in the model.",
-                  f"Weighted missing percentage not covered by the given model is {missing_percentage:.2f}%.")
+            msg = f"Found {len(idx_not_in_model)} word(s) missing in the model.",
+                  f"Weighted missing percentage not covered by the given model is {missing_percentage:.2f}%."
+            logger.info(msg)
 
             message = ("Missing percentage is larger than set maximum.",
                        "Consider retraining the used model or change the `allowed_missing_percentage`.")

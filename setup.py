@@ -48,7 +48,7 @@ setup(
     python_requires='>=3.7',
     install_requires=[
         "gensim >=4.0.0",
-        "matchms >=0.6.0",
+        "matchms >=0.11.0",
         "numba >=0.51",
         "numpy",
         "tqdm",

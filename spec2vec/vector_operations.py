@@ -45,7 +45,7 @@ def calc_vector(model: BaseTopicModel, document: Document,
                   f"Weighted missing percentage not covered by the given model is {missing_percentage:.2f}%.")
 
             message = ("Missing percentage is larger than set maximum.",
-                       "Consider retraining the used model or increasing the allowed percentage.")
+                       "Consider retraining the used model or change the `allowed_missing_percentage`.")
             assert missing_percentage <= allowed_missing_percentage, message
 
     idx_not_in_model = [i for i, x in enumerate(document.words) if x not in model.wv.key_to_index]

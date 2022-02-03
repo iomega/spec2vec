@@ -7,8 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2022-01-03
+
 ## Added
 
+- Logging (replacing former print statements) including options to write logs to file [#73](https://github.com/iomega/spec2vec/pull/73)
 - Now supports Python 3.9 (including CI test runs) [#40](https://github.com/iomega/spec2vec/issues/40)
 
 ## Changed
@@ -112,7 +115,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fossa configuration
 - Flowchart
 
-[Unreleased]: https://github.com/iomega/spec2vec/compare/0.5.0...HEAD
+[Unreleased]: https://github.com/iomega/spec2vec/compare/0.6.0...HEAD
+[0.6.0]: https://github.com/iomega/spec2vec/compare/0.5.0...0.6.0
 [0.5.0]: https://github.com/iomega/spec2vec/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/iomega/spec2vec/compare/0.3.4...0.4.0
 [0.3.4]: https://github.com/iomega/spec2vec/compare/0.3.3...0.3.4

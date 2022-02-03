@@ -2,9 +2,9 @@ import re
 from typing import List, Union
 import numpy
 from gensim.models import Word2Vec
-from tqdm import tqdm
 from matchms import Spectrum
 from matchms.similarity.BaseSimilarity import BaseSimilarity
+from tqdm import tqdm
 from spec2vec.SpectrumDocument import SpectrumDocument
 from spec2vec.vector_operations import (calc_vector, cosine_similarity,
                                         cosine_similarity_matrix)

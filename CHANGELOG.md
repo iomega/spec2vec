@@ -16,7 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Changed
 
-- changed default setting for `allowed_missing_percentage` to 50.0 to be less strict on model coverage [#72](https://github.com/iomega/spec2vec/pull/72)
+- missing words percentage above the `allowed_missing_percentage` no longer causes an expection but only leads to raising a warning [#73](https://github.com/iomega/spec2vec/pull/73)
+- default setting for `allowed_missing_percentage` to 10.0 to be less strict on model coverage [#72](https://github.com/iomega/spec2vec/pull/72)
 
 ## [0.5.0] - 2021-06-18
 

@@ -1,6 +1,5 @@
 import os
 import re
-
 from spec2vec import __version__ as expected_version
 
 

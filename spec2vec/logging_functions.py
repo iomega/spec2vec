@@ -55,8 +55,8 @@ stream of such messages, you can do the following:
 import logging
 import logging.config
 import sys
-
 import matchms.logging_functions as matchms_logging
+
 
 _formatter = logging.Formatter(
     '%(asctime)s:%(levelname)s:%(name)s:%(module)s:%(message)s')
@@ -114,13 +114,13 @@ def add_logging_to_file(filename: str, loglevel: str = "INFO",
 def reset_spec2vec_logger(logger_name="spec2vec"):
     """Reset spec2vec logger to initial state.
 
-    This will remove all logging Handlers and initialize a new matchms logger.
-    Use this function to reset previous changes made to the default matchms logger.
+    This will remove all logging Handlers and initialize a new spec2vec logger.
+    Use this function to reset previous changes made to the default spec2vec logger.
 
     Parameters
     ----------
     logger_name
-        Default is "matchms". Change if logger name should be different.
+        Default is "spec2vec". Change if logger name should be different.
     """
     logger = logging.getLogger(logger_name)
     logger.handlers.clear()

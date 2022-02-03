@@ -1,8 +1,6 @@
 import os
-
 import gensim
 import pytest
-
 from matchms import calculate_scores
 from matchms.filtering import (add_losses, add_parent_mass, default_filters,
                                normalize_intensities,

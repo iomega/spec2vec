@@ -1,9 +1,7 @@
 import os
-
 import gensim
 import numpy
 import pytest
-
 from matchms import Spectrum
 from spec2vec import SpectrumDocument
 from spec2vec.model_building import (set_learning_rate_decay,

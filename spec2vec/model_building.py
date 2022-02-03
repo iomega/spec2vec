@@ -3,10 +3,9 @@ through gensim.
 """
 import logging
 from typing import List, Tuple, Union
-
 import gensim
-
 from spec2vec.utils import ModelSaver, TrainingProgressLogger
+
 
 logger = logging.getLogger("spec2vec")
 

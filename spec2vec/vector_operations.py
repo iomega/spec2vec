@@ -1,11 +1,10 @@
 import logging
 from typing import Union
-
 import numba
 import numpy
 from gensim.models.basemodel import BaseTopicModel
-
 from spec2vec.Document import Document
+
 
 logger = logging.getLogger("spec2vec")
 

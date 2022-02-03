@@ -1,5 +1,4 @@
 import pytest
-
 from spec2vec.Document import Document
 
 

@@ -5,6 +5,7 @@ from .Spec2Vec import Spec2Vec
 from .SpectrumDocument import SpectrumDocument
 from .vector_operations import calc_vector
 
+
 _init_logger()
 
 

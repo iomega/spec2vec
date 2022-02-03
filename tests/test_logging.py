@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
 import os
-
 from spec2vec.logging_functions import (add_logging_to_file,
                                         reset_spec2vec_logger,
                                         set_spec2vec_logger_level)

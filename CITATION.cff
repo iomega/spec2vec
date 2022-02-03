@@ -59,7 +59,7 @@ authors:
     given-names: Niek
     orcid: "https://orcid.org/0000-0002-3054-6210"
 
-cff-version: "1.1.0"
+cff-version: 1.2.0
 keywords:
   - Word2Vec
   - "similarity measures"

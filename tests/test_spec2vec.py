@@ -1,10 +1,11 @@
 import os
+
 import gensim
 import numpy
 import pytest
+
 from matchms import Spectrum
-from spec2vec import Spec2Vec
-from spec2vec import SpectrumDocument
+from spec2vec import Spec2Vec, SpectrumDocument
 
 
 def test_spec2vec_pair_method_spectrum_entry():

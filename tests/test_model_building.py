@@ -1,11 +1,13 @@
 import os
+
 import gensim
 import numpy
 import pytest
+
 from matchms import Spectrum
 from spec2vec import SpectrumDocument
-from spec2vec.model_building import set_learning_rate_decay
-from spec2vec.model_building import train_new_word2vec_model
+from spec2vec.model_building import (set_learning_rate_decay,
+                                     train_new_word2vec_model)
 
 
 def test_set_learning_rate_decay():

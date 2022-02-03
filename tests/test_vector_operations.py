@@ -1,12 +1,15 @@
 import os
+
 import gensim
 import numpy
 import pytest
+
 from matchms import Spectrum
 from spec2vec import SpectrumDocument
-from spec2vec.vector_operations import calc_vector
-from spec2vec.vector_operations import cosine_similarity
-from spec2vec.vector_operations import cosine_similarity_matrix
+from spec2vec.logging_functions import (reset_spec2vec_logger,
+                                        set_spec2vec_logger_level)
+from spec2vec.vector_operations import (calc_vector, cosine_similarity,
+                                        cosine_similarity_matrix)
 
 
 def test_calc_vector():
@@ -23,7 +26,28 @@ def test_calc_vector():
     assert numpy.all(vector == pytest.approx(expected_vector, 1e-5)), "Expected different document vector."
 
 
-def test_calc_vector_higher_than_allowed_missing_percentage():
+def test_calc_vector_missing_words_logging(caplog):
+    """Test using a pretrained network and a missing words."""
+    set_spec2vec_logger_level("INFO")
+    spectrum = Spectrum(mz=numpy.array([11.1, 100, 200, 250], dtype="float"),
+                        intensities=numpy.array([0.1, 0.1, 0.1, 1.0], dtype="float"),
+                        metadata={})
+
+    document = SpectrumDocument(spectrum, n_decimals=1)
+    model = import_pretrained_model()
+    assert document.words[0] not in model.wv.key_to_index, "Expected word to be missing from given model."
+
+    calc_vector(model, document, intensity_weighting_power=0.5,
+                allowed_missing_percentage=100.0)
+
+    expected_msg1 = "spec2vec:vector_operations.py"
+    expected_msg2 = "Found 1 word(s) missing in the model."
+    assert expected_msg1 in caplog.text, "Expected particular warning message."
+    assert expected_msg2 in caplog.text, "Expected particular warning message."
+    reset_spec2vec_logger()
+
+
+def test_calc_vector_higher_than_allowed_missing_percentage(caplog):
     """Test using a pretrained network and a missing word percentage above allowed."""
     spectrum = Spectrum(mz=numpy.array([11.1, 100, 200, 250], dtype="float"),
                         intensities=numpy.array([0.1, 0.1, 0.1, 1.0], dtype="float"),
@@ -32,11 +56,11 @@ def test_calc_vector_higher_than_allowed_missing_percentage():
     document = SpectrumDocument(spectrum, n_decimals=1)
     model = import_pretrained_model()
     assert document.words[0] not in model.wv.key_to_index, "Expected word to be missing from given model."
-    with pytest.raises(AssertionError) as msg:
-        calc_vector(model, document, intensity_weighting_power=0.5, allowed_missing_percentage=16.0)
+
+    calc_vector(model, document, intensity_weighting_power=0.5, allowed_missing_percentage=16.0)
 
     expected_message_part = "Missing percentage is larger than set maximum."
-    assert expected_message_part in str(msg.value), "Expected particular error message."
+    assert expected_message_part in caplog.text, "Expected particular warning message."
 
 
 def test_calc_vector_within_allowed_missing_percentage():

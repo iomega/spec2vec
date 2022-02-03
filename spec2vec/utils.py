@@ -1,4 +1,5 @@
 from typing import List
+
 from gensim.models.callbacks import CallbackAny2Vec
 
 

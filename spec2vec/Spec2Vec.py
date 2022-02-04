@@ -1,15 +1,13 @@
 import re
-from typing import List
-from typing import Union
-import numpy
+from typing import List, Union
+import numpy as np
 from gensim.models import Word2Vec
 from matchms import Spectrum
 from matchms.similarity.BaseSimilarity import BaseSimilarity
 from tqdm import tqdm
 from spec2vec.SpectrumDocument import SpectrumDocument
-from spec2vec.vector_operations import calc_vector
-from spec2vec.vector_operations import cosine_similarity
-from spec2vec.vector_operations import cosine_similarity_matrix
+from spec2vec.vector_operations import (calc_vector, cosine_similarity,
+                                        cosine_similarity_matrix)
 
 
 class Spec2Vec(BaseSimilarity):
@@ -82,7 +80,7 @@ class Spec2Vec(BaseSimilarity):
 
     """
     def __init__(self, model: Word2Vec, intensity_weighting_power: Union[float, int] = 0,
-                 allowed_missing_percentage: Union[float, int] = 50, progress_bar: bool = False):
+                 allowed_missing_percentage: Union[float, int] = 10, progress_bar: bool = False):
         """
 
         Parameters
@@ -97,8 +95,10 @@ class Spec2Vec(BaseSimilarity):
         allowed_missing_percentage:
             Set the maximum allowed percentage of the document that may be missing
             from the input model. This is measured as percentage of the weighted, missing
-            words compared to all word vectors of the document. Default is 100, which
-            means up to 50% missing words are allowed (not a very strict setting!).
+            words compared to all word vectors of the document. Default is 10, which
+            means up to 10% missing words are allowed. If more words are missing from
+            the model, an empty embedding will be returned (leading to similarities of 0)
+            and a warning is raised.
         progress_bar:
             Set to True to monitor the embedding creating with a progress bar.
             Default is False.
@@ -133,7 +133,7 @@ class Spec2Vec(BaseSimilarity):
 
     def matrix(self, references: Union[List[SpectrumDocument], List[Spectrum]],
                queries: Union[List[SpectrumDocument], List[Spectrum]],
-               is_symmetric: bool = False) -> numpy.ndarray:
+               is_symmetric: bool = False) -> np.ndarray:
         """Calculate the spec2vec similarities between all references and queries.
 
         Parameters
@@ -152,18 +152,18 @@ class Spec2Vec(BaseSimilarity):
             Array of spec2vec similarity scores.
         """
         n_rows = len(references)
-        reference_vectors = numpy.empty((n_rows, self.vector_size), dtype="float")
+        reference_vectors = np.empty((n_rows, self.vector_size), dtype="float")
         for index_reference, reference in enumerate(tqdm(references, desc='Calculating vectors of reference spectrums',
                                                          disable=self.disable_progress_bar)):
             reference_vectors[index_reference, 0:self.vector_size] = self._calculate_embedding(reference)
 
         n_cols = len(queries)
         if is_symmetric:
-            assert numpy.all(references == queries), \
+            assert np.all(references == queries), \
                 "Expected references to be equal to queries for is_symmetric=True"
             query_vectors = reference_vectors
         else:
-            query_vectors = numpy.empty((n_cols, self.vector_size), dtype="float")
+            query_vectors = np.empty((n_cols, self.vector_size), dtype="float")
             for index_query, query in enumerate(tqdm(queries, desc='Calculating vectors of query spectrums',
                                                      disable=self.disable_progress_bar)):
                 query_vectors[index_query, 0:self.vector_size] = self._calculate_embedding(query)

@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 import pytest
 from matchms import Spectrum
 from matchms.filtering import add_losses
@@ -7,8 +7,8 @@ from spec2vec import SpectrumDocument
 
 def test_spectrum_document_init_n_decimals_default_value_no_losses():
 
-    mz = numpy.array([10, 20, 30, 40], dtype="float")
-    intensities = numpy.array([0, 0.01, 0.1, 1], dtype="float")
+    mz = np.array([10, 20, 30, 40], dtype="float")
+    intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = dict(precursor_mz=100.0)
     spectrum = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
     spectrum_document = SpectrumDocument(spectrum)
@@ -22,8 +22,8 @@ def test_spectrum_document_init_n_decimals_default_value_no_losses():
 
 
 def test_spectrum_document_init_n_decimals_1_no_losses():
-    mz = numpy.array([10, 20, 30, 40], dtype="float")
-    intensities = numpy.array([0, 0.01, 0.1, 1], dtype="float")
+    mz = np.array([10, 20, 30, 40], dtype="float")
+    intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = dict(precursor_mz=100.0)
     spectrum = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
     spectrum_document = SpectrumDocument(spectrum, n_decimals=1)
@@ -38,8 +38,8 @@ def test_spectrum_document_init_n_decimals_1_no_losses():
 
 def test_spectrum_document_init_default_with_losses():
     """Use default n_decimal and add losses."""
-    mz = numpy.array([10, 20, 30, 40], dtype="float")
-    intensities = numpy.array([0, 0.01, 0.1, 1], dtype="float")
+    mz = np.array([10, 20, 30, 40], dtype="float")
+    intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = dict(precursor_mz=100.0)
     spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
     spectrum = add_losses(spectrum_in)
@@ -56,8 +56,8 @@ def test_spectrum_document_init_default_with_losses():
 
 def test_spectrum_document_init_n_decimals_1():
     """Use n_decimal=1 and add losses."""
-    mz = numpy.array([10, 20, 30, 40], dtype="float")
-    intensities = numpy.array([0, 0.01, 0.1, 1], dtype="float")
+    mz = np.array([10, 20, 30, 40], dtype="float")
+    intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = dict(precursor_mz=100.0)
     spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
     spectrum = add_losses(spectrum_in)
@@ -74,8 +74,8 @@ def test_spectrum_document_init_n_decimals_1():
 
 def test_spectrum_document_metadata_getter():
     """Test metadata getter"""
-    mz = numpy.array([10, 20, 30, 40], dtype="float")
-    intensities = numpy.array([0, 0.01, 0.1, 1], dtype="float")
+    mz = np.array([10, 20, 30, 40], dtype="float")
+    intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = {"precursor_mz": 100.0,
                 "smiles": "testsmiles"}
     spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
@@ -93,8 +93,8 @@ def test_spectrum_document_metadata_getter():
 
 def test_spectrum_document_metadata_getter_notallowed_key():
     """Test metadata getter with key that is also attribute"""
-    mz = numpy.array([10], dtype="float")
-    intensities = numpy.array([0], dtype="float")
+    mz = np.array([10], dtype="float")
+    intensities = np.array([0], dtype="float")
     metadata = {"smiles": "testsmiles"}
     spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
     spectrum_document = SpectrumDocument(spectrum_in, n_decimals=2)
@@ -108,8 +108,8 @@ def test_spectrum_document_metadata_getter_notallowed_key():
 
 def test_spectrum_document_peak_getter():
     """Test peak getter"""
-    mz = numpy.array([10, 20, 30, 40], dtype="float")
-    intensities = numpy.array([0, 0.01, 0.1, 1], dtype="float")
+    mz = np.array([10, 20, 30, 40], dtype="float")
+    intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = {"precursor_mz": 100.0}
     spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
     spectrum_document = SpectrumDocument(spectrum_in, n_decimals=2)
@@ -117,19 +117,19 @@ def test_spectrum_document_peak_getter():
     assert spectrum_document.words == [
         "peak@10.00", "peak@20.00", "peak@30.00", "peak@40.00"
     ]
-    assert numpy.all(spectrum_document.peaks.mz == mz), "Expected different peak m/z"
-    assert numpy.all(spectrum_document.peaks.intensities == intensities), "Expected different peaks"
+    assert np.all(spectrum_document.peaks.mz == mz), "Expected different peak m/z"
+    assert np.all(spectrum_document.peaks.intensities == intensities), "Expected different peaks"
 
 
 def test_spectrum_document_losses_getter():
     """Test losses getter"""
-    mz = numpy.array([10, 20, 30, 40], dtype="float")
-    intensities = numpy.array([0, 0.01, 0.1, 1], dtype="float")
+    mz = np.array([10, 20, 30, 40], dtype="float")
+    intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = {"precursor_mz": 100.0}
     spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
     spectrum = add_losses(spectrum_in)
     spectrum_document = SpectrumDocument(spectrum, n_decimals=2)
-    assert numpy.all(spectrum_document.losses.mz == numpy.array([60., 70., 80., 90.])), \
+    assert np.all(spectrum_document.losses.mz == np.array([60., 70., 80., 90.])), \
         "Expected different losses"
-    assert numpy.all(spectrum_document.losses.intensities == intensities[::-1]), \
+    assert np.all(spectrum_document.losses.intensities == intensities[::-1]), \
         "Expected different losses"

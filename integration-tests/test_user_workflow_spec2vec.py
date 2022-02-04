@@ -2,16 +2,12 @@ import os
 import gensim
 import pytest
 from matchms import calculate_scores
-from matchms.filtering import add_losses
-from matchms.filtering import add_parent_mass
-from matchms.filtering import default_filters
-from matchms.filtering import normalize_intensities
-from matchms.filtering import reduce_to_number_of_peaks
-from matchms.filtering import require_minimum_number_of_peaks
-from matchms.filtering import select_by_mz
+from matchms.filtering import (add_losses, add_parent_mass, default_filters,
+                               normalize_intensities,
+                               reduce_to_number_of_peaks,
+                               require_minimum_number_of_peaks, select_by_mz)
 from matchms.importing import load_from_mgf
-from spec2vec import Spec2Vec
-from spec2vec import SpectrumDocument
+from spec2vec import Spec2Vec, SpectrumDocument
 
 
 def test_user_workflow_spec2vec():

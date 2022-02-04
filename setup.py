@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 import os
+from setuptools import find_packages, setup
 
-from setuptools import setup
-from setuptools import find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -48,7 +47,7 @@ setup(
     python_requires='>=3.7',
     install_requires=[
         "gensim >=4.0.0",
-        "matchms >=0.6.0",
+        "matchms >=0.11.0",
         "numba >=0.51",
         "numpy",
         "tqdm",

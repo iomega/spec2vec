@@ -1,12 +1,13 @@
 """This module contains functions that will help users to train a word2vec model
 through gensim.
 """
-from typing import List
-from typing import Tuple
-from typing import Union
+import logging
+from typing import List, Tuple, Union
 import gensim
-from spec2vec.utils import ModelSaver
-from spec2vec.utils import TrainingProgressLogger
+from spec2vec.utils import ModelSaver, TrainingProgressLogger
+
+
+logger = logging.getLogger("spec2vec")
 
 
 def train_new_word2vec_model(documents: List, iterations: Union[List[int], int], filename: str = None,
@@ -118,7 +119,8 @@ def set_spec2vec_defaults(**settings):
     # Set default parameters or replace by **settings input
     for key, value in defaults.items():
         if key in settings:
-            print(f"The value of {key} is set from {value} (default) to {settings[key]}")
+            msg = f"The value of {key} is set from {value} (default) to {settings[key]}"
+            logger.info(msg)
         else:
             settings[key] = value
     return settings
@@ -164,8 +166,9 @@ def set_learning_rate_decay(learning_rate_initial: float, learning_rate_decay: f
     """
     min_alpha = learning_rate_initial - num_of_epochs * learning_rate_decay
     if min_alpha < 0:
-        print("Warning! Number of total iterations is too high for given learning_rate decay.")
-        print("Learning_rate_decay will be set from {learning_rate_decay} ",
-              "to {learning_rate_initial/num_of_epochs}.")
+        msg = ("Number of total iterations is too high for given learning_rate decay.",
+               f"Learning_rate_decay will be set from {learning_rate_decay} ",
+               "to {learning_rate_initial/num_of_epochs}.")
+        logger.warning(msg)
         min_alpha = 0
     return learning_rate_initial, min_alpha

@@ -96,7 +96,9 @@ class Spec2Vec(BaseSimilarity):
             Set the maximum allowed percentage of the document that may be missing
             from the input model. This is measured as percentage of the weighted, missing
             words compared to all word vectors of the document. Default is 10, which
-            means up to 10% missing words are allowed before a warning is raised.
+            means up to 10% missing words are allowed. If more words are missing from
+            the model, an empty embedding will be returned (leading to similarities of 0)
+            and a warning is raised.
         progress_bar:
             Set to True to monitor the embedding creating with a progress bar.
             Default is False.

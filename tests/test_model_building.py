@@ -1,6 +1,6 @@
 import os
 import gensim
-import numpy
+import numpy as np
 import pytest
 from matchms import Spectrum
 from spec2vec import SpectrumDocument
@@ -27,8 +27,8 @@ def test_train_new_word2vec_model():
     # Create fake corpus
     documents = []
     for i in range(100):
-        spectrum = Spectrum(mz=numpy.linspace(i, 9+i, 10),
-                            intensities=numpy.ones((10)).astype("float"),
+        spectrum = Spectrum(mz=np.linspace(i, 9+i, 10),
+                            intensities=np.ones((10)).astype("float"),
                             metadata={})
         documents.append(SpectrumDocument(spectrum, n_decimals=1))
     model = train_new_word2vec_model(documents, iterations=20, vector_size=20,
@@ -49,8 +49,8 @@ def test_train_new_word2vec_model_with_logger_and_saving(tmp_path):
     # Create fake corpus
     documents = []
     for i in range(100):
-        spectrum = Spectrum(mz=numpy.linspace(i, 9+i, 10),
-                            intensities=numpy.ones((10)).astype("float"),
+        spectrum = Spectrum(mz=np.linspace(i, 9+i, 10),
+                            intensities=np.ones((10)).astype("float"),
                             metadata={})
         documents.append(SpectrumDocument(spectrum, n_decimals=1))
     # Train model and write to file
@@ -79,8 +79,8 @@ def test_train_new_word2vec_model_wrong_entry():
     # Create fake corpus
     documents = []
     for i in range(10):
-        spectrum = Spectrum(mz=numpy.linspace(i, 9+i, 10),
-                            intensities=numpy.ones((10)).astype("float"),
+        spectrum = Spectrum(mz=np.linspace(i, 9+i, 10),
+                            intensities=np.ones((10)).astype("float"),
                             metadata={})
         documents.append(SpectrumDocument(spectrum, n_decimals=1))
 

@@ -9,29 +9,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.6.0] - 2022-01-03
 
-## Added
+### Added
 
 - Logging (replacing former print statements) including options to write logs to file [#73](https://github.com/iomega/spec2vec/pull/73)
 - Now supports Python 3.9 (including CI test runs) [#40](https://github.com/iomega/spec2vec/issues/40)
 
-## Changed
+### Changed
 
 - missing words percentage above the `allowed_missing_percentage` no longer causes an expection but only leads to raising a warning [#73](https://github.com/iomega/spec2vec/pull/73)
 - default setting for `allowed_missing_percentage` to 10.0 to be less strict on model coverage [#72](https://github.com/iomega/spec2vec/pull/72)
 
+### Fixed
+
+- Can now also handle spectra in which no peak is known to the model (will return warning + empty vector) [#73](https://github.com/iomega/spec2vec/pull/73)
+
 ## [0.5.0] - 2021-06-18
 
-## Changed
+### Changed
 
 - Spec2Vec is now using gensim >= 4.0.0 [#62](https://github.com/iomega/spec2vec/pull/62)
 
 ## [0.4.0] - 2021-02-10
 
-## Changed
+### Changed
 
 - refactored `Spec2Vec` to now accept `Spectrum` or `SpectrumDocument` as input [#51](https://github.com/iomega/spec2vec/issues/51)
 
-## Fixed
+### Fixed
 
 - updated and fixed code examples  [#51](https://github.com/iomega/spec2vec/issues/51)
 - updated and fixed attribute typing [#51](https://github.com/iomega/spec2vec/issues/51)

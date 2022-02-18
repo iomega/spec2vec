@@ -1,5 +1,5 @@
 from typing import Optional
-from matchms.Spikes import Spikes
+from matchms.Fragments import Fragments
 from .Document import Document
 
 
@@ -94,11 +94,11 @@ class SpectrumDocument(Document):
         return self._obj.metadata
 
     @property
-    def losses(self) -> Optional[Spikes]:
+    def losses(self) -> Optional[Fragments]:
         """Return losses of original spectrum."""
         return self._obj.losses
 
     @property
-    def peaks(self) -> Spikes:
+    def peaks(self) -> Fragments:
         """Return peaks of original spectrum."""
         return self._obj.peaks

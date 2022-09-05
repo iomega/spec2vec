@@ -22,5 +22,8 @@ def test_write_model_to_disk(model, tmp_path):
 
 
 def test_read_model_from_disk():
-    model = import_model("path_to_model_file", "path_to_weights_file")
+    model_file = os.path.join("data", "model.json")
+    weights_file = os.path.join("data", "weights.npy")
+    model = import_model(model_file, weights_file)
+
     assert isinstance(model, Word2Vec)

@@ -1,8 +1,8 @@
 from gensim.models import Word2Vec
 import os
 import pytest
-from spec2vec.model_serialization import export_model
-from spec2vec.model_deserialization import import_model
+from spec2vec.serialization.model_exporting import export_model
+from spec2vec.serialization.model_importing import import_model
 
 
 @pytest.fixture

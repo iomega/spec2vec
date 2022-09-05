@@ -1,7 +1,8 @@
-import os
+from copy import deepcopy
 from gensim.models import Word2Vec
 import json
 import numpy as np
+import os
 import scipy.sparse
 from typing import Union
 
@@ -21,6 +22,7 @@ def export_model(model: Word2Vec,
     output_weights_file:
         A path of npy file to save the model's weights.
     """
+    model = deepcopy(model)
     keyedvectors = extract_keyedvectors(model)
     weights = keyedvectors.pop("vectors", KeyError("The model contains no weights."))
 

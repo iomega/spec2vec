@@ -9,13 +9,13 @@ from typing import Union
 def export_model(model: Word2Vec,
                  output_model_file: Union[str, os.PathLike],
                  output_weights_file: Union[str, os.PathLike]):
-    """Write a lightweight version of a Spec2Vec model to disk. Such a model can be read to calculate scores
-    but is not capable of further training.
+    """Write a lightweight version of a :class:`~spec2vec.Spec2Vec` model to disk.
+    Such a model can be read to calculate scores but is not capable of further training.
 
     Parameters
     ----------
     model:
-        :py:class:Word2Vec trained model.
+        :class:`~spec2vec.Spec2Vec` trained model.
     output_model_file:
         A path of json file to save the model.
     output_weights_file:
@@ -48,17 +48,18 @@ def save_model(keyedvectors: dict, output_model_file: Union[str, os.PathLike]):
 
 def extract_keyedvectors(model: Word2Vec) -> dict:
     """
-    Extract :py:class:KeyedVectors object from the model, convert it to a dictionary and remove redundant keys.
+    Extract :class:`~gensim.models.KeyedVectors` object from the model, convert it to a dictionary and
+    remove redundant keys.
 
     Parameters
     ----------
     model:
-        Word2Vec trained model.
+        :class:`~spec2vec.Spec2Vec` trained model.
 
     Returns
     -------
     keyedvectors:
-        Dictionary representation of :py:class:KeyedVectors without redundant keys.
+        Dictionary representation of :class:`~gensim.models.KeyedVectors` without redundant keys.
     """
     keyedvectors = model.wv.__dict__
     keyedvectors.pop("vectors_lockf", None)

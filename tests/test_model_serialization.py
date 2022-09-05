@@ -2,6 +2,7 @@ from gensim.models import Word2Vec
 import os
 import pytest
 from spec2vec.model_serialization import export_model
+from spec2vec.model_deserialization import import_model
 
 
 @pytest.fixture
@@ -18,3 +19,8 @@ def test_write_model_to_disk(model, tmp_path):
 
     assert os.path.isfile(model_file)
     assert os.path.isfile(weights_file)
+
+
+def test_read_model_from_disk():
+    model = import_model("path_to_model_file", "path_to_weights_file")
+    assert isinstance(model, Word2Vec)

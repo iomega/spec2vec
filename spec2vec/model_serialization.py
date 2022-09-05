@@ -24,17 +24,24 @@ def export_model(model: Word2Vec,
     keyedvectors = extract_keyedvectors(model)
     weights = keyedvectors.pop('vectors', ValueError('The model contains no weights.'))
 
-    # Save model
-    with open(output_model_file, 'w') as f:
-        json.dump(keyedvectors, f)
+    save_model(keyedvectors, output_model_file)
+    save_weights(keyedvectors, weights, output_weights_file)
 
-    # Save weights
+
+def save_weights(keyedvectors, weights, output_weights_file):
+    """Write model's weights to disk in npy or npz format."""
     if keyedvectors['__numpys'] or keyedvectors['__ignoreds']:
         save_npy(output_weights_file, weights)
     elif keyedvectors['__scipys']:
         save_npz(output_weights_file, weights)
     else:
         raise AttributeError('The model contains no weights.')
+
+
+def save_model(keyedvectors, output_model_file):
+    """Write model's metadata to disk in json format."""
+    with open(output_model_file, 'w') as f:
+        json.dump(keyedvectors, f)
 
 
 def extract_keyedvectors(model: Word2Vec) -> dict:

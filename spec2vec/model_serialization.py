@@ -29,7 +29,7 @@ def export_model(model: Word2Vec,
 
 
 def save_weights(keyedvectors: dict,
-                 weights: Union[np.ndarray, scipy.sparse],
+                 weights: Union[np.ndarray, scipy.sparse.csr_matrix, scipy.sparse.csc_matrix],
                  output_weights_file: Union[str, os.PathLike]):
     """Write model's weights to disk in npy or npz format."""
     if keyedvectors["__numpys"] or keyedvectors["__ignoreds"]:

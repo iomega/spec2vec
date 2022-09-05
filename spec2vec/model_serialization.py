@@ -22,7 +22,7 @@ def export_model(model: Word2Vec,
         A path of npy file to save the model's weights.
     """
     keyedvectors = extract_keyedvectors(model)
-    weights = keyedvectors.pop('vectors', KeyError('The model contains no weights.'))
+    weights = keyedvectors.pop("vectors", KeyError("The model contains no weights."))
 
     save_model(keyedvectors, output_model_file)
     save_weights(keyedvectors, weights, output_weights_file)
@@ -32,9 +32,9 @@ def save_weights(keyedvectors: dict,
                  weights: Union[np.ndarray, scipy.sparse],
                  output_weights_file: Union[str, os.PathLike]):
     """Write model's weights to disk in npy or npz format."""
-    if keyedvectors['__numpys'] or keyedvectors['__ignoreds']:
+    if keyedvectors["__numpys"] or keyedvectors["__ignoreds"]:
         np.save(output_weights_file, weights)
-    elif keyedvectors['__scipys']:
+    elif keyedvectors["__scipys"]:
         scipy.sparse.save_npz(output_weights_file, weights)
     else:
         raise AttributeError("The model's weights format is undefined.")
@@ -42,7 +42,7 @@ def save_weights(keyedvectors: dict,
 
 def save_model(keyedvectors: dict, output_model_file: Union[str, os.PathLike]):
     """Write model's metadata to disk in json format."""
-    with open(output_model_file, 'w') as f:
+    with open(output_model_file, "w") as f:
         json.dump(keyedvectors, f)
 
 
@@ -61,6 +61,6 @@ def extract_keyedvectors(model: Word2Vec) -> dict:
         Dictionary representation of :py:class:KeyedVectors without redundant keys.
     """
     keyedvectors = model.wv.__dict__
-    keyedvectors.pop('vectors_lockf', None)
-    keyedvectors.pop('expandos', None)
+    keyedvectors.pop("vectors_lockf", None)
+    keyedvectors.pop("expandos", None)
     return keyedvectors

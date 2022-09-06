@@ -1,8 +1,8 @@
-from gensim.models import KeyedVectors
 import json
+from typing import Union
 import numpy as np
 import scipy.sparse
-from typing import Union
+from gensim.models import KeyedVectors
 
 
 class Word2VecLight:
@@ -66,7 +66,7 @@ def import_model(model_file, weights_file) -> Word2VecLight:
     :class:`~spec2vec.serialization.model_importing.Word2VecLight` – a lightweight version of a
     :class:`~gensim.models.Word2Vec`
     """
-    with open(model_file, "r") as f:
+    with open(model_file, "r", encoding="utf-8") as f:
         model: dict = json.load(f)
 
     weights = load_weights(model, weights_file)
@@ -78,7 +78,7 @@ def load_weights(model, weights_file):
 
     if not (model["__numpys"] or model["__scipys"] or model["__ignoreds"]):
         raise ValueError("The model's weights format is undefined.")
-    elif model["__scipys"]:
+    if model["__scipys"]:
         sparse_array_builder = {"csr_matrix": scipy.sparse.csr_matrix, "csc_matrix": scipy.sparse.csc_matrix}
         weights = sparse_array_builder[model["__weights_format"]](weights)
 

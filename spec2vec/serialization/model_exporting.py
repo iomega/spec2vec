@@ -1,10 +1,10 @@
-from copy import deepcopy
-from gensim.models import Word2Vec
 import json
-import numpy as np
 import os
-import scipy.sparse
+from copy import deepcopy
 from typing import Union
+import numpy as np
+import scipy.sparse
+from gensim.models import Word2Vec
 
 
 def export_model(model: Word2Vec,
@@ -41,7 +41,7 @@ def save_weights(keyedvectors: dict,
     """
     if not (keyedvectors["__numpys"] or keyedvectors["__scipys"] or keyedvectors["__ignoreds"]):
         raise AttributeError("The model contains no weights.")
-    elif keyedvectors["__scipys"]:
+    if keyedvectors["__scipys"]:
         weights = weights.toarray()
 
     np.save(output_weights_file, weights, allow_pickle=False)
@@ -49,7 +49,7 @@ def save_weights(keyedvectors: dict,
 
 def save_model(keyedvectors: dict, output_model_file: Union[str, os.PathLike]):
     """Write model's metadata to disk in json format."""
-    with open(output_model_file, "w") as f:
+    with open(output_model_file, "w", encoding="utf-8") as f:
         json.dump(keyedvectors, f)
 
 
@@ -69,12 +69,11 @@ def get_weights_format(weights: Union[np.ndarray, scipy.sparse.csr_matrix, scipy
     """
     if isinstance(weights, np.ndarray):
         return "np.ndarray"
-    elif isinstance(weights, scipy.sparse.csr_matrix):
+    if isinstance(weights, scipy.sparse.csr_matrix):
         return "csr_matrix"
-    elif isinstance(weights, scipy.sparse.csc_matrix):
+    if isinstance(weights, scipy.sparse.csc_matrix):
         return "csc_matrix"
-    else:
-        raise NotImplementedError("The model's weights format is not supported.")
+    raise NotImplementedError("The model's weights format is not supported.")
 
 
 def extract_keyedvectors(model: Word2Vec) -> dict:

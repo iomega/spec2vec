@@ -6,7 +6,21 @@ from typing import Union
 
 
 class Word2VecLight:
+    """
+    A lightweight version of a :class:`~gensim.models.Word2Vec`. The objects of this class follow the interface of the
+    original :class:`~gensim.models.Word2Vec` to the point necessary to calculate Spec2Vec scores. The model cannot be
+    used for further training.
+    """
     def __init__(self, model: dict, weights: Union[np.ndarray, scipy.sparse.csr_matrix, scipy.sparse.csc_matrix]):
+        """
+
+        Parameters
+        ----------
+        model:
+            A dictionary containing the model's metadata.
+        weights:
+            A numpy array or a scipy sparse matrix containing the model's weights.
+        """
         self.wv = self._KeyedVectorsBuilder().from_dict(model).with_weights(weights).build()
 
     class _KeyedVectorsBuilder:
@@ -36,6 +50,21 @@ class Word2VecLight:
 
 
 def import_model(model_file, weights_file) -> Word2VecLight:
+    """
+    Read a lightweight version of a :class:`~gensim.models.Word2Vec` model from disk.
+
+    Parameters
+    ----------
+    model_file:
+        A path of json file to load the model.
+    weights_file:
+        A path of npy or npz file to load the model's weights.
+
+    Returns
+    -------
+    :class:`~spec2vec.serialization.model_importing.Word2VecLight` – a lightweight version of a
+    :class:`~gensim.models.Word2Vec`
+    """
     with open(model_file, "r") as f:
         model: dict = json.load(f)
 

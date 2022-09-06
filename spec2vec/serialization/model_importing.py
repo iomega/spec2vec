@@ -22,7 +22,7 @@ class Word2VecLight:
         weights:
             A numpy array or a scipy sparse matrix containing the model's weights.
         """
-        self.wv = self._KeyedVectorsBuilder().from_dict(model).with_weights(weights).build()
+        self.wv: KeyedVectors = self._KeyedVectorsBuilder().from_dict(model).with_weights(weights).build()
 
     class _KeyedVectorsBuilder:
         def __init__(self):
@@ -59,7 +59,7 @@ def import_model(model_file, weights_file) -> Word2VecLight:
     model_file:
         A path of json file to load the model.
     weights_file:
-        A path of npy or npz file to load the model's weights.
+        A path of `.npy` file to load the model's weights.
 
     Returns
     -------

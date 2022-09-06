@@ -17,11 +17,11 @@ def export_model(model: Word2Vec,
     Parameters
     ----------
     model:
-        :class:`~gensim.model.Word2Vec` trained model.
+        :class:`~gensim.models.Word2Vec` trained model.
     output_model_file:
         A path of json file to save the model.
     output_weights_file:
-        A path of npy file to save the model's weights.
+        A path of `.npy` file to save the model's weights.
     """
     model = deepcopy(model)
     keyedvectors = extract_keyedvectors(model)
@@ -85,7 +85,7 @@ def extract_keyedvectors(model: Word2Vec) -> dict:
     Parameters
     ----------
     model:
-        :class:`~spec2vec.Spec2Vec` trained model.
+        :class:`~gensim.models.Word2Vec` trained model.
 
     Returns
     -------

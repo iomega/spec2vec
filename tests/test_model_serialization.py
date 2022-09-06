@@ -1,14 +1,24 @@
 from gensim.models import Word2Vec
 import os
 import pytest
+from scipy.sparse import csc_matrix, csr_matrix
 from spec2vec.serialization.model_exporting import export_model
 from spec2vec.serialization.model_importing import import_model, Word2VecLight
 
 
-@pytest.fixture(scope="module")
-def model():
+@pytest.fixture(params=["numpy", "scipy_csr", "scipy_csc"])
+def model(request):
     model_file = os.path.join(os.getcwd(), "..", "integration-tests", "test_user_workflow_spec2vec.model")
     model = Word2Vec.load(model_file)
+
+    if request.param == "scipy_csc":
+        model.wv.__numpys, model.wv.__ignoreds = [], []
+        model.wv.__scipys = ["vectors"]
+        model.wv.vectors = csc_matrix(model.wv.vectors)
+    elif request.param == "scipy_csr":
+        model.wv.__numpys, model.wv.__ignoreds = [], []
+        model.wv.__scipys = ["vectors"]
+        model.wv.vectors = csr_matrix(model.wv.vectors)
     yield model
 
 

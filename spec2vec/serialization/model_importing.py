@@ -1,4 +1,5 @@
 import json
+import os
 from typing import Union
 import numpy as np
 import scipy.sparse
@@ -69,17 +70,16 @@ def import_model(model_file, weights_file) -> Word2VecLight:
     with open(model_file, "r", encoding="utf-8") as f:
         model: dict = json.load(f)
 
-    weights = load_weights(model, weights_file)
+    weights = load_weights(weights_file, model["__weights_format"])
     return Word2VecLight(model, weights)
 
 
-def load_weights(model, weights_file):
+def load_weights(weights_file: Union[str, os.PathLike], weights_format: str):
     weights = np.load(weights_file, allow_pickle=False)
 
-    if not (model["__numpys"] or model["__scipys"] or model["__ignoreds"]):
-        raise ValueError("The model's weights format is undefined.")
-    if model["__scipys"]:
-        sparse_array_builder = {"csr_matrix": scipy.sparse.csr_matrix, "csc_matrix": scipy.sparse.csc_matrix}
-        weights = sparse_array_builder[model["__weights_format"]](weights)
+    sparse_array_builder = {"csr_matrix": scipy.sparse.csr_matrix,
+                            "csc_matrix": scipy.sparse.csc_matrix,
+                            "np.ndarray": lambda x: x}
+    weights = sparse_array_builder[weights_format](weights)
 
     return weights

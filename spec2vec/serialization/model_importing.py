@@ -27,23 +27,22 @@ class Word2VecLight:
 
     class _KeyedVectorsBuilder:
         def __init__(self):
-            self.weights = None
-            self.key_to_index = None
-            self.index_to_key = None
             self.vector_size = None
+            self.weights = None
 
         def build(self) -> KeyedVectors:
             keyed_vectors = KeyedVectors(self.vector_size)
-            keyed_vectors.vector_size = self.vector_size
-            keyed_vectors.index_to_key = self.index_to_key
-            keyed_vectors.key_to_index = self.key_to_index
+            keyed_vectors.__dict__ = self.__dict__
             keyed_vectors.vectors = self.weights
             return keyed_vectors
 
         def from_dict(self, dictionary: dict):
-            self.vector_size = dictionary["vector_size"]
-            self.index_to_key = dictionary["index_to_key"]
-            self.key_to_index = dictionary["key_to_index"]
+            expected_keys = {"vector_size", "__numpys", "__scipys", "__ignoreds", "__recursive_saveloads",
+                             "index_to_key", "norms", "key_to_index", "next_index", "__weights_format"}
+            if dictionary.keys() == expected_keys:
+                self.__dict__ = dictionary
+            else:
+                raise ValueError("The model dictionary representation does not contain the expected keys.")
             return self
 
         def with_weights(self, weights: Union[np.ndarray, scipy.sparse.csr_matrix, scipy.sparse.csc_matrix]):

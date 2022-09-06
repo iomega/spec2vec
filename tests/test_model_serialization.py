@@ -54,6 +54,9 @@ def test_model_metadata_integrity(model, tmp_path):
     assert imported_model.wv.vector_size == model.wv.vector_size
     assert imported_model.wv.key_to_index == model.wv.key_to_index
     assert imported_model.wv.index_to_key == model.wv.index_to_key
+    assert imported_model.wv.__scipys == model.wv.__scipys
+    assert imported_model.wv.__numpys == model.wv.__numpys
+    assert imported_model.wv.__ignoreds == model.wv.__ignoreds
 
 
 @pytest.mark.parametrize("model", ["numpy"], indirect=True)

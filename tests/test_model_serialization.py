@@ -56,7 +56,15 @@ def test_write_read_model_integrity(model, tmp_path):
     assert imported_model.wv.index_to_key == model.wv.index_to_key
 
 
-def test_write_read_model_weights_integrity(model, tmp_path):
+@pytest.mark.parametrize("model", ["numpy"], indirect=True)
+def test_dense_weights_model_integrity(model, tmp_path):
     imported_model = write_read_model(model, tmp_path)
 
     assert (imported_model.wv.vectors == model.wv.vectors).all()
+
+
+@pytest.mark.parametrize("model", ["scipy_csr", "scipy_csc"], indirect=True)
+def test_sparse_weights_model_integrity(model, tmp_path):
+    imported_model = write_read_model(model, tmp_path)
+
+    assert (imported_model.wv.vectors.toarray() == model.wv.vectors.toarray()).all()

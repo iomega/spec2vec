@@ -11,6 +11,7 @@ class Word2VecLight:
     original :class:`~gensim.models.Word2Vec` to the point necessary to calculate Spec2Vec scores. The model cannot be
     used for further training.
     """
+
     def __init__(self, model: dict, weights: Union[np.ndarray, scipy.sparse.csr_matrix, scipy.sparse.csc_matrix]):
         """
 
@@ -68,11 +69,17 @@ def import_model(model_file, weights_file) -> Word2VecLight:
     with open(model_file, "r") as f:
         model: dict = json.load(f)
 
-    if model["__numpys"] or model["__ignoreds"]:
-        weights = np.load(weights_file)
-    elif model["__scipys"]:
-        weights = scipy.sparse.load_npz(weights_file)
-    else:
-        raise ValueError("The model's weights format is undefined.")
-
+    weights = load_weights(model, weights_file)
     return Word2VecLight(model, weights)
+
+
+def load_weights(model, weights_file):
+    weights = np.load(weights_file, allow_pickle=False)
+
+    if not (model["__numpys"] or model["__scipys"] or model["__ignoreds"]):
+        raise ValueError("The model's weights format is undefined.")
+    elif model["__scipys"]:
+        sparse_array_builder = {"csr_matrix": scipy.sparse.csr_matrix, "csc_matrix": scipy.sparse.csc_matrix}
+        weights = sparse_array_builder[model["__weights_format"]](weights)
+
+    return weights

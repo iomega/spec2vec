@@ -7,7 +7,7 @@ from typing import Union
 
 class Word2VecLight:
     """
-    A lightweight version of a :class:`~gensim.models.Word2Vec`. The objects of this class follow the interface of the
+    A lightweight version of :class:`~gensim.models.Word2Vec`. The objects of this class follow the interface of the
     original :class:`~gensim.models.Word2Vec` to the point necessary to calculate Spec2Vec scores. The model cannot be
     used for further training.
     """

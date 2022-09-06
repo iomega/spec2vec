@@ -10,13 +10,14 @@ from typing import Union
 def export_model(model: Word2Vec,
                  output_model_file: Union[str, os.PathLike],
                  output_weights_file: Union[str, os.PathLike]):
-    """Write a lightweight version of a :class:`~spec2vec.Spec2Vec` model to disk.
-    Such a model can be read to calculate scores but is not capable of further training.
+    """
+    Write a lightweight version of a :class:`~gensim.model.Word2Vec` model to disk. Such a model can be read to
+    calculate scores but is not capable of further training.
 
     Parameters
     ----------
     model:
-        :class:`~spec2vec.Spec2Vec` trained model.
+        :class:`~gensim.model.Word2Vec` trained model.
     output_model_file:
         A path of json file to save the model.
     output_weights_file:

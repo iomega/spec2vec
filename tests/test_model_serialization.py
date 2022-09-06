@@ -7,8 +7,8 @@ from spec2vec.serialization.model_importing import import_model, Word2VecLight
 
 
 @pytest.fixture(params=["numpy", "scipy_csr", "scipy_csc"])
-def model(request):
-    model_file = os.path.join(os.getcwd(), "..", "integration-tests", "test_user_workflow_spec2vec.model")
+def model(request, test_dir):
+    model_file = os.path.join(test_dir, "..", "integration-tests", "test_user_workflow_spec2vec.model")
     model = Word2Vec.load(model_file)
 
     if request.param == "scipy_csc":
@@ -40,9 +40,9 @@ def test_write_model_to_disk(model, tmp_path):
     assert os.path.isfile(weights_file)
 
 
-def test_read_model_from_disk():
-    model_file = os.path.join("data", "model.json")
-    weights_file = os.path.join("data", "weights.npy")
+def test_read_model_from_disk(test_dir):
+    model_file = os.path.join(test_dir, "data", "model.json")
+    weights_file = os.path.join(test_dir, "data", "weights.npy")
     model = import_model(model_file, weights_file)
 
     assert isinstance(model, Word2VecLight)

@@ -2,7 +2,7 @@ from gensim.models import Word2Vec
 import os
 import pytest
 from spec2vec.serialization.model_exporting import export_model
-from spec2vec.serialization.model_importing import import_model
+from spec2vec.serialization.model_importing import import_model, Word2VecLight
 
 
 @pytest.fixture
@@ -26,4 +26,4 @@ def test_read_model_from_disk():
     weights_file = os.path.join("data", "weights.npy")
     model = import_model(model_file, weights_file)
 
-    assert isinstance(model, Word2Vec)
+    assert isinstance(model, Word2VecLight)

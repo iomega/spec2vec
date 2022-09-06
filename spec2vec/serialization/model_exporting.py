@@ -25,7 +25,7 @@ def export_model(model: Word2Vec,
     """
     model = deepcopy(model)
     keyedvectors = extract_keyedvectors(model)
-    weights = keyedvectors.pop("vectors", KeyError("The model contains no weights."))
+    weights = keyedvectors.pop("vectors", AttributeError("The model contains no weights."))
     keyedvectors["__weights_format"] = get_weights_format(weights)
 
     save_model(keyedvectors, output_model_file)
@@ -40,7 +40,7 @@ def save_weights(keyedvectors: dict,
     prior to saving.
     """
     if not (keyedvectors["__numpys"] or keyedvectors["__scipys"] or keyedvectors["__ignoreds"]):
-        raise AttributeError("The model contains no weights.")
+        raise AttributeError("The model's weights format is undefined'.")
     if keyedvectors["__scipys"]:
         weights = weights.toarray()
 

@@ -29,19 +29,16 @@ def export_model(model: Word2Vec,
     keyedvectors["__weights_format"] = get_weights_format(weights)
 
     save_model(keyedvectors, output_model_file)
-    save_weights(keyedvectors, weights, output_weights_file)
+    save_weights(weights, output_weights_file)
 
 
-def save_weights(keyedvectors: dict,
-                 weights: Union[np.ndarray, scipy.sparse.csr_matrix, scipy.sparse.csc_matrix],
+def save_weights(weights: Union[np.ndarray, scipy.sparse.csr_matrix, scipy.sparse.csc_matrix],
                  output_weights_file: Union[str, os.PathLike]):
     """
     Write model's weights to disk in `.npy` dense array format. If the weights are sparse, they are converted to dense
     prior to saving.
     """
-    if not (keyedvectors["__numpys"] or keyedvectors["__scipys"] or keyedvectors["__ignoreds"]):
-        raise AttributeError("The model's weights format is undefined'.")
-    if keyedvectors["__scipys"]:
+    if isinstance(weights, scipy.sparse.csr_matrix) or isinstance(weights, scipy.sparse.csc_matrix):
         weights = weights.toarray()
 
     np.save(output_weights_file, weights, allow_pickle=False)

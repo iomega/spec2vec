@@ -6,8 +6,7 @@ from gensim.models import Word2Vec
 from matchms import Spectrum, calculate_scores
 from scipy.sparse import coo_matrix, csc_matrix, csr_matrix
 from spec2vec import Spec2Vec
-from spec2vec.serialization.model_exporting import export_model
-from spec2vec.serialization.model_importing import Word2VecLight, import_model
+from spec2vec.serialization import export_model, Word2VecLight, import_model
 
 
 @pytest.fixture(params=["numpy", "scipy_csr", "scipy_csc"])

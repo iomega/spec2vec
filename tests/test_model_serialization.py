@@ -2,7 +2,7 @@ from gensim.models import Word2Vec
 import json
 import os
 import pytest
-from scipy.sparse import csc_matrix, csr_matrix
+from scipy.sparse import csc_matrix, csr_matrix, coo_matrix
 from spec2vec.serialization.model_exporting import export_model
 from spec2vec.serialization.model_importing import import_model, Word2VecLight
 from unittest.mock import MagicMock, patch
@@ -81,3 +81,12 @@ def test_reading_model_with_wrong_keys_fails(test_dir):
         import_model(model_file, weights_file)
 
     assert str(error.value) == "The model dictionary representation does not contain the expected keys."
+
+
+def test_writing_model_with_wrong_weights_format_fails(model):
+    model.wv.vectors = coo_matrix(model.wv.vectors)
+
+    with pytest.raises(NotImplementedError) as error:
+        export_model(model, "model.json", "weights.npy")
+
+    assert str(error.value) == "The model's weights format is not supported."

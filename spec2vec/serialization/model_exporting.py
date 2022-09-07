@@ -38,7 +38,7 @@ def save_weights(weights: Union[np.ndarray, scipy.sparse.csr_matrix, scipy.spars
     Write model's weights to disk in `.npy` dense array format. If the weights are sparse, they are converted to dense
     prior to saving.
     """
-    if isinstance(weights, scipy.sparse.csr_matrix) or isinstance(weights, scipy.sparse.csc_matrix):
+    if isinstance(weights, (scipy.sparse.csr_matrix, scipy.sparse.csc_matrix)):
         weights = weights.toarray()
 
     np.save(output_weights_file, weights, allow_pickle=False)

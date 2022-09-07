@@ -1,8 +1,11 @@
 from gensim.models import Word2Vec
 import json
+from matchms import calculate_scores, Spectrum
+import numpy as np
 import os
 import pytest
 from scipy.sparse import csc_matrix, csr_matrix, coo_matrix
+from spec2vec import Spec2Vec
 from spec2vec.serialization.model_exporting import export_model
 from spec2vec.serialization.model_importing import import_model, Word2VecLight
 from unittest.mock import MagicMock, patch
@@ -90,3 +93,28 @@ def test_writing_model_with_wrong_weights_format_fails(model):
         export_model(model, "model.json", "weights.npy")
 
     assert str(error.value) == "The model's weights format is not supported."
+
+
+@pytest.mark.parametrize("model", ["numpy"], indirect=True)  # calculate_scores supports only numpy arrays
+def test_reloaded_model_computes_scores(model, tmp_path):
+    spectrum_1 = Spectrum(mz=np.array([100, 150, 200.]),
+                          intensities=np.array([0.7, 0.2, 0.1]),
+                          metadata={'id': 'spectrum1'})
+    spectrum_2 = Spectrum(mz=np.array([100, 140, 190.]),
+                          intensities=np.array([0.4, 0.2, 0.1]),
+                          metadata={'id': 'spectrum2'})
+    spectrum_3 = Spectrum(mz=np.array([100, 140, 190.]),
+                          intensities=np.array([0.4, 0.2, 0.1]),
+                          metadata={'id': 'spectrum2'})
+
+    queries = [spectrum_1, spectrum_2]
+    references = [spectrum_1, spectrum_2, spectrum_3]
+
+    reloaded_model = write_read_model(model, tmp_path)
+    spec2vec_reloaded = Spec2Vec(reloaded_model, intensity_weighting_power=0.5)
+    spec2vec = Spec2Vec(model, intensity_weighting_power=0.5)
+
+    scores = list(calculate_scores(references, queries, spec2vec))
+    scores_reloaded = list(calculate_scores(references, queries, spec2vec_reloaded))
+
+    assert scores == scores_reloaded

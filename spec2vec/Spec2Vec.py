@@ -8,6 +8,7 @@ from tqdm import tqdm
 from spec2vec.SpectrumDocument import SpectrumDocument
 from spec2vec.vector_operations import (calc_vector, cosine_similarity,
                                         cosine_similarity_matrix)
+from spec2vec.serialization.model_importing import Word2VecLight
 
 
 class Spec2Vec(BaseSimilarity):
@@ -79,7 +80,7 @@ class Spec2Vec(BaseSimilarity):
         ['CCMSLIB00001058300', 'CCMSLIB00001058289', 'CCMSLIB00001058303', ...
 
     """
-    def __init__(self, model: Word2Vec, intensity_weighting_power: Union[float, int] = 0,
+    def __init__(self, model: Union[Word2Vec, Word2VecLight], intensity_weighting_power: Union[float, int] = 0,
                  allowed_missing_percentage: Union[float, int] = 10, progress_bar: bool = False):
         """
 

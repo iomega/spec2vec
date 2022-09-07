@@ -17,7 +17,7 @@ def model(request, test_dir):
     if request.param in ["scipy_csc", "scipy_csr"]:
         scipy_matrix_builder = {"scipy_csr": csr_matrix, "scipy_csc": csc_matrix}
         model.wv.__numpys, model.wv.__ignoreds = [], []
-        model.wv.__scipys = ["vectors"]
+        model.wv.__scipys = ["vectors"]  # pylint:disable=protected-access
         model.wv.vectors = scipy_matrix_builder[request.param](model.wv.vectors)
     return model
 
@@ -54,9 +54,9 @@ def test_model_metadata_integrity(model, tmp_path):
     assert imported_model.wv.vector_size == model.wv.vector_size
     assert imported_model.wv.key_to_index == model.wv.key_to_index
     assert imported_model.wv.index_to_key == model.wv.index_to_key
-    assert imported_model.wv.__scipys == model.wv.__scipys
-    assert imported_model.wv.__numpys == model.wv.__numpys
-    assert imported_model.wv.__ignoreds == model.wv.__ignoreds
+    assert imported_model.wv.__scipys == model.wv.__scipys  # pylint:disable=protected-access
+    assert imported_model.wv.__numpys == model.wv.__numpys  # pylint:disable=protected-access
+    assert imported_model.wv.__ignoreds == model.wv.__ignoreds  # pylint:disable=protected-access
 
 
 @pytest.mark.parametrize("model", ["numpy"], indirect=True)

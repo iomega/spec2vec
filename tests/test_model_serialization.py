@@ -101,9 +101,9 @@ def test_reloaded_model_computes_scores(model, tmp_path):
     spectrum_2 = Spectrum(mz=np.array([100, 140, 190.]),
                           intensities=np.array([0.4, 0.2, 0.1]),
                           metadata={'id': 'spectrum2'})
-    spectrum_3 = Spectrum(mz=np.array([100, 140, 190.]),
-                          intensities=np.array([0.4, 0.2, 0.1]),
-                          metadata={'id': 'spectrum2'})
+    spectrum_3 = Spectrum(mz=np.array([110, 140, 180.]),
+                          intensities=np.array([0.4, 0.3, 0.1]),
+                          metadata={'id': 'spectrum3'})
 
     queries = [spectrum_1, spectrum_2]
     references = [spectrum_1, spectrum_2, spectrum_3]

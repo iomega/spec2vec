@@ -73,8 +73,9 @@ def import_model(model_file, weights_file) -> Word2VecLight:
     return Word2VecLight(model, weights)
 
 
-def load_weights(weights_file: Union[str, os.PathLike], weights_format: str):
-    weights = np.load(weights_file, allow_pickle=False)
+def load_weights(weights_file: Union[str, os.PathLike],
+                 weights_format: str) -> Union[np.ndarray, scipy.sparse.csr_matrix, scipy.sparse.csc_matrix]:
+    weights: np.ndarray = np.load(weights_file, allow_pickle=False)
 
     sparse_array_builder = {"csr_matrix": scipy.sparse.csr_matrix,
                             "csc_matrix": scipy.sparse.csc_matrix,

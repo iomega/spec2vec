@@ -8,7 +8,7 @@ from tqdm import tqdm
 from spec2vec.SpectrumDocument import SpectrumDocument
 from spec2vec.vector_operations import (calc_vector, cosine_similarity,
                                         cosine_similarity_matrix)
-from spec2vec.serialization.model_importing import Word2VecLight
+from spec2vec.serialization import Word2VecLight
 
 
 class Spec2Vec(BaseSimilarity):

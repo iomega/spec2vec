@@ -42,7 +42,7 @@ class Word2VecLight:
             if dictionary.keys() == expected_keys:
                 self.__dict__ = dictionary
             else:
-                raise ValueError("The model dictionary representation does not contain the expected keys.")
+                raise ValueError("The keys of model's dictionary representation do not match the expected keys.")
             return self
 
         def with_weights(self, weights: Union[np.ndarray, scipy.sparse.csr_matrix, scipy.sparse.csc_matrix]):

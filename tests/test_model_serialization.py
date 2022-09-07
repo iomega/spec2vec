@@ -81,7 +81,7 @@ def test_reading_model_with_wrong_keys_fails(test_dir):
     with pytest.raises(ValueError) as error:
         import_model(model_file, weights_file)
 
-    assert str(error.value) == "The model dictionary representation does not contain the expected keys."
+    assert str(error.value) == "The keys of model's dictionary representation do not match the expected keys."
 
 
 def test_writing_model_with_wrong_weights_format_fails(model):

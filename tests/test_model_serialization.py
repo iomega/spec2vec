@@ -1,9 +1,11 @@
 from gensim.models import Word2Vec
+import json
 import os
 import pytest
 from scipy.sparse import csc_matrix, csr_matrix
 from spec2vec.serialization.model_exporting import export_model
 from spec2vec.serialization.model_importing import import_model, Word2VecLight
+from unittest.mock import MagicMock, patch
 
 
 @pytest.fixture(params=["numpy", "scipy_csr", "scipy_csc"])
@@ -68,3 +70,14 @@ def test_sparse_weights_integrity(model, tmp_path):
     imported_model = write_read_model(model, tmp_path)
 
     assert (imported_model.wv.vectors.toarray() == model.wv.vectors.toarray()).all()
+
+
+@patch("json.load", MagicMock(return_value={"unexpected_key": "value", "__weights_format": "np.ndarray"}))
+def test_reading_model_with_wrong_keys_fails(test_dir):
+    model_file = os.path.join(test_dir, "data", "model.json")
+    weights_file = os.path.join(test_dir, "data", "weights.npy")
+
+    with pytest.raises(ValueError) as error:
+        import_model(model_file, weights_file)
+
+    assert str(error.value) == "The model dictionary representation does not contain the expected keys."

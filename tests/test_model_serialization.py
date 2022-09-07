@@ -11,15 +11,12 @@ def model(request, test_dir):
     model_file = os.path.join(test_dir, "..", "integration-tests", "test_user_workflow_spec2vec.model")
     model = Word2Vec.load(model_file)
 
-    if request.param == "scipy_csc":
+    if request.param in ["scipy_csc", "scipy_csr"]:
+        scipy_matrix_builder = {"scipy_csr": csr_matrix, "scipy_csc": csc_matrix}
         model.wv.__numpys, model.wv.__ignoreds = [], []
         model.wv.__scipys = ["vectors"]
-        model.wv.vectors = csc_matrix(model.wv.vectors)
-    elif request.param == "scipy_csr":
-        model.wv.__numpys, model.wv.__ignoreds = [], []
-        model.wv.__scipys = ["vectors"]
-        model.wv.vectors = csr_matrix(model.wv.vectors)
-    yield model
+        model.wv.vectors = scipy_matrix_builder[request.param](model.wv.vectors)
+    return model
 
 
 def write_read_model(model, tmp_path):

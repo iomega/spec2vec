@@ -42,6 +42,7 @@ requirements:
     - numpy
     - pip
     - python >=3.7
+    - scipy
     - tqdm
 
 test:

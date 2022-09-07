@@ -77,9 +77,9 @@ def load_weights(weights_file: Union[str, os.PathLike],
                  weights_format: str) -> Union[np.ndarray, scipy.sparse.csr_matrix, scipy.sparse.csc_matrix]:
     weights: np.ndarray = np.load(weights_file, allow_pickle=False)
 
-    sparse_array_builder = {"csr_matrix": scipy.sparse.csr_matrix,
+    weights_array_builder = {"csr_matrix": scipy.sparse.csr_matrix,
                             "csc_matrix": scipy.sparse.csc_matrix,
                             "np.ndarray": lambda x: x}
-    weights = sparse_array_builder[weights_format](weights)
+    weights = weights_array_builder[weights_format](weights)
 
     return weights

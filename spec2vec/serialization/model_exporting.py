@@ -25,7 +25,7 @@ def export_model(model: Word2Vec,
     """
     model = deepcopy(model)
     keyedvectors = extract_keyedvectors(model)
-    weights = keyedvectors.pop("vectors", AttributeError("The model contains no weights."))
+    weights = keyedvectors.pop("vectors")
     keyedvectors["__weights_format"] = get_weights_format(weights)
 
     save_model(keyedvectors, output_model_file)

@@ -11,6 +11,7 @@ dependencies:
   - numpy
   - pip
   - python >=3.7
+  - scipy
   - tqdm
   - pip:
     - -e ..[dev]

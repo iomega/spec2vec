@@ -31,7 +31,7 @@ def test_user_workflow_spec2vec():
         return s
 
     repository_root = os.path.join(os.path.dirname(__file__), "..")
-    spectrums_file = os.path.join(repository_root, "tests", "pesticides.mgf")
+    spectrums_file = os.path.join(repository_root, "tests", "data", "pesticides.mgf")
 
     # apply my filters to the data
     spectrums = [apply_my_filters(s) for s in load_from_mgf(spectrums_file)]

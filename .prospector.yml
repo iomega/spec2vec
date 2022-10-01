@@ -1,0 +1,13 @@
+# prospector configuration file
+
+---
+
+output-format: grouped
+
+strictness: medium
+doc-warnings: false
+test-warnings: true
+member-warnings: false
+
+ignore-paths:
+  - readthedocs

@@ -5,6 +5,7 @@ from gensim.models import Word2Vec
 from matchms import Spectrum
 from matchms.similarity.BaseSimilarity import BaseSimilarity
 from tqdm import tqdm
+from spec2vec.serialization import Word2VecLight
 from spec2vec.SpectrumDocument import SpectrumDocument
 from spec2vec.vector_operations import (calc_vector, cosine_similarity,
                                         cosine_similarity_matrix)
@@ -48,7 +49,7 @@ class Spec2Vec(BaseSimilarity):
             s = require_minimum_number_of_peaks(s, n_required=5)
             return s
 
-        spectrums_file = os.path.join(os.getcwd(), "..", "tests", "pesticides.mgf")
+        spectrums_file = os.path.join(os.getcwd(), "..", "tests", "data", "pesticides.mgf")
 
         # Load data and apply the above defined filters to the data
         spectrums = [spectrum_processing(s) for s in load_from_mgf(spectrums_file)]
@@ -69,8 +70,8 @@ class Spec2Vec(BaseSimilarity):
         # Select top-10 candidates for first query spectrum
         spectrum0_top10 = scores.scores_by_query(spectrums[0], sort=True)[:10]
 
-        # Display spectrum IDs for top-10 matches
-        print([s[0].metadata['spectrumid'] for s in spectrum0_top10])
+        # Display spectrum IDs for top-10 matches (only works if metadata contains "spectrum_id" field)
+        print([s[0].metadata['spectrum_id'] for s in spectrum0_top10])
 
     Should output
 
@@ -79,7 +80,7 @@ class Spec2Vec(BaseSimilarity):
         ['CCMSLIB00001058300', 'CCMSLIB00001058289', 'CCMSLIB00001058303', ...
 
     """
-    def __init__(self, model: Word2Vec, intensity_weighting_power: Union[float, int] = 0,
+    def __init__(self, model: Union[Word2Vec, Word2VecLight], intensity_weighting_power: Union[float, int] = 0,
                  allowed_missing_percentage: Union[float, int] = 10, progress_bar: bool = False):
         """
 

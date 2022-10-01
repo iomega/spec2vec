@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.0] - 2022-10-01
+
+### Added
+
+- added `spec2vec.serialization` subpackage to import and export `Word2Vec` models to/from disk without Pickle 
+  (via `import_model` and `export_model` respectively) [#80](https://github.com/iomega/spec2vec/pull/80)
+
+## Fixed
+
+- updated Code examples in documentation to recent changes in matchms.
+
 ## [0.6.0] - 2022-01-03
 
 ### Added
@@ -120,7 +131,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fossa configuration
 - Flowchart
 
-[Unreleased]: https://github.com/iomega/spec2vec/compare/0.6.0...HEAD
+[Unreleased]: https://github.com/iomega/spec2vec/compare/0.7.0...HEAD
+[0.7.0]: https://github.com/iomega/spec2vec/compare/0.6.0...0.7.0
 [0.6.0]: https://github.com/iomega/spec2vec/compare/0.5.0...0.6.0
 [0.5.0]: https://github.com/iomega/spec2vec/compare/0.4.0...0.5.0
 [0.4.0]: https://github.com/iomega/spec2vec/compare/0.3.4...0.4.0

@@ -9,4 +9,5 @@ dependencies:
   - numba >=0.51
   - numpy
   - python >=3.7
+  - scipy
   - tqdm

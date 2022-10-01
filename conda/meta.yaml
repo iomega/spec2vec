@@ -1,5 +1,5 @@
 {% set name = "spec2vec" %}
-{% set version = "0.6.0" %}
+{% set version = "0.7.0" %}
 
 package:
   name: {{ name|lower }}
@@ -42,6 +42,7 @@ requirements:
     - numpy
     - pip
     - python >=3.7
+    - scipy
     - tqdm
 
 test:

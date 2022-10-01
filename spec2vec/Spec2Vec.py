@@ -70,8 +70,8 @@ class Spec2Vec(BaseSimilarity):
         # Select top-10 candidates for first query spectrum
         spectrum0_top10 = scores.scores_by_query(spectrums[0], sort=True)[:10]
 
-        # Display spectrum IDs for top-10 matches (only works if metadata contains "spectrum-id" field)
-        print([s[0].metadata['spectrum-id'] for s in spectrum0_top10])
+        # Display spectrum IDs for top-10 matches (only works if metadata contains "spectrum_id" field)
+        print([s[0].metadata['spectrum_id'] for s in spectrum0_top10])
 
     Should output
 

@@ -49,7 +49,7 @@ class Spec2Vec(BaseSimilarity):
             s = require_minimum_number_of_peaks(s, n_required=5)
             return s
 
-        spectrums_file = os.path.join(os.getcwd(), "..", "tests", "pesticides.mgf")
+        spectrums_file = os.path.join(os.getcwd(), "..", "tests", "data", "pesticides.mgf")
 
         # Load data and apply the above defined filters to the data
         spectrums = [spectrum_processing(s) for s in load_from_mgf(spectrums_file)]

@@ -55,6 +55,11 @@
          "name": "Spreeuw, Hanno", 
          "orcid": "0000-0002-5057-0322"
       }
+      {
+         "affiliation": "ICS, Masaryk University",
+         "name": "Skoryk, Maksym",
+         "orcid": "0000-0003-2056-8018"
+      }
    ], 
    "description": "Word2Vec based similarity measure of mass spectrometry data.", 
    "keywords": [

@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- bumped **gensim** version to `>=4.2.0` in dependencies
+- bumped **gensim** version to `>=4.2.0` in dependencies [#84](https://github.com/iomega/spec2vec/pull/84)
 
 ### Fixed
 

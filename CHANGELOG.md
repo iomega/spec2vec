@@ -14,7 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - added `spec2vec.serialization` subpackage to import and export `Word2Vec` models to/from disk without Pickle 
   (via `import_model` and `export_model` respectively) [#80](https://github.com/iomega/spec2vec/pull/80)
 
-## Fixed
+### Changed
+
+- bumped **gensim** version to `>=4.2.0` in dependencies [#84](https://github.com/iomega/spec2vec/pull/84)
+
+### Fixed
 
 - updated Code examples in documentation to recent changes in matchms.
 

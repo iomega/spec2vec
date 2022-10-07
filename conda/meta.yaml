@@ -36,7 +36,7 @@ requirements:
     - pytest-runner
     - setuptools
   run:
-    - gensim >=3.8.0
+    - gensim >=4.2.0
     - matchms >=0.6.0
     - numba >=0.51
     - numpy

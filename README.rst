@@ -91,7 +91,7 @@ Thanks!
    :target: https://sonarcloud.io/component_measures?id=iomega_spec2vec&metric=Coverage&view=list
    :alt: Sonarcloud Coverage
 
-.. |GitHub Workflow Status| image:: https://img.shields.io/github/workflow/status/iomega/spec2vec/CI%20Build
+.. |GitHub Workflow Status| image:: https://img.shields.io/github/actions/workflow/status/matchms/spec2vec/CI_build.yml?branch=master
    :target: https://img.shields.io/github/workflow/status/iomega/spec2vec/CI%20Build
    :alt: GitHub Workflow Status
 

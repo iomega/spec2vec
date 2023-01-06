@@ -54,9 +54,9 @@ Thanks!
    :target: https://github.com/iomega/spec2vec
    :alt: License Badge
 
-.. |Conda Badge| image:: https://anaconda.org/nlesc/spec2vec/badges/installer/conda.svg
-   :target: https://conda.anaconda.org/nlesc
-   :alt: Conda Badge
+.. |Conda Badge| image:: https://img.shields.io/conda/v/bioconda/spec2vec?color=blue
+   :target: https://bioconda.github.io/recipes/spec2vec/README.html
+   :alt: Conda Badge (Bioconda)
 
 .. |Pypi Badge| image:: https://img.shields.io/pypi/v/spec2vec?color=blue
    :target: https://pypi.org/project/spec2vec/

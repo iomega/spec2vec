@@ -38,8 +38,11 @@ class Word2VecLight:
 
         def from_dict(self, dictionary: dict):
             expected_keys = {"vector_size", "__numpys", "__scipys", "__ignoreds", "__recursive_saveloads",
-                             "index_to_key", "norms", "key_to_index", "next_index", "__weights_format"}
+                             "index_to_key", "norms", "key_to_index", "__weights_format"}
             if dictionary.keys() == expected_keys:
+                self.__dict__ = dictionary
+            elif expected_keys.symmetric_difference(dictionary.keys()) == {"next_index"}:  # backward compatibility
+                dictionary.pop("next_index")
                 self.__dict__ = dictionary
             else:
                 raise ValueError("The keys of model's dictionary representation do not match the expected keys.")

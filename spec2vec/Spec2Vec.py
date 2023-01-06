@@ -134,6 +134,7 @@ class Spec2Vec(BaseSimilarity):
 
     def matrix(self, references: Union[List[SpectrumDocument], List[Spectrum]],
                queries: Union[List[SpectrumDocument], List[Spectrum]],
+               array_type: str = "numpy",
                is_symmetric: bool = False) -> np.ndarray:
         """Calculate the spec2vec similarities between all references and queries.
 
@@ -143,6 +144,10 @@ class Spec2Vec(BaseSimilarity):
             Reference spectrums or spectrum documents.
         queries:
             Query spectrums or spectrum documents.
+        array_type
+            Specify the output array type. Can be "numpy" or "sparse".
+            Currently, only "numpy" is supported and will return a numpy array.
+            Future versions will include "sparse" as option to return a COO-sparse array.
         is_symmetric:
             Set to True if references == queries to speed up calculation about 2x.
             Uses the fact that in this case score[i, j] = score[j, i]. Default is False.

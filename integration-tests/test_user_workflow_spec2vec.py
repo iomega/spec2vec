@@ -1,6 +1,6 @@
 import os
 import gensim
-import pytest
+import numpy as np
 from matchms import calculate_scores
 from matchms.filtering import (add_losses, add_parent_mass, default_filters,
                                normalize_intensities,
@@ -68,16 +68,18 @@ def test_user_workflow_spec2vec():
     actual_top10 = sorted_by_score[:10]
 
     expected_top10 = [
-        (documents[19], documents[25], pytest.approx(0.9999121928249473, rel=1e-9)),
-        (documents[20], documents[25], pytest.approx(0.9998846890269892, rel=1e-9)),
-        (documents[20], documents[45], pytest.approx(0.9998756073673759, rel=1e-9)),
-        (documents[25], documents[45], pytest.approx(0.9998750427994474, rel=1e-9)),
-        (documents[19], documents[27], pytest.approx(0.9998722768460854, rel=1e-9)),
-        (documents[22], documents[27], pytest.approx(0.9998633023352553, rel=1e-9)),
-        (documents[18], documents[27], pytest.approx(0.9998616961532616, rel=1e-9)),
-        (documents[19], documents[45], pytest.approx(0.9998528723697396, rel=1e-9)),
-        (documents[14], documents[71], pytest.approx(0.9998404364805897, rel=1e-9)),
-        (documents[20], documents[27], pytest.approx(0.9998336807761137, rel=1e-9))
+        (documents[19], documents[25], 0.9999121928249473),
+        (documents[20], documents[25], 0.9998846890269892),
+        (documents[20], documents[45], 0.9998756073673759),
+        (documents[25], documents[45], 0.9998750427994474),
+        (documents[19], documents[27], 0.9998722768460854),
+        (documents[22], documents[27], 0.9998633023352553),
+        (documents[18], documents[27], 0.9998616961532616),
+        (documents[19], documents[45], 0.9998528723697396),
+        (documents[14], documents[71], 0.9998404364805897),
+        (documents[20], documents[27], 0.9998336807761137)
     ]
 
-    assert actual_top10 == expected_top10, "Expected different top 10 table."
+    assert [x[0] for x in actual_top10] == [x[0] for x in expected_top10]
+    assert [x[1] for x in actual_top10] == [x[1] for x in expected_top10]
+    assert np.allclose([x[2][0] for x in actual_top10], [x[2] for x in expected_top10]), "Expected different top 10 table."

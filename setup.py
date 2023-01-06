@@ -47,7 +47,7 @@ setup(
     python_requires='>=3.7',
     install_requires=[
         "gensim >=4.2.0",
-        "matchms >=0.11.0",
+        "matchms >=0.18.0",
         "numba >=0.51",
         "numpy",
         "scipy",

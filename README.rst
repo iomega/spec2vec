@@ -280,43 +280,10 @@ Run tests (including coverage) with:
 Conda package
 =============
 
-To build anaconda package locally, do:
+The conda packaging is handled by a `recipe at Bioconda <https://github.com/bioconda/bioconda-recipes/blob/master/recipes/spec2vec/meta.yaml>`_.
 
-.. code-block:: console
-
-  conda deactivate
-  conda env create --file conda/environment-build.yml
-  conda activate spec2vec-build
-  BUILD_FOLDER=/tmp/spec2vec/_build
-  rm -rfv $BUILD_FOLDER;mkdir -p $BUILD_FOLDER
-  conda build --numpy 1.18.1 --no-include-recipe -c bioconda -c conda-forge \
-  --croot $BUILD_FOLDER ./conda
-
-If successful, this will yield the built ``spec2vec`` conda package as
-``spec2vec-<version>*.tar.bz2`` in ``$BUILD_FOLDER/noarch/``. You can test if
-installation of this conda package works with:
-
-.. code-block:: console
-
-  # make a clean environment
-  conda deactivate
-  cd $(mktemp -d)
-  conda env create --name test python=3.7
-  conda activate test
-
-  conda install \
-    --channel bioconda \
-    --channel conda-forge \
-    --channel file://${CONDA_PREFIX}/noarch/ \
-    spec2vec
-
-To publish the package on anaconda cloud, do:
-
-.. code-block:: console
-
-  anaconda --token ${{ secrets.ANACONDA_TOKEN }} upload --user nlesc --force $BUILD_FOLDER/noarch/*.tar.bz2
-
-where ``secrets.ANACONDA_TOKEN`` is a token to be generated on the Anaconda Cloud website. This secret should be added to GitHub repository.
+Publishing to PyPI will trigger the creation of a `pull request on the bioconda recipes repository <https://github.com/bioconda/bioconda-recipes/pulls?q=is%3Apr+is%3Aopen+spec2vec>`_
+Once the PR is merged the new version of matchms will appear on `https://anaconda.org/bioconda/spec2vec <https://anaconda.org/bioconda/spec2vec>`_ 
 
 
 To remove spec2vec package from the active environment:

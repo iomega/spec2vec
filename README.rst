@@ -39,7 +39,7 @@ Thanks!
    * - **Code quality checks**
      -
    * - Continuous integration
-     - |GitHub Workflow Status| |Anaconda Publish|
+     - |GitHub Workflow Status|
    * - Documentation
      - |ReadTheDocs Badge|
    * - Code Quality
@@ -95,9 +95,6 @@ Thanks!
    :target: https://img.shields.io/github/workflow/status/iomega/spec2vec/CI%20Build
    :alt: GitHub Workflow Status
 
-.. |Anaconda Publish| image:: https://github.com/iomega/spec2vec/workflows/Anaconda%20Publish/badge.svg
-   :target: https://github.com/iomega/spec2vec/actions?query=workflow%3A%22Anaconda%20Publish%22
-   :alt: Anaconda Publish
 
 ***********************
 Documentation for users

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2022-01-06
+
+### Changed
+
+- Minor changes to make tests pass with new matchms versions (>=0.18.0). Should nearly always be backwards compatible though.
+- Now dependency requirement is set to `matchms>=0.14.0`
+
 ## [0.7.0] - 2022-10-01
 
 ### Added
@@ -135,7 +142,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fossa configuration
 - Flowchart
 
-[Unreleased]: https://github.com/iomega/spec2vec/compare/0.7.0...HEAD
+[Unreleased]: https://github.com/iomega/spec2vec/compare/0.8.0...HEAD
+[0.8.0]: https://github.com/iomega/spec2vec/compare/0.6.0...0.7.0
 [0.7.0]: https://github.com/iomega/spec2vec/compare/0.6.0...0.7.0
 [0.6.0]: https://github.com/iomega/spec2vec/compare/0.5.0...0.6.0
 [0.5.0]: https://github.com/iomega/spec2vec/compare/0.4.0...0.5.0

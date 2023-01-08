@@ -1,3 +1,17 @@
+`fair-software.nl <https://fair-software.nl/>`_ recommendations:
+
+|GitHub Badge|
+|License Badge|
+|Conda Badge| |Pypi Badge| |Research Software Directory Badge|
+|Zenodo Badge|
+|CII Best Practices Badge| |Howfairis Badge|
+
+Code quality checks:
+
+|GitHub Workflow Status|
+|ReadTheDocs Badge|
+|Sonarcloud Quality Gate Badge| |Sonarcloud Coverage Badge|
+
 ################################################################################
 spec2vec
 ################################################################################
@@ -16,34 +30,6 @@ F. Huber, S. Verhoeven, C. Meijer, H. Spreeuw, E. M. Villanueva Castilla, C. Gen
 
 Thanks!
 
-|
-
-.. list-table::
-   :widths: 25 25
-   :header-rows: 1
-
-   * - 
-     - Badges
-   * - **fair-software.nl recommendations**
-     - 
-   * - \1. Code repository
-     - |GitHub Badge|
-   * - \2. License
-     - |License Badge|
-   * - \3. Community Registry
-     - |Conda Badge| |Pypi Badge| |Research Software Directory Badge|
-   * - \4. Enable Citation
-     - |Zenodo Badge|
-   * - \5. Checklists
-     - |CII Best Practices Badge| |Howfairis Badge|
-   * - **Code quality checks**
-     -
-   * - Continuous integration
-     - |GitHub Workflow Status|
-   * - Documentation
-     - |ReadTheDocs Badge|
-   * - Code Quality
-     - |Sonarcloud Quality Gate Badge| |Sonarcloud Coverage Badge|
 
 
 .. |GitHub Badge| image:: https://img.shields.io/badge/github-repo-000.svg?logo=github&labelColor=gray&color=blue

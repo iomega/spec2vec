@@ -292,7 +292,7 @@ have a look at the `contribution guidelines <CONTRIBUTING.md>`_.
 License
 *******
 
-Copyright (c) 2020, Netherlands eScience Center
+Copyright (c) 2023, Netherlands eScience Center & Düsseldorf University of Applied Sciences
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

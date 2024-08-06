@@ -124,7 +124,7 @@ def test_spectrum_document_losses_getter():
     intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = {"precursor_mz": 100.0}
     spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
-    spectrum_document = SpectrumDocument(spectrum_in, n_decimals=2, loss_mz_from=0.0, loss_mz_to=-1.0)
+    spectrum_document = SpectrumDocument(spectrum_in, n_decimals=2)
     assert np.all(spectrum_document.losses.mz == np.array([60., 70., 80., 90.])), \
         "Expected different losses"
     assert np.all(spectrum_document.losses.intensities == intensities[::-1]), \

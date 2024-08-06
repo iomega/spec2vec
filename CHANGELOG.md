@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.1] - 2024-08-06
+### Changed
+- Set max matchms to 0.26.4
+- Set max scipy to 1.10.1
+
 ## [0.8.0] - 2022-01-06
 
 ### Changed

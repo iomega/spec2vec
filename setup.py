@@ -47,10 +47,10 @@ setup(
     python_requires='>=3.7',
     install_requires=[
         "gensim >=4.2.0",
-        "matchms >=0.14.0",
+        "matchms >=0.14.0,<=0.26.4",
         "numba >=0.51",
         "numpy",
-        "scipy",
+        "scipy <=1.10.1",
         "tqdm",
     ],
     extras_require={"dev": ["bump2version",

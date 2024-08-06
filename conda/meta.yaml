@@ -1,5 +1,5 @@
 {% set name = "spec2vec" %}
-{% set version = "0.8.0" %}
+{% set version = "0.8.1" %}
 
 package:
   name: {{ name|lower }}
@@ -37,12 +37,12 @@ requirements:
     - setuptools
   run:
     - gensim >=4.2.0
-    - matchms >=0.14.0
+    - matchms >=0.14.0, <=0.26.4
     - numba >=0.51
     - numpy
     - pip
     - python >=3.7
-    - scipy
+    - scipy <=1.10.1
     - tqdm
 
 test:

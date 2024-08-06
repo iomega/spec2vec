@@ -1,7 +1,6 @@
 import numpy as np
 import pytest
 from matchms import Spectrum
-from matchms.filtering import add_losses
 from spec2vec import SpectrumDocument
 
 
@@ -42,7 +41,6 @@ def test_spectrum_document_init_default_with_losses():
     intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = dict(precursor_mz=100.0)
     spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
-    spectrum = add_losses(spectrum_in)
     spectrum_document = SpectrumDocument(spectrum)
 
     assert spectrum_document.n_decimals == 2, "Expected different default for n_decimals"
@@ -60,7 +58,6 @@ def test_spectrum_document_init_n_decimals_1():
     intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = dict(precursor_mz=100.0)
     spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
-    spectrum = add_losses(spectrum_in)
     spectrum_document = SpectrumDocument(spectrum, n_decimals=1)
 
     assert spectrum_document.n_decimals == 1
@@ -127,7 +124,6 @@ def test_spectrum_document_losses_getter():
     intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = {"precursor_mz": 100.0}
     spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
-    spectrum = add_losses(spectrum_in)
     spectrum_document = SpectrumDocument(spectrum, n_decimals=2)
     assert np.all(spectrum_document.losses.mz == np.array([60., 70., 80., 90.])), \
         "Expected different losses"

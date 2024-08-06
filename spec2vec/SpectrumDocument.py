@@ -52,7 +52,7 @@ class SpectrumDocument(Document):
         """
         self.n_decimals = n_decimals
         self.loss_mz_from = loss_mz_from
-        self.loss_mz_to = 200
+        self.loss_mz_to = loss_mz_to
         self.weights = None
         super().__init__(obj=spectrum)
         self._add_weights()

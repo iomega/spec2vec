@@ -50,7 +50,7 @@ setup(
         "matchms >=0.14.0,<=0.26.4",
         "numba >=0.51",
         "numpy",
-        "scipy",
+        "scipy <=1.10.1",
         "tqdm",
     ],
     extras_require={"dev": ["bump2version",

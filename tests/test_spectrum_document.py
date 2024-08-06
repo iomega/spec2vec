@@ -1,7 +1,6 @@
 import numpy as np
 import pytest
 from matchms import Spectrum
-from matchms.filtering import add_losses
 from spec2vec import SpectrumDocument
 
 
@@ -11,7 +10,7 @@ def test_spectrum_document_init_n_decimals_default_value_no_losses():
     intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = dict(precursor_mz=100.0)
     spectrum = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
-    spectrum_document = SpectrumDocument(spectrum)
+    spectrum_document = SpectrumDocument(spectrum, loss_mz_from = 0.0, loss_mz_to = -1.0)
 
     assert spectrum_document.n_decimals == 2, "Expected different default for n_decimals"
     assert len(spectrum_document) == 4
@@ -26,7 +25,7 @@ def test_spectrum_document_init_n_decimals_1_no_losses():
     intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = dict(precursor_mz=100.0)
     spectrum = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
-    spectrum_document = SpectrumDocument(spectrum, n_decimals=1)
+    spectrum_document = SpectrumDocument(spectrum, n_decimals=1, loss_mz_from = 0.0, loss_mz_to = -1.0)
 
     assert spectrum_document.n_decimals == 1
     assert len(spectrum_document) == 4
@@ -42,8 +41,7 @@ def test_spectrum_document_init_default_with_losses():
     intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = dict(precursor_mz=100.0)
     spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
-    spectrum = add_losses(spectrum_in)
-    spectrum_document = SpectrumDocument(spectrum)
+    spectrum_document = SpectrumDocument(spectrum_in)
 
     assert spectrum_document.n_decimals == 2, "Expected different default for n_decimals"
     assert len(spectrum_document) == 8
@@ -60,8 +58,7 @@ def test_spectrum_document_init_n_decimals_1():
     intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = dict(precursor_mz=100.0)
     spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
-    spectrum = add_losses(spectrum_in)
-    spectrum_document = SpectrumDocument(spectrum, n_decimals=1)
+    spectrum_document = SpectrumDocument(spectrum_in, n_decimals=1)
 
     assert spectrum_document.n_decimals == 1
     assert len(spectrum_document) == 8
@@ -79,7 +76,7 @@ def test_spectrum_document_metadata_getter():
     metadata = {"precursor_mz": 100.0,
                 "smiles": "testsmiles"}
     spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
-    spectrum_document = SpectrumDocument(spectrum_in, n_decimals=2)
+    spectrum_document = SpectrumDocument(spectrum_in, n_decimals=2, loss_mz_from=0.0, loss_mz_to=-1.0)
 
     assert spectrum_document.n_decimals == 2
     assert len(spectrum_document) == 4
@@ -112,7 +109,7 @@ def test_spectrum_document_peak_getter():
     intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = {"precursor_mz": 100.0}
     spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
-    spectrum_document = SpectrumDocument(spectrum_in, n_decimals=2)
+    spectrum_document = SpectrumDocument(spectrum_in, n_decimals=2, loss_mz_from=0.0, loss_mz_to=-1.0)
 
     assert spectrum_document.words == [
         "peak@10.00", "peak@20.00", "peak@30.00", "peak@40.00"
@@ -127,8 +124,7 @@ def test_spectrum_document_losses_getter():
     intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = {"precursor_mz": 100.0}
     spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
-    spectrum = add_losses(spectrum_in)
-    spectrum_document = SpectrumDocument(spectrum, n_decimals=2)
+    spectrum_document = SpectrumDocument(spectrum_in, n_decimals=2)
     assert np.all(spectrum_document.losses.mz == np.array([60., 70., 80., 90.])), \
         "Expected different losses"
     assert np.all(spectrum_document.losses.intensities == intensities[::-1]), \

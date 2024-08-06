@@ -2,7 +2,7 @@ import os
 import gensim
 import numpy as np
 from matchms import calculate_scores
-from matchms.filtering import (add_losses, add_parent_mass, default_filters,
+from matchms.filtering import (add_parent_mass, default_filters,
                                normalize_intensities,
                                reduce_to_number_of_peaks,
                                require_minimum_number_of_peaks, select_by_mz)
@@ -26,7 +26,6 @@ def test_user_workflow_spec2vec():
         s = normalize_intensities(s)
         s = reduce_to_number_of_peaks(s, n_required=10, ratio_desired=0.5)
         s = select_by_mz(s, mz_from=0, mz_to=1000)
-        s = add_losses(s, loss_mz_from=10.0, loss_mz_to=200.0)
         s = require_minimum_number_of_peaks(s, n_required=5)
         return s
 
@@ -40,7 +39,7 @@ def test_user_workflow_spec2vec():
     spectrums = [s for s in spectrums if s is not None]
 
     # convert spectrums to spectrum 'documents'
-    documents = [SpectrumDocument(s, n_decimals=1) for s in spectrums]
+    documents = [SpectrumDocument(s, n_decimals=1,  loss_mz_from=10.0, loss_mz_to=200.0) for s in spectrums]
 
     model_file = os.path.join(repository_root, "integration-tests", "test_user_workflow_spec2vec.model")
     if os.path.isfile(model_file):

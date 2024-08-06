@@ -139,7 +139,6 @@ dataset.
         s = msfilters.normalize_intensities(s)
         s = msfilters.reduce_to_number_of_peaks(s, n_required=10, ratio_desired=0.5, n_max=500)
         s = msfilters.select_by_mz(s, mz_from=0, mz_to=1000)
-        s = msfilters.add_losses(s, loss_mz_from=10.0, loss_mz_to=200.0)
         s = msfilters.require_minimum_number_of_peaks(s, n_required=10)
         return s
 
@@ -150,7 +149,7 @@ dataset.
     spectrums = [s for s in spectrums if s is not None]
 
     # Create spectrum documents
-    reference_documents = [SpectrumDocument(s, n_decimals=2) for s in spectrums]
+    reference_documents = [SpectrumDocument(s, n_decimals=2, loss_mz_from=10.0, loss_mz_to=200.0) for s in spectrums]
 
     model_file = "references.model"
     model = train_new_word2vec_model(reference_documents, iterations=[10, 20, 30], filename=model_file,

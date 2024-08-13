@@ -30,7 +30,6 @@ class Spec2Vec(BaseSimilarity):
         import os
         import gensim
         from matchms import calculate_scores
-        from matchms.filtering import add_losses
         from matchms.filtering import default_filters
         from matchms.filtering import normalize_intensities
         from matchms.filtering import require_minimum_number_of_peaks
@@ -46,7 +45,6 @@ class Spec2Vec(BaseSimilarity):
             s = normalize_intensities(s)
             s = select_by_mz(s, mz_from=0, mz_to=1000)
             s = select_by_intensity(s, intensity_from=0.01)
-            s = add_losses(s, loss_mz_from=10.0, loss_mz_to=200.0)
             s = require_minimum_number_of_peaks(s, n_required=5)
             return s
 
@@ -78,7 +76,7 @@ class Spec2Vec(BaseSimilarity):
 
     .. testoutput::
 
-        ['CCMSLIB00001058300', 'CCMSLIB00001058289', 'CCMSLIB00001058303', ...
+        ['CCMSLIB00001058430', 'CCMSLIB00001058367', 'CCMSLIB00001058433', ...
 
     """
     def __init__(self, model: Union[Word2Vec, Word2VecLight], intensity_weighting_power: Union[float, int] = 0,

@@ -14,6 +14,7 @@ class SpectrumDocumentWithLosses(SpectrumDocument):
         self.words = peak_words + loss_words
         return self
 
+
     def _add_weights(self):
         """Add peaks (and loss) intensities as weights."""
         assert self._obj.peaks.intensities.max() <= 1, "peak intensities not normalized"
@@ -22,6 +23,7 @@ class SpectrumDocumentWithLosses(SpectrumDocument):
         loss_intensities = self.losses.intensities.tolist()
         self.weights = peak_intensities + loss_intensities
         return self
+
 
     @property
     def losses(self):

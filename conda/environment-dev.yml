@@ -3,15 +3,23 @@ channels:
   - bioconda
   - conda-forge
   - defaults
-  - nlesc
 dependencies:
-  - gensim >=4.2.0
-  - matchms >=0.6.2
-  - numba >=0.51
+  - python
+  - gensim ==4.3.2
+  - matchms >=0.14.0, <=0.26.4
+  - numba
   - numpy
   - pip
-  - python >=3.7
   - scipy
   - tqdm
-  - pip:
-    - -e ..[dev]
+  - bump2version
+  - isort>=5.1.0
+  - pylint<2.12.0
+  - prospector
+  - pytest
+  - pytest-cov
+  - sphinx>=4.0.0
+  - sphinx_rtd_theme
+  - sphinxcontrib-apidoc
+  - yapf
+

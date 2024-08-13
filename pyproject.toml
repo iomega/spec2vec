@@ -1,0 +1,59 @@
+[tool.poetry]
+name = "spec2vec"
+version = "0.8.1"
+description = "Word2Vec based similarity measure of mass spectrometry data."
+authors = ["Florian Huber <florian.huber@hs-duesseldorf.de>"]
+license = "Apache Software License 2.0"
+readme = "README.rst"
+repository = "https://github.com/iomega/spec2vec"
+keywords = [
+    "word2vec",
+    "mass spectrometry",
+    "fuzzy matching",
+    "fuzzy search"
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+gensim = "^4.3.3"
+matchms = "^0.27.0"
+tqdm = "^4.66.5"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+isort = "^5.13.2"
+yapf = "^0.40.2"
+pytest-cov = "^5.0.0"
+poetry-bumpversion = "^0.3.2"
+prospector = {extras = ["with-pyroma"], version = "^1.10.3"}
+
+[tool.poetry.group.docs.dependencies]
+sphinx-rtd-theme = "^2.0.0"
+sphinxcontrib-apidoc = "^0.5.0"
+
+[tool.poetry_bumpversion.file."spec2vec/__version__.py"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+sections = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+no_lines_before = "FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+lines_after_imports = 2
+
+[tool.coverage.run]
+branch = true
+source = "spec2vec"
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+    "integration-tests",
+]
+
+[build_sphinx]
+source-dir = "docs"
+build-dir = "docs/_build"
+all_files = 1
+builder = "html"

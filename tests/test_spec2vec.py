@@ -17,14 +17,24 @@ def spectra():
                           
     return spectrum_1, spectrum_2
 
+
 @pytest.fixture
 def documents(spectra):
     return [SpectrumDocument(s, n_decimals=1) for s in spectra]
+
 
 @pytest.fixture
 def model():
     repository_root = os.path.join(os.path.dirname(__file__), "..")
     model_file = os.path.join(repository_root, "integration-tests", "test_user_workflow_spec2vec.model")
+    return gensim.models.Word2Vec.load(model_file)
+
+
+def test_load_test_model():
+    """Load pretrained Word2Vec model."""
+    repository_root = os.path.join(os.path.dirname(__file__), "..")
+    model_file = os.path.join(repository_root, "integration-tests", "test_user_workflow_spec2vec.model")
+    assert os.path.isfile(model_file), "Expected file not found."
     return gensim.models.Word2Vec.load(model_file)
 
 
@@ -73,14 +83,15 @@ def test_spec2vec_pair_method_wrong_spectrumdocument_entry(spectra, model):
     expected_msg = "Decimal rounding of input data does not agree with model vocabulary."
     assert expected_msg in str(msg), "Expected different exception"
 
+@pytest.mark.parametrize("array_type", ["numpy", "sparse"])
 @pytest.mark.parametrize("is_symmetric", [True, False])
 @pytest.mark.parametrize("progress_bar", [True, False])
-def test_spec2vec_matrix_method(progress_bar, is_symmetric, documents, model):
+def test_spec2vec_matrix_method(progress_bar, is_symmetric, array_type, documents, model):
     """Test if matrix of 2x2 SpectrumDocuments is handled correctly.
     Run with and without progress bar.
     """
     spec2vec = Spec2Vec(model=model, intensity_weighting_power=0.5, progress_bar=progress_bar)
-    scores = spec2vec.matrix(documents, documents, is_symmetric=is_symmetric)
+    scores = spec2vec.matrix(documents, documents, array_type=array_type, is_symmetric=is_symmetric)
 
     assert scores[0, 0] == pytest.approx(1.0, 1e-9), "Expected different score."
     assert scores[1, 1] == pytest.approx(1.0, 1e-9), "Expected different score."
@@ -114,11 +125,3 @@ def test_spec2vec_matrix_method_symmetric_wrong_entry(spectra, model):
     with pytest.raises(AssertionError) as msg:
         _ = spec2vec.matrix(documents1, documents2, is_symmetric=True)
     assert expected_msg in str(msg), "Expected different exception message"
-
-
-def test_load_test_model():
-    """Load pretrained Word2Vec model."""
-    repository_root = os.path.join(os.path.dirname(__file__), "..")
-    model_file = os.path.join(repository_root, "integration-tests", "test_user_workflow_spec2vec.model")
-    assert os.path.isfile(model_file), "Expected file not found."
-    return gensim.models.Word2Vec.load(model_file)

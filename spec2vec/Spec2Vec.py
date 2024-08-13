@@ -4,6 +4,7 @@ import numpy as np
 from gensim.models import Word2Vec
 from matchms import Spectrum
 from matchms.similarity.BaseSimilarity import BaseSimilarity
+from sparsestack import StackedSparseArray 
 from tqdm import tqdm
 from spec2vec.serialization import Word2VecLight
 from spec2vec.SpectrumDocument import SpectrumDocument
@@ -176,7 +177,14 @@ class Spec2Vec(BaseSimilarity):
 
         spec2vec_similarity = cosine_similarity_matrix(reference_vectors, query_vectors)
 
-        return spec2vec_similarity
+        if array_type == "numpy":
+            return spec2vec_similarity
+        elif array_type == "sparse":
+            sparse = StackedSparseArray(n_rows, n_cols)
+            sparse.add_dense_matrix(spec2vec_similarity, "")
+            return sparse
+        else:
+            raise NotImplementedError("Only 'numpy' and 'sparse' array types are supported.")
 
     @staticmethod
     def _get_word_decimals(model):

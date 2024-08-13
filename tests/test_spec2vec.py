@@ -35,7 +35,6 @@ def test_load_test_model():
     repository_root = os.path.join(os.path.dirname(__file__), "..")
     model_file = os.path.join(repository_root, "integration-tests", "test_user_workflow_spec2vec.model")
     assert os.path.isfile(model_file), "Expected file not found."
-    return gensim.models.Word2Vec.load(model_file)
 
 
 def test_spec2vec_pair_method_spectrum_entry(spectra, model):

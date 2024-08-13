@@ -64,7 +64,7 @@ authors:
     given-names: Maksym
     orcid: "https://orcid.org/0000-0003-2056-8018"
 
-cff-version: "1.1.0"
+cff-version: 1.2.0
 keywords:
   - Word2Vec
   - "similarity measures"

@@ -39,7 +39,7 @@ def test_user_workflow_spec2vec():
     spectrums = [s for s in spectrums if s is not None]
 
     # convert spectrums to spectrum 'documents'
-    documents = [SpectrumDocumentWithLosses(s, n_decimals=1) for s in spectrums]
+    documents = [SpectrumDocumentWithLosses(s, n_decimals=1, loss_mz_from=10.0, loss_mz_to=200.0) for s in spectrums]
 
     model_file = os.path.join(repository_root, "integration-tests", "test_user_workflow_spec2vec.model")
     if os.path.isfile(model_file):

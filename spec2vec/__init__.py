@@ -4,6 +4,7 @@ from .Document import Document
 from .logging_functions import _init_logger
 from .Spec2Vec import Spec2Vec
 from .SpectrumDocument import SpectrumDocument
+from .SpectrumDocumentWithLosses import SpectrumDocumentWithLosses
 from .vector_operations import calc_vector
 
 
@@ -16,5 +17,6 @@ __all__ = [
     "Document",
     "serialization",
     "SpectrumDocument",
+    "SpectrumDocumentWithLosses,"
     "Spec2Vec",
 ]

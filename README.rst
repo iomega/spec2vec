@@ -66,7 +66,6 @@ Thanks!
 
 .. |ReadTheDocs Badge| image:: https://readthedocs.org/projects/spec2vec/badge/?version=latest
     :alt: Documentation Status
-    :scale: 100%
     :target: https://spec2vec.readthedocs.io/en/latest/?badge=latest
 
 .. |Sonarcloud Quality Gate Badge| image:: https://sonarcloud.io/api/project_badges/measure?project=iomega_spec2vec&metric=alert_status

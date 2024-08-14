@@ -1,14 +1,18 @@
 from matchms import Spectrum
+import pytest
 import numpy as np
 from spec2vec import SpectrumDocumentWithLosses
 
 
-def test_spectrum_document_init_default_with_losses():
-    """Use default n_decimal and add losses."""
+@pytest.fixture
+def spectrum() -> Spectrum:
     mz = np.array([10, 20, 30, 40], dtype="float")
     intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
     metadata = dict(precursor_mz=100.0)
-    spectrum = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
+    return Spectrum(mz=mz, intensities=intensities, metadata=metadata)
+
+def test_spectrum_document_init_default_with_losses(spectrum: Spectrum):
+    """Use default n_decimal and add losses."""
     spectrum_document = SpectrumDocumentWithLosses(spectrum)
 
     assert spectrum_document.n_decimals == 2, "Expected different default for n_decimals"
@@ -20,12 +24,8 @@ def test_spectrum_document_init_default_with_losses():
     assert next(spectrum_document) == "peak@10.00"
 
 
-def test_spectrum_document_init_n_decimals_1():
+def test_spectrum_document_init_n_decimals_1(spectrum: Spectrum):
     """Use n_decimal=1 and add losses."""
-    mz = np.array([10, 20, 30, 40], dtype="float")
-    intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
-    metadata = dict(precursor_mz=100.0)
-    spectrum = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
     spectrum_document = SpectrumDocumentWithLosses(spectrum, n_decimals=1)
 
     assert spectrum_document.n_decimals == 1
@@ -36,14 +36,22 @@ def test_spectrum_document_init_n_decimals_1():
     ]
     assert next(spectrum_document) == "peak@10.0"
 
-def test_spectrum_document_losses_getter():
+def test_spectrum_document_losses_getter(spectrum: Spectrum):
     """Test losses getter"""
-    mz = np.array([10, 20, 30, 40], dtype="float")
-    intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
-    metadata = {"precursor_mz": 100.0}
-    spectrum = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
     spectrum_document = SpectrumDocumentWithLosses(spectrum, n_decimals=2)
     assert np.all(spectrum_document.losses.mz == np.array([60., 70., 80., 90.])), \
         "Expected different losses"
-    assert np.all(spectrum_document.losses.intensities == intensities[::-1]), \
+    assert np.all(spectrum_document.losses.intensities == spectrum.intensities[::-1]), \
         "Expected different losses"
+
+
+def test_losses(spectrum: Spectrum):
+    loss_mz_from = 10
+    loss_mz_to = 30
+    expected = spectrum.compute_losses(loss_mz_from, loss_mz_to)
+
+    spectrum_document = SpectrumDocumentWithLosses(spectrum, n_decimals=2, loss_mz_from=loss_mz_from, loss_mz_to=loss_mz_to)
+    actual = spectrum_document.losses
+
+    assert actual == expected
+

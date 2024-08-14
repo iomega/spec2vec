@@ -1,6 +1,6 @@
-from matchms import Spectrum
-import pytest
 import numpy as np
+import pytest
+from matchms import Spectrum
 from spec2vec import SpectrumDocumentWithLosses
 
 
@@ -8,7 +8,7 @@ from spec2vec import SpectrumDocumentWithLosses
 def spectrum() -> Spectrum:
     mz = np.array([10, 20, 30, 40], dtype="float")
     intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
-    metadata = dict(precursor_mz=100.0)
+    metadata = {"precursor_mz": 100.0}
     return Spectrum(mz=mz, intensities=intensities, metadata=metadata)
 
 def test_spectrum_document_init_default_with_losses(spectrum: Spectrum):

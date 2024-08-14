@@ -4,12 +4,16 @@ from matchms import Spectrum
 from spec2vec import SpectrumDocument
 
 
-def test_spectrum_document_init_n_decimals_default_value_no_losses():
-
+@pytest.fixture
+def spectrum():
     mz = np.array([10, 20, 30, 40], dtype="float")
     intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
-    metadata = dict(precursor_mz=100.0)
+    metadata = {"precursor_mz": 100.0, "smiles": "testsmiles"}
     spectrum = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
+    return spectrum
+
+
+def test_spectrum_document_init_n_decimals_default_value_no_losses(spectrum):
     spectrum_document = SpectrumDocument(spectrum)
 
     assert spectrum_document.n_decimals == 2, "Expected different default for n_decimals"
@@ -20,11 +24,7 @@ def test_spectrum_document_init_n_decimals_default_value_no_losses():
     assert next(spectrum_document) == "peak@10.00"
 
 
-def test_spectrum_document_init_n_decimals_1_no_losses():
-    mz = np.array([10, 20, 30, 40], dtype="float")
-    intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
-    metadata = dict(precursor_mz=100.0)
-    spectrum = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
+def test_spectrum_document_init_n_decimals_1_no_losses(spectrum):
     spectrum_document = SpectrumDocument(spectrum, n_decimals=1)
 
     assert spectrum_document.n_decimals == 1
@@ -35,18 +35,13 @@ def test_spectrum_document_init_n_decimals_1_no_losses():
     assert next(spectrum_document) == "peak@10.0"
 
 
-def test_spectrum_document_metadata_getter():
+def test_spectrum_document_metadata_getter(spectrum):
     """Test metadata getter"""
-    mz = np.array([10, 20, 30, 40], dtype="float")
-    intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
-    metadata = {"precursor_mz": 100.0,
-                "smiles": "testsmiles"}
-    spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
-    spectrum_document = SpectrumDocument(spectrum_in, n_decimals=2)
+    spectrum_document = SpectrumDocument(spectrum, n_decimals=2)
 
     assert spectrum_document.n_decimals == 2
     assert len(spectrum_document) == 4
-    assert spectrum_document.metadata == metadata, "Expected different metadata"
+    assert spectrum_document.metadata == spectrum.metadata, "Expected different metadata"
     assert spectrum_document.get("smiles") == "testsmiles", "Expected different metadata"
     assert spectrum_document.words == [
         "peak@10.00", "peak@20.00", "peak@30.00", "peak@40.00"
@@ -69,16 +64,12 @@ def test_spectrum_document_metadata_getter_notallowed_key():
     assert str(msg.value) == "Key cannot be attribute of SpectrumDocument class"
 
 
-def test_spectrum_document_peak_getter():
+def test_spectrum_document_peak_getter(spectrum):
     """Test peak getter"""
-    mz = np.array([10, 20, 30, 40], dtype="float")
-    intensities = np.array([0, 0.01, 0.1, 1], dtype="float")
-    metadata = {"precursor_mz": 100.0}
-    spectrum_in = Spectrum(mz=mz, intensities=intensities, metadata=metadata)
-    spectrum_document = SpectrumDocument(spectrum_in, n_decimals=2)
+    spectrum_document = SpectrumDocument(spectrum, n_decimals=2)
 
     assert spectrum_document.words == [
         "peak@10.00", "peak@20.00", "peak@30.00", "peak@40.00"
     ]
-    assert np.all(spectrum_document.peaks.mz == mz), "Expected different peak m/z"
-    assert np.all(spectrum_document.peaks.intensities == intensities), "Expected different peaks"
+    assert np.all(spectrum_document.peaks.mz == spectrum.mz), "Expected different peak m/z"
+    assert np.all(spectrum_document.peaks.intensities == spectrum.intensities), "Expected different peaks"

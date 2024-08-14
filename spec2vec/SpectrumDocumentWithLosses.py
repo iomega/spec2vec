@@ -1,5 +1,6 @@
 from .SpectrumDocument import SpectrumDocument
 
+
 class SpectrumDocumentWithLosses(SpectrumDocument):
     def __init__(self, spectrum, n_decimals: int = 2, loss_mz_from: int = 10, loss_mz_to: int = 200):
         self._loss_mz_from = loss_mz_from

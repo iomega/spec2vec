@@ -4,7 +4,7 @@ import numpy as np
 from gensim.models import Word2Vec
 from matchms import Spectrum
 from matchms.similarity.BaseSimilarity import BaseSimilarity
-from sparsestack import StackedSparseArray 
+from sparsestack import StackedSparseArray
 from tqdm import tqdm
 from spec2vec.serialization import Word2VecLight
 from spec2vec.SpectrumDocument import SpectrumDocument

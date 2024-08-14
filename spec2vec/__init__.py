@@ -17,6 +17,6 @@ __all__ = [
     "Document",
     "serialization",
     "SpectrumDocument",
-    "SpectrumDocumentWithLosses,"
+    "SpectrumDocumentWithLosses",
     "Spec2Vec",
 ]

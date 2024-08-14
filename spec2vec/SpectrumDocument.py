@@ -1,7 +1,6 @@
-from typing import Optional
+from matchms import Spectrum
 from matchms.Spikes import Spikes
 from .Document import Document
-from matchms import Spectrum
 
 
 class SpectrumDocument(Document):

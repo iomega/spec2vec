@@ -177,12 +177,11 @@ class Spec2Vec(BaseSimilarity):
 
         if array_type == "numpy":
             return spec2vec_similarity
-        elif array_type == "sparse":
+        if array_type == "sparse":
             sparse = StackedSparseArray(n_rows, n_cols)
             sparse.add_dense_matrix(spec2vec_similarity, "")
             return sparse
-        else:
-            raise NotImplementedError("Only 'numpy' and 'sparse' array types are supported.")
+        raise NotImplementedError("Only 'numpy' and 'sparse' array types are supported.")
 
     @staticmethod
     def _get_word_decimals(model):

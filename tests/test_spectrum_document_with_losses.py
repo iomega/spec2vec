@@ -54,4 +54,3 @@ def test_losses(spectrum: Spectrum):
     actual = spectrum_document.losses
 
     assert actual == expected
-

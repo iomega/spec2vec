@@ -44,7 +44,7 @@ lines_after_imports = 2
 
 [tool.coverage.run]
 branch = true
-source = "spec2vec"
+source = ["spec2vec"]
 
 [tool.pytest.ini_options]
 testpaths = [

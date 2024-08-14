@@ -1,11 +1,13 @@
 import os
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 import numpy as np
 import pytest
 from gensim.models import Word2Vec
 from matchms import Spectrum, calculate_scores
 from scipy.sparse import coo_matrix, csc_matrix, csr_matrix
-from spec2vec import Spec2Vec
+from spec2vec import Spec2Vec, SpectrumDocument
+from spec2vec.model_building import train_new_word2vec_model
 from spec2vec.serialization import Word2VecLight, export_model, import_model
 
 
@@ -20,6 +22,25 @@ def model(request, test_dir):
         model.wv.__scipys = ["vectors"]  # pylint:disable=protected-access
         model.wv.vectors = scipy_matrix_builder[request.param](model.wv.vectors)
     return model
+
+@pytest.fixture
+def new_model():
+    documents = []
+    for i in range(100):
+        spectrum = Spectrum(mz=np.linspace(i, 9+i, 10),
+                            intensities=np.ones((10)).astype("float"),
+                            metadata={})
+        documents.append(SpectrumDocument(spectrum, n_decimals=1))
+    return train_new_word2vec_model(documents, iterations=20, vector_size=20,
+                                     progress_logger=False)
+
+@pytest.fixture
+def new_model_on_disk(new_model, tmp_path) -> [Path, Path, Word2Vec]:
+    outfile_model = tmp_path / "model.json"
+    outfile_weights = tmp_path / "model.npy"
+    export_model(new_model, outfile_model, outfile_weights)
+    return outfile_model, outfile_weights, new_model
+
 
 
 def write_read_model(model, tmp_path):
@@ -116,3 +137,20 @@ def test_reloaded_model_computes_scores(model, tmp_path):
     scores_reloaded = list(calculate_scores(references, queries, spec2vec_reloaded))
 
     assert scores == scores_reloaded
+
+
+def test_export_model(tmp_path, new_model):
+    outfile_model = tmp_path / "model.json"
+    outfile_weights = tmp_path / "model.npy"
+
+    export_model(new_model, outfile_model, outfile_weights)
+
+    assert Path.exists(outfile_model)
+    assert Path.exists(outfile_weights)
+
+
+def test_import_model(new_model_on_disk):
+    model_path, weights_path, expected = new_model_on_disk
+
+    actual = import_model(model_path, weights_path)
+    assert actual == expected

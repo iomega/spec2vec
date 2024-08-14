@@ -15,7 +15,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: 3.10
+          python-version: "3.10"
       - name: Python info
         run: |
           which python
@@ -56,7 +56,7 @@ jobs:
         python-version: ['3.10']
         exclude:
           # already tested in first_check job
-          - python-version: 3.10
+          - python-version: "3.10"
             os: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -125,7 +125,7 @@ jobs:
           activate-environment: spec2vec-build
           auto-update-conda: true
           environment-file: conda/environment-build.yml
-          python-version: 3.10
+          python-version: "3.10"
       - name: Show conda config
         shell: bash -l {0}
         run: |

@@ -95,7 +95,6 @@ jobs:
       - name: Build documentation
         shell: bash -l {0}
         run: |
-          cd readthedocs
           make coverage doctest html
         working-directory: readthedocs/
         env:

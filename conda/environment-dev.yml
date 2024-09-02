@@ -5,8 +5,8 @@ channels:
   - defaults
 dependencies:
   - python
-  - gensim ==4.3.2
-  - matchms >=0.14.0, <=0.26.4
+  - gensim >=4.3.3
+  - matchms >=0.27.0
   - numba
   - numpy
   - pip

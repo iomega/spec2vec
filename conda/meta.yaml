@@ -15,10 +15,10 @@ build:
 
 requirements:
   host:
-    - python >=3.7
+    - python >=3.10
     - pip
   run:
-    - python >=3.7
+    - python >=3.10
     - gensim >=4.3.3
     - matchms >=0.27.0
     - tqdm

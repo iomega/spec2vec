@@ -32,6 +32,7 @@ sphinx-rtd-theme = "^2.0.0"
 sphinxcontrib-apidoc = "^0.5.0"
 
 [tool.poetry_bumpversion.file."spec2vec/__version__.py"]
+[tool.poetry_bumpversion.file."conda/meta.yaml"]
 
 [build-system]
 requires = ["poetry-core"]

@@ -14,9 +14,9 @@ keywords = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.10,<3.13"
-gensim = "^4.3.3"
-matchms = "^0.27.0"
+python = ">=3.10,<3.14"
+gensim = "^4.4.0"
+matchms = ">=0.27.0"
 tqdm = "^4.66.5"
 
 [tool.poetry.group.dev.dependencies]

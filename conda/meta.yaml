@@ -23,7 +23,7 @@ requirements:
     - pip
   run:
     - python >=3.10
-    - gensim >=4.3.3
+    - gensim >=4.4.0
     - matchms >=0.27.0
     - tqdm
 

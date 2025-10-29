@@ -8,39 +8,39 @@ on:
 jobs:
 
   first_check:
-    name: first code check / python-3.8 / ubuntu-latest
+    name: first code check / python-3.10 / ubuntu-latest
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.8
+          python-version: "3.10"
       - name: Python info
         run: |
           which python
           python --version
       - name: Build package and create dev environment
         run: |
-          python -m pip install --upgrade pip
-          pip install -e .[dev]
+          python -m pip install --upgrade pip poetry
+          poetry install
       - name: Show pip list
         run: |
           pip list
       - name: Test with coverage
         run: |
-          pytest --cov --cov-report term --cov-report xml --junitxml=xunit-result.xml
+          poetry run pytest --cov --cov-report term --cov-report xml --junitxml=xunit-result.xml
       - name: Correct coverage paths
         run: sed -i "s+$PWD/++g" coverage.xml
       - name: Check style against standards using prospector
         shell: bash -l {0}
-        run: prospector -o grouped -o pylint:pylint-report.txt
+        run: poetry run prospector -o grouped -o pylint:pylint-report.txt
       - name: Check whether import statements are used consistently
         shell: bash -l {0}
-        run: isort --check-only --diff --conda-env spec2vec-dev .
-      - name: SonarCloud Scan
+        run: poetry run isort --check-only --diff --conda-env spec2vec-dev .
+      - name: SonarQube Scan
         if: github.repository == 'iomega/spec2vec'
-        uses: sonarsource/sonarcloud-github-action@master
+        uses: SonarSource/sonarqube-scan-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -53,15 +53,15 @@ jobs:
       fail-fast: false
       matrix:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
-        python-version: ['3.7', '3.8', '3.9']
+        python-version: ['3.10']
         exclude:
           # already tested in first_check job
-          - python-version: 3.8
+          - python-version: "3.10"
             os: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Python info
@@ -70,31 +70,31 @@ jobs:
           python --version
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip poetry
       - name: Build package
         run: |
-          pip install wheel twine
-          python setup.py sdist bdist_wheel
+          poetry build
       - name: Test package
         run: |
+          pip install twine
           python -m twine check dist/*
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip poetry
+          poetry install
       - name: Show pip list
         run: |
           pip list
-      - name: Install development dependencies
-        run: |
-          pip install -e .[dev]
       - name: Test
         run: |
-          pytest
+          poetry run pytest
       - name: Show environment variables
         shell: bash -l {0}
         run: |
           env | sort
       - name: Build documentation
-        shell: bash -l {0}
         run: |
-          make coverage doctest html
+          poetry run make coverage doctest html
         working-directory: readthedocs/
         env:
           SPHINXOPTS: "-n"  # enable nit-picky mode
@@ -108,22 +108,22 @@ jobs:
           echo "The code is sufficiently documented with ${UNCOVERED_MEMBERS} uncovered members out of ${UNCOVERED_MEMBERS_ALLOWED} allowed.";
 
   anaconda_build:
-    name: Anaconda build / python-3.7 / ubuntu-latest
+    name: Anaconda build / python-3.10 / ubuntu-latest
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
     needs: first_check
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: "0"
       - name: Create spec2vec-build environment
-        uses: conda-incubator/setup-miniconda@v2
+        uses: conda-incubator/setup-miniconda@v3
         with:
           activate-environment: spec2vec-build
           auto-update-conda: true
           environment-file: conda/environment-build.yml
-          python-version: 3.8
+          python-version: "3.10"
       - name: Show conda config
         shell: bash -l {0}
         run: |
@@ -148,11 +148,11 @@ jobs:
           [ "$RUNNING_OS" = "Windows" ] && export BUILDDIR=$RUNNER_TEMP\\spec2vec\\_build\\
           conda config --set anaconda_upload no
           conda build --no-include-recipe \
-            --channel bioconda --channel conda-forge \
+            --channel conda-forge --channel bioconda \
             --croot ${BUILDDIR} \
             ./conda
       - name: Upload package artifact from build
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: conda-package-artifact
           path: ${{ runner.temp }}/spec2vec/_build

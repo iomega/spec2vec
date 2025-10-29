@@ -16,8 +16,8 @@ pylint-report.txt
 xunit-result.xml
 .scannerwork/
 
-docs/_build
-docs/apidocs
+readthedocs/_build
+readthedocs/api
 
 # ide
 .idea

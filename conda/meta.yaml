@@ -1,65 +1,49 @@
 {% set name = "spec2vec" %}
-{% set version = "0.8.1" %}
+{% set version = "0.9.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  path: ..
-
-extra:
-  channels:
-    - nlesc
-    - conda-forge
-    - bioconda
+  path: ../
 
 build:
   noarch: python
-  preserve_egg_dir: True
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   number: 0
-  skip: True # [py2k]
-  script: {{ PYTHON }} -m pip install --no-deps --ignore-installed . -vv
 
 requirements:
   build:
-    - conda-build
-    - conda-verify
-    - pytest-runner
     - python
-    - matchms >=0.6.2
-    - numpy {{ numpy }}
-    - setuptools
+    - poetry
   host:
-    - python >=3.7
+    - python >=3.10, <3.14
+    - poetry
     - pip
-    - pytest-runner
-    - setuptools
   run:
-    - gensim >=4.2.0
-    - matchms >=0.14.0, <=0.26.4
-    - numba >=0.51
-    - numpy
-    - pip
-    - python >=3.7
-    - scipy <=1.10.1
+    - python >=3.10, <3.14
+    - gensim >=4.4.0
+    - matchms >=0.27.0
     - tqdm
+    - lxml >=4.9.3, <6.0.0
+    - rdkit >=2024.3.5, <2025.0.0
+    - numba >=0.60, <0.62
 
 test:
   imports:
     - spec2vec
+  commands:
+    - pip check
+  requires:
+    - pip
 
 about:
   home: https://github.com/iomega/spec2vec
-  license: Apache-2.0
-  license_family: APACHE
-  license_file: LICENSE
   summary: Word2Vec based similarity measure of mass spectrometry data.
-  description: Word2Vec based similarity measure of mass spectrometry data.
-  doc_url: https://spec2vec.readthedocs.io/
-  dev_url: https://github.com/iomega/spec2vec
+  license: Apache-2.0
+  license_file: LICENSE
 
 extra:
   recipe-maintainers:
-    - fdiblen
-    - florian-huber
+    - hechth

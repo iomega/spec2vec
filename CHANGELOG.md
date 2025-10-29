@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2025-10-20
+### Changed
+- Added loss_mz_from and loss_mz_to to SpectrumDocument [#95](https://github.com/iomega/spec2vec/pull/95)
+- Updated required matchms version to >=0.27.0 [#95](https://github.com/iomega/spec2vec/pull/95)
+- Updated required Python version to >=3.10 [#95](https://github.com/iomega/spec2vec/pull/95)
+- Moved to poetry [#95](https://github.com/iomega/spec2vec/pull/95)
+- Updated CI_build workflow to use poetry and actions [#95](https://github.com/iomega/spec2vec/pull/95)
+- Added sparse array type handling and tests [#95](https://github.com/iomega/spec2vec/pull/95)
+
+### Fixed
+
+- Fixed missing keyword in model dict [#95](https://github.com/iomega/spec2vec/pull/95)
+- Fixed documentation [#95](https://github.com/iomega/spec2vec/pull/95)
+
 ## [0.8.1] - 2024-08-06
 ### Changed
 - Set max matchms to 0.26.4
@@ -147,7 +161,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fossa configuration
 - Flowchart
 
-[Unreleased]: https://github.com/iomega/spec2vec/compare/0.8.0...HEAD
+[Unreleased]: https://github.com/iomega/spec2vec/compare/0.9.0...HEAD
+[0.9.0]: https://github.com/iomega/spec2vec/compare/0.8.1...0.9.0
+[0.8.1]: https://github.com/iomega/spec2vec/compare/0.8.0...0.8.1
 [0.8.0]: https://github.com/iomega/spec2vec/compare/0.6.0...0.7.0
 [0.7.0]: https://github.com/iomega/spec2vec/compare/0.6.0...0.7.0
 [0.6.0]: https://github.com/iomega/spec2vec/compare/0.5.0...0.6.0

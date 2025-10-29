@@ -1,4 +1,4 @@
-from typing import Optional
+from matchms import Spectrum
 from matchms.Spikes import Spikes
 from .Document import Document
 
@@ -6,7 +6,7 @@ from .Document import Document
 class SpectrumDocument(Document):
     """Create documents from spectra.
 
-    Every peak (and loss) positions (m/z value) will be converted into a string "word".
+    Every peak positions (m/z value) will be converted into a string "word".
     The entire list of all peak words forms a spectrum document. Peak words have
     the form "peak@100.32" (for n_decimals=2), and losses have the format "loss@100.32".
     Peaks with identical resulting strings will not be merged, hence same words can
@@ -38,7 +38,7 @@ class SpectrumDocument(Document):
         [100.   150.   200.51]
         substance1
     """
-    def __init__(self, spectrum, n_decimals: int = 2):
+    def __init__(self, spectrum: Spectrum, n_decimals: int = 2):
         """
 
         Parameters
@@ -50,31 +50,24 @@ class SpectrumDocument(Document):
             The default is 2, which would convert a peak at 100.387 into the
             word "peak@100.39".
         """
-        self.n_decimals = n_decimals
+        self.n_decimals: int = n_decimals
         self.weights = None
         super().__init__(obj=spectrum)
         self._add_weights()
+        self._obj: Spectrum = self._obj
 
-    def _make_words(self):
+    def _make_words(self) -> list[str]:
         """Create word from peaks (and losses)."""
         peak_words = [f"peak@{mz:.{self.n_decimals}f}" for mz in self._obj.peaks.mz]
-        if self._obj.losses is not None:
-            loss_words = [f"loss@{mz:.{self.n_decimals}f}" for mz in self._obj.losses.mz]
-        else:
-            loss_words = []
-        self.words = peak_words + loss_words
+        self.words = peak_words
         return self
 
-    def _add_weights(self):
+    def _add_weights(self) -> list[float]:
         """Add peaks (and loss) intensities as weights."""
         assert self._obj.peaks.intensities.max() <= 1, "peak intensities not normalized"
 
         peak_intensities = self._obj.peaks.intensities.tolist()
-        if self._obj.losses is not None:
-            loss_intensities = self._obj.losses.intensities.tolist()
-        else:
-            loss_intensities = []
-        self.weights = peak_intensities + loss_intensities
+        self.weights = peak_intensities
         return self
 
     def get(self, key: str, default=None):
@@ -92,11 +85,6 @@ class SpectrumDocument(Document):
     def metadata(self):
         """Return metadata of original spectrum."""
         return self._obj.metadata
-
-    @property
-    def losses(self) -> Optional[Spikes]:
-        """Return losses of original spectrum."""
-        return self._obj.losses
 
     @property
     def peaks(self) -> Spikes:

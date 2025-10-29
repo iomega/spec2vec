@@ -8,6 +8,17 @@ from spec2vec.model_building import (set_learning_rate_decay,
                                      train_new_word2vec_model)
 
 
+@pytest.fixture
+def documents():
+    documents = []
+    for i in range(100):
+        spectrum = Spectrum(mz=np.linspace(i, 9+i, 10),
+                            intensities=np.ones((10)).astype("float"),
+                            metadata={})
+        documents.append(SpectrumDocument(spectrum, n_decimals=1))
+    return documents
+
+
 def test_set_learning_rate_decay():
     """Test if correct alpha and min_alpha are calculated."""
     alpha, min_alpha = set_learning_rate_decay(0.5, 0.05, 8)
@@ -22,15 +33,9 @@ def test_set_learning_rate_decay_rate_too_high():
     assert min_alpha == 0.0, "Expected different min_alpha"
 
 
-def test_train_new_word2vec_model():
+def test_train_new_word2vec_model(documents):
     """Test training of a dummy model."""
     # Create fake corpus
-    documents = []
-    for i in range(100):
-        spectrum = Spectrum(mz=np.linspace(i, 9+i, 10),
-                            intensities=np.ones((10)).astype("float"),
-                            metadata={})
-        documents.append(SpectrumDocument(spectrum, n_decimals=1))
     model = train_new_word2vec_model(documents, iterations=20, vector_size=20,
                                      progress_logger=False)
     assert model.sg == 0, "Expected different default value."
@@ -44,16 +49,9 @@ def test_train_new_word2vec_model():
     assert model.wv.get_vector(documents[0].words[1]).shape[0] == 20, "Expected differnt vector size."
 
 
-def test_train_new_word2vec_model_with_logger_and_saving(tmp_path):
+def test_train_new_word2vec_model_with_logger_and_saving(tmp_path, documents):
     """Test training of a dummy model and save it."""
     # Create fake corpus
-    documents = []
-    for i in range(100):
-        spectrum = Spectrum(mz=np.linspace(i, 9+i, 10),
-                            intensities=np.ones((10)).astype("float"),
-                            metadata={})
-        documents.append(SpectrumDocument(spectrum, n_decimals=1))
-    # Train model and write to file
     filename = os.path.join(tmp_path, "test.model")
     model = train_new_word2vec_model(documents, iterations=20, filename=filename,
                                      vector_size=20, progress_logger=True)
@@ -74,18 +72,11 @@ def test_train_new_word2vec_model_with_logger_and_saving(tmp_path):
     assert model.wv.get_vector(documents[0].words[1]).shape[0] == 20, "Expected differnt vector size."
 
 
-def test_train_new_word2vec_model_wrong_entry():
+def test_train_new_word2vec_model_wrong_entry(documents):
     """Test training of a dummy model with not-accepted gensim argument entry."""
     # Create fake corpus
-    documents = []
-    for i in range(10):
-        spectrum = Spectrum(mz=np.linspace(i, 9+i, 10),
-                            intensities=np.ones((10)).astype("float"),
-                            metadata={})
-        documents.append(SpectrumDocument(spectrum, n_decimals=1))
-
     with pytest.raises(AssertionError) as msg:
-        _ = train_new_word2vec_model(documents, iterations=20, alpha=0.01,
+        _ = train_new_word2vec_model(documents[:10], iterations=20, alpha=0.01,
                                      progress_logger=False)
 
     expected_message_part = "Expect 'learning_rate_initial' instead of 'alpha'."

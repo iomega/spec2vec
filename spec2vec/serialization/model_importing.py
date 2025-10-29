@@ -38,7 +38,7 @@ class Word2VecLight:
 
         def from_dict(self, dictionary: dict):
             expected_keys = {"vector_size", "__numpys", "__scipys", "__ignoreds", "__recursive_saveloads",
-                             "index_to_key", "norms", "key_to_index", "__weights_format"}
+                             "index_to_key", "norms", "key_to_index", "__weights_format"} #, "mapfile_path"
             if dictionary.keys() == expected_keys:
                 self.__dict__ = dictionary
             elif expected_keys.symmetric_difference(dictionary.keys()) == {"next_index"}:  # backward compatibility

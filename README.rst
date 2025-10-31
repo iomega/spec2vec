@@ -148,7 +148,7 @@ dataset.
                                      workers=2, progress_logger=True)
 
 Once a word2vec model has been trained, spec2vec allows to calculate the similarities
-between mass spectrums based on this model. In cases where the word2vec model was
+between mass spectra based on this model. In cases where the word2vec model was
 trained on data different than the data it is applied for, a number of peaks ("words")
 might be unknown to the model (if they weren't part of the training dataset). To
 account for those cases it is important to specify the ``allowed_missing_percentage``,
@@ -160,11 +160,11 @@ as in the example below.
     from matchms import calculate_scores
     from spec2vec import Spec2Vec
 
-    # query_spectrums loaded from files using https://matchms.readthedocs.io/en/latest/api/matchms.importing.load_from_mgf.html
-    query_spectrums = [spectrum_processing(s) for s in load_from_mgf("query_spectrums.mgf")]
+    # query_spectra loaded from files using https://matchms.readthedocs.io/en/latest/api/matchms.importing.load_from_mgf.html
+    query_spectra = [spectrum_processing(s) for s in load_from_mgf("query_spectrums.mgf")]
 
-    # Omit spectrums that didn't qualify for analysis
-    query_spectrums = [s for s in query_spectrums if s is not None]
+    # Omit spectra that didn't qualify for analysis
+    query_spectra = [s for s in query_spectrums if s is not None]
 
     # Import pre-trained word2vec model (see code example above)
     model_file = "references.model"
@@ -174,8 +174,8 @@ as in the example below.
     spec2vec_similarity = Spec2Vec(model=model, intensity_weighting_power=0.5,
                                    allowed_missing_percentage=5.0)
 
-    # Calculate scores on all combinations of reference spectrums and queries
-    scores = calculate_scores(reference_documents, query_spectrums, spec2vec_similarity)
+    # Calculate scores on all combinations of reference spectra and queries
+    scores = calculate_scores(reference_documents, query_spectra, spec2vec_similarity)
 
     # Find the highest scores for a query spectrum of interest
     best_matches = scores.scores_by_query(query_documents[0], sort=True)[:10]

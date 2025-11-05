@@ -135,14 +135,15 @@ dataset.
     
     # Add some default filters. You can add more filters functions like require min. number of peaks
     processor = SpectrumProcessor(DEFAULT_FILTERS)
-    # processor.parse_and_add_filter(("require_minimum_number_of_peaks", {"n_required": 4}))
     
     # Apply filter pipeline
     spectra_cleaned, _ = processor.process_spectra(spectra)
+    spectra_cleaned = [s for s in spectra_cleaned if s is not None]
 
     # Create spectrum documents
-    reference_documents = [SpectrumDocument(s, n_decimals=2, loss_mz_from=10.0, loss_mz_to=200.0) for s in spectra_cleaned]
+    reference_documents = [SpectrumDocument(s, n_decimals=2) for s in spectra_cleaned]
 
+    # Train your reference model
     model_file = "references.model"
     model = train_new_word2vec_model(reference_documents, iterations=[10, 20, 30], filename=model_file,
                                      workers=2, progress_logger=True)
@@ -161,10 +162,11 @@ as in the example below.
     from spec2vec import Spec2Vec
 
     # query_spectra loaded from files using https://matchms.readthedocs.io/en/latest/api/matchms.importing.load_from_mgf.html
-    query_spectra = [spectrum_processing(s) for s in load_from_mgf("query_spectrums.mgf")]
+    query_spectra = list(load_from_mgf("query_spectrums.mgf"))
+    query_spectra_cleaned, _ = processor.process_spectra(query_spectra)
 
     # Omit spectra that didn't qualify for analysis
-    query_spectra = [s for s in query_spectrums if s is not None]
+    query_spectra_cleaned = [s for s in query_spectra_cleaned if s is not None]
 
     # Import pre-trained word2vec model (see code example above)
     model_file = "references.model"
@@ -175,10 +177,10 @@ as in the example below.
                                    allowed_missing_percentage=5.0)
 
     # Calculate scores on all combinations of reference spectra and queries
-    scores = calculate_scores(reference_documents, query_spectra, spec2vec_similarity)
+    scores = calculate_scores(reference_documents, query_spectra_cleaned, spec2vec_similarity)
 
     # Find the highest scores for a query spectrum of interest
-    best_matches = scores.scores_by_query(query_documents[0], sort=True)[:10]
+    best_matches = scores.scores_by_query(query_spectra_cleaned[0], sort=True)[:10]
 
     # Return highest scores
     print([x[1] for x in best_matches])

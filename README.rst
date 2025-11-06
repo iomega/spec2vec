@@ -88,7 +88,7 @@ For more extensive documentation `see our readthedocs <https://spec2vec.readthed
 
 Versions
 ========
-Since version `0.5.0` Spec2Vec uses `gensim >= 4.0.0` which should make it faster and more future proof. Model trained with older versions should still be importable without any issues. If you had scripts that used additional gensim code, however, those might occationally need some adaptation, see also the `gensim documentation on how to migrate your code <https://github.com/RaRe-Technologies/gensim/wiki/Migrating-from-Gensim-3.x-to-4>`_.
+Since version `0.9.0` Spec2Vec uses `gensim >= 4.4.0` which should make it faster and more future proof. Model trained with older versions should still be importable without any issues. If you had scripts that used additional gensim code, however, those might occationally need some adaptation, see also the `gensim documentation on how to migrate your code <https://github.com/RaRe-Technologies/gensim/wiki/Migrating-from-Gensim-3.x-to-4>`_.
 
 
 Installation
@@ -97,14 +97,14 @@ Installation
 
 Prerequisites:  
 
-- Python 3.7, 3.8, or 3.9  
+- Python 3.10, 3.11, 3.12 or 3.13  
 - Recommended: Anaconda
 
 We recommend installing spec2vec from Anaconda Cloud with
 
 .. code-block:: console
 
-  conda create --name spec2vec python=3.8
+  conda create --name spec2vec python=3.13
   conda activate spec2vec
   conda install --channel bioconda --channel conda-forge spec2vec
 
@@ -124,38 +124,32 @@ dataset.
 
 .. code-block:: python
 
-    import os
-    import matchms.filtering as msfilters
+    from matchms import SpectrumProcessor
+    from matchms.filtering.default_pipelines import DEFAULT_FILTERS
     from matchms.importing import load_from_mgf
     from spec2vec import SpectrumDocument
     from spec2vec.model_building import train_new_word2vec_model
 
-    def spectrum_processing(s):
-        """This is how one would typically design a desired pre- and post-
-        processing pipeline."""
-        s = msfilters.default_filters(s)
-        s = msfilters.add_parent_mass(s)
-        s = msfilters.normalize_intensities(s)
-        s = msfilters.reduce_to_number_of_peaks(s, n_required=10, ratio_desired=0.5, n_max=500)
-        s = msfilters.select_by_mz(s, mz_from=0, mz_to=1000)
-        s = msfilters.require_minimum_number_of_peaks(s, n_required=10)
-        return s
-
-    # Load data from MGF file and apply filters
-    spectrums = [spectrum_processing(s) for s in load_from_mgf("reference_spectrums.mgf")]
-
-    # Omit spectrums that didn't qualify for analysis
-    spectrums = [s for s in spectrums if s is not None]
+    # Load spectra from MGF
+    spectra = list(load_from_mgf("reference_spectrums.mgf"))
+    
+    # Add some default filters. You can add more filters functions like require min. number of peaks
+    processor = SpectrumProcessor(DEFAULT_FILTERS)
+    
+    # Apply filter pipeline
+    spectra_cleaned, _ = processor.process_spectra(spectra)
+    spectra_cleaned = [s for s in spectra_cleaned if s is not None]
 
     # Create spectrum documents
-    reference_documents = [SpectrumDocument(s, n_decimals=2, loss_mz_from=10.0, loss_mz_to=200.0) for s in spectrums]
+    reference_documents = [SpectrumDocument(s, n_decimals=2) for s in spectra_cleaned]
 
+    # Train your reference model
     model_file = "references.model"
     model = train_new_word2vec_model(reference_documents, iterations=[10, 20, 30], filename=model_file,
                                      workers=2, progress_logger=True)
 
 Once a word2vec model has been trained, spec2vec allows to calculate the similarities
-between mass spectrums based on this model. In cases where the word2vec model was
+between mass spectra based on this model. In cases where the word2vec model was
 trained on data different than the data it is applied for, a number of peaks ("words")
 might be unknown to the model (if they weren't part of the training dataset). To
 account for those cases it is important to specify the ``allowed_missing_percentage``,
@@ -167,11 +161,12 @@ as in the example below.
     from matchms import calculate_scores
     from spec2vec import Spec2Vec
 
-    # query_spectrums loaded from files using https://matchms.readthedocs.io/en/latest/api/matchms.importing.load_from_mgf.html
-    query_spectrums = [spectrum_processing(s) for s in load_from_mgf("query_spectrums.mgf")]
+    # query_spectra loaded from files using https://matchms.readthedocs.io/en/latest/api/matchms.importing.load_from_mgf.html
+    query_spectra = list(load_from_mgf("query_spectrums.mgf"))
+    query_spectra_cleaned, _ = processor.process_spectra(query_spectra)
 
-    # Omit spectrums that didn't qualify for analysis
-    query_spectrums = [s for s in query_spectrums if s is not None]
+    # Omit spectra that didn't qualify for analysis
+    query_spectra_cleaned = [s for s in query_spectra_cleaned if s is not None]
 
     # Import pre-trained word2vec model (see code example above)
     model_file = "references.model"
@@ -181,11 +176,11 @@ as in the example below.
     spec2vec_similarity = Spec2Vec(model=model, intensity_weighting_power=0.5,
                                    allowed_missing_percentage=5.0)
 
-    # Calculate scores on all combinations of reference spectrums and queries
-    scores = calculate_scores(reference_documents, query_spectrums, spec2vec_similarity)
+    # Calculate scores on all combinations of reference spectra and queries
+    scores = calculate_scores(reference_documents, query_spectra_cleaned, spec2vec_similarity)
 
     # Find the highest scores for a query spectrum of interest
-    best_matches = scores.scores_by_query(query_documents[0], sort=True)[:10]
+    best_matches = scores.scores_by_query(query_spectra_cleaned[0], sort=True)[:10]
 
     # Return highest scores
     print([x[1] for x in best_matches])

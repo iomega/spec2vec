@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spec2vec"
-version = "0.8.1"
+version = "0.9.1"
 description = "Word2Vec based similarity measure of mass spectrometry data."
 authors = ["Florian Huber <florian.huber@hs-duesseldorf.de>"]
 license = "Apache Software License 2.0"

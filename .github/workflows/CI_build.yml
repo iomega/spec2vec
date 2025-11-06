@@ -8,7 +8,7 @@ on:
 jobs:
 
   first_check:
-    name: first code check / python-3.10 / ubuntu-latest
+    name: first code check / python-3.13 / ubuntu-latest
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -108,7 +108,7 @@ jobs:
           echo "The code is sufficiently documented with ${UNCOVERED_MEMBERS} uncovered members out of ${UNCOVERED_MEMBERS_ALLOWED} allowed.";
 
   anaconda_build:
-    name: Anaconda build / python-3.10 / ubuntu-latest
+    name: Anaconda build / python-3.12 / ubuntu-latest
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -123,7 +123,7 @@ jobs:
           activate-environment: spec2vec-build
           auto-update-conda: true
           environment-file: conda/environment-build.yml
-          python-version: "3.13"
+          python-version: "3.12"
       - name: Show conda config
         shell: bash -l {0}
         run: |

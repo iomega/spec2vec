@@ -54,7 +54,6 @@ class SpectrumDocument(Document):
         self.weights = None
         super().__init__(obj=spectrum)
         self._add_weights()
-        self._obj: Spectrum = self._obj
 
     def _make_words(self) -> list[str]:
         """Create word from peaks (and losses)."""

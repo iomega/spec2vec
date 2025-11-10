@@ -1,5 +1,7 @@
 {% set name = "spec2vec" %}
-{% set version = "0.9.1" %}
+
+{% set pyproject = load_file_data('../pyproject.toml', from_recipe_dir=True) %}
+{% set version = pyproject.get('tool', {}).get('poetry', {}).get('version', '0+unknown') %}
 
 package:
   name: {{ name|lower }}

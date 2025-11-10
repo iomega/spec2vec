@@ -4,6 +4,12 @@ on:
   push:
   pull_request:
     types: [opened, reopened]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Tag for manually running CI Build workflow
+        required: False
+        default: ''
 
 jobs:
 
@@ -38,12 +44,12 @@ jobs:
       - name: Check whether import statements are used consistently
         shell: bash -l {0}
         run: poetry run isort --check-only --diff --conda-env spec2vec-dev .
-      - name: SonarQube Scan
-        if: github.repository == 'iomega/spec2vec'
-        uses: SonarSource/sonarqube-scan-action@v6
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#      - name: SonarQube Scan
+#        if: github.repository == 'iomega/spec2vec'
+#        uses: SonarSource/sonarqube-scan-action@v6
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   build_pypi:
     name: Pypi and documentation build / python-${{ matrix.python-version }} / ${{ matrix.os }}

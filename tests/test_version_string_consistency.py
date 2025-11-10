@@ -1,7 +1,6 @@
 import importlib
 import os
 import pytest
-import re
 import tomli
 
 

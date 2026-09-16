@@ -1,5 +1,5 @@
 from matchms import Spectrum
-from matchms.Spikes import Spikes
+from matchms.Fragments import Fragments
 from .Document import Document
 
 
@@ -86,6 +86,6 @@ class SpectrumDocument(Document):
         return self._obj.metadata
 
     @property
-    def peaks(self) -> Spikes:
+    def peaks(self) -> Fragments:
         """Return peaks of original spectrum."""
         return self._obj.peaks

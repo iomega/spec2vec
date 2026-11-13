@@ -13,6 +13,7 @@ Code quality checks:
 |Sonarcloud Quality Gate Badge| |Sonarcloud Coverage Badge|
 
 .. image:: readthedocs/spec2vec_logo_01.svg
+   :width: 500px
    :target: readthedocs/spec2vec_logo_01.svg
    :align: left
    :alt: spec2vec logo

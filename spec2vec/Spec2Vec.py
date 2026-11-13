@@ -4,7 +4,7 @@ import numpy as np
 from gensim.models import Word2Vec
 from matchms import Spectrum
 from tqdm import tqdm
-from spec2vec._matchms_compat import BaseSimilarity, MATCHMS_V1, Scores
+from spec2vec._matchms_compat import MATCHMS_V1, BaseSimilarity, Scores
 from spec2vec.serialization import Word2VecLight
 from spec2vec.SpectrumDocument import SpectrumDocument
 from spec2vec.vector_operations import (calc_vector, cosine_similarity,
@@ -205,13 +205,15 @@ class Spec2Vec(BaseSimilarity):
 
         if MATCHMS_V1:
             if array_type == "sparse":
-                from scipy.sparse import coo_array  # pylint: disable=import-outside-toplevel
+                from scipy.sparse import \
+                    coo_array  # pylint: disable=import-outside-toplevel
                 return Scores({"score": coo_array(similarities)})
             return Scores({"score": similarities})
 
         if array_type == "sparse":
             # Only needed for the old matchms scoring API.
-            from sparsestack import StackedSparseArray  # pylint: disable=import-outside-toplevel
+            from sparsestack import \
+                StackedSparseArray  # pylint: disable=import-outside-toplevel
             sparse = StackedSparseArray(len(references), len(queries))
             sparse.add_dense_matrix(similarities, "")
             return sparse

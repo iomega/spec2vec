@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 0.10.0 (Unreleased)
+
+### Changed
+- Added compatibility with matchms 1.0 while preserving support for matchms 0.x.
+- Adapted similarity matrix output to the new matchms `Scores` API.
+- Updated imports, tests, documentation examples, and CI compatibility checks.
+
+### Fixed
+- Prevented `NaN` similarities for zero embeddings.
+- Corrected outdated Gensim arguments and legacy test assumptions.
+
+### Maintenance
+- Added temporary lint suppressions ahead of the planned migration to uv and Ruff.
+- Retained Gensim and existing pretrained model compatibility.
+
+## [0.9.1] - 2025-10-20
+- corrected version number, so same as 0.9.0
+
 ## [0.9.0] - 2025-10-20
 ### Changed
 - Added loss_mz_from and loss_mz_to to SpectrumDocument [#95](https://github.com/iomega/spec2vec/pull/95)

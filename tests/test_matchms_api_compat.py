@@ -110,5 +110,5 @@ def test_sparse_matrix_output():
         assert result.is_sparse
         np.testing.assert_allclose(result.to_array("score"), np.eye(2))
     else:
-        from sparsestack import StackedSparseArray
+        from sparsestack import StackedSparseArray  # pylint: disable=import-outside-toplevel
         assert isinstance(result, StackedSparseArray)

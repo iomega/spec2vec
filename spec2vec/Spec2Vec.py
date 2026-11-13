@@ -134,6 +134,7 @@ class Spec2Vec(BaseSimilarity):
 
         return cosine_similarity(reference_vector, query_vector)
 
+    # pylint: disable=arguments-differ,too-many-arguments,too-many-locals
     def matrix(self, references: Union[List[SpectrumDocument], List[Spectrum]],
                queries: Union[List[SpectrumDocument], List[Spectrum], None] = None,
                score_fields=None,
@@ -204,13 +205,13 @@ class Spec2Vec(BaseSimilarity):
 
         if MATCHMS_V1:
             if array_type == "sparse":
-                from scipy.sparse import coo_array
+                from scipy.sparse import coo_array  # pylint: disable=import-outside-toplevel
                 return Scores({"score": coo_array(similarities)})
             return Scores({"score": similarities})
 
         if array_type == "sparse":
             # Only needed for the old matchms scoring API.
-            from sparsestack import StackedSparseArray
+            from sparsestack import StackedSparseArray  # pylint: disable=import-outside-toplevel
             sparse = StackedSparseArray(len(references), len(queries))
             sparse.add_dense_matrix(similarities, "")
             return sparse

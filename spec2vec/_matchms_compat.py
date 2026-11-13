@@ -3,7 +3,8 @@
 Do not infer the API from package version strings: use the public module
 location provided by each matchms API generation instead.
 """
-
+# pylint: disable=unused-import
+# flake8: noqa: F401
 try:
     from matchms.similarity.base_similarity import BaseSimilarity
 except ModuleNotFoundError as error:

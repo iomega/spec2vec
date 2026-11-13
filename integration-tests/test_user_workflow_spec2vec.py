@@ -10,6 +10,7 @@ from matchms.importing import load_from_mgf
 from spec2vec import Spec2Vec, SpectrumDocumentWithLosses
 
 
+# pylint: disable=too-many-locals
 def test_user_workflow_spec2vec():
     """Test typical user workflow to get from mass spectra to spec2vec similarities.
 

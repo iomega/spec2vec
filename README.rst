@@ -25,7 +25,7 @@ spec2vec
 algorithm -- Word2Vec. Where Word2Vec learns relationships between words in sentences,
 **spec2vec** does so for mass fragments and neutral losses in MS/MS spectra.
 The spectral similarity score is based on spectral embeddings learnt
-from the fragmental relationships within a large set of spectral data. 
+from the fragmental relationships within a large set of spectral data.
 
 If you use **spec2vec** for your research, please cite the following references:
 
@@ -74,115 +74,109 @@ Thanks!
     :alt: Documentation Status
     :target: https://spec2vec.readthedocs.io/en/latest/?badge=latest
 
-.. |GitHub Workflow Status| image:: https://img.shields.io/github/actions/workflow/status/matchms/spec2vec/CI_build.yml?branch=master
-   :target: https://img.shields.io/github/workflow/status/iomega/spec2vec/CI%20Build
+.. |GitHub Workflow Status| image:: https://img.shields.io/github/actions/workflow/status/iomega/spec2vec/CI_build.yml?branch=master
+   :target: https://github.com/iomega/spec2vec/actions/workflows/CI_build.yml
    :alt: GitHub Workflow Status
 
 
 ***********************
 Documentation for users
 ***********************
-For more extensive documentation `see our readthedocs <https://spec2vec.readthedocs.io/en/latest/>`_ or get started with our `spec2vec introduction tutorial <https://blog.esciencecenter.nl/build-a-mass-spectrometry-analysis-pipeline-in-python-using-matchms-part-ii-spec2vec-8aa639571018>`_.
 
-Versions
-========
-Since version `0.9.0` Spec2Vec uses `gensim >= 4.4.0` which should make it faster and more future proof. Model trained with older versions should still be importable without any issues. If you had scripts that used additional gensim code, however, those might occationally need some adaptation, see also the `gensim documentation on how to migrate your code <https://github.com/RaRe-Technologies/gensim/wiki/Migrating-from-Gensim-3.x-to-4>`_.
+See the `full documentation <https://spec2vec.readthedocs.io/en/latest/>`_ for
+installation, examples, and the API reference.
 
+Compatibility
+=============
+
+The upcoming Spec2Vec 0.10.0 compatibility release supports **matchms 1.0**
+(including ``1.0.0.dev1``) while retaining support for matchms 0.x.  It keeps
+**Gensim 4.4**, the existing Word2Vec model format, and the Spec2Vec embedding
+algorithm. Replacing Gensim is outside the scope of this release.
+
+Spec2Vec currently supports Python **3.10--3.13**. For reproducible workflows,
+pin your Spec2Vec, matchms, and Gensim versions.
 
 Installation
 ============
 
-
-Prerequisites:  
-
-- Python 3.10, 3.11, 3.12 or 3.13  
-- Recommended: Anaconda
-
-We recommend installing spec2vec from Anaconda Cloud with
+Install the current published release from PyPI:
 
 .. code-block:: console
 
-  conda create --name spec2vec python=3.13
-  conda activate spec2vec
-  conda install --channel bioconda --channel conda-forge spec2vec
+   python -m pip install spec2vec
 
-Alternatively, spec2vec can also be installed using ``pip``. When using spec2vec together with ``matchms`` it is important to note that only the Anaconda install will make sure that also ``rdkit`` is installed properly, which is requried for a few matchms filter functions (it is not required for any spec2vec related functionalities though).
+Or use a Conda environment and install the Bioconda package:
 
 .. code-block:: console
 
-  pip install spec2vec
+   conda create -n spec2vec -c conda-forge -c bioconda python=3.12 spec2vec
+   conda activate spec2vec
 
-Examples
-========
-Below a code example of how to process a large data set of reference spectra to
-train a word2vec model from scratch. Spectra are converted to documents using ``SpectrumDocument`` which converts spectrum peaks into "words" according to their m/z ratio (for instance "peak@100.39"). A new word2vec model can then trained using ``train_new_word2vec_model`` which will set the training parameters to spec2vec defaults unless specified otherwise. Word2Vec models learn from co-occurences of peaks ("words") across many different spectra.
-To get a model that can give a meaningful representation of a set of
-given spectra it is desirable to train the model on a large and representative
-dataset.
+Bioconda packages can lag behind PyPI releases. To test the matchms 1.0
+prerelease, explicitly select it in a compatible environment, once the
+Spec2Vec compatibility changes are installed:
 
-.. code-block:: python
+.. code-block:: console
 
-    from matchms import SpectrumProcessor
-    from matchms.filtering.default_pipelines import DEFAULT_FILTERS
-    from matchms.importing import load_from_mgf
-    from spec2vec import SpectrumDocument
-    from spec2vec.model_building import train_new_word2vec_model
+   python -m pip install --pre "matchms==1.0.0.dev1"
 
-    # Load spectra from MGF
-    spectra = list(load_from_mgf("reference_spectrums.mgf"))
-    
-    # Add some default filters. You can add more filters functions like require min. number of peaks
-    processor = SpectrumProcessor(DEFAULT_FILTERS)
-    
-    # Apply filter pipeline
-    spectra_cleaned, _ = processor.process_spectra(spectra)
-    spectra_cleaned = [s for s in spectra_cleaned if s is not None]
+Check the resulting environment with ``python -m pip check``. Do not assume
+that a standard installation will automatically choose prerelease versions.
 
-    # Create spectrum documents
-    reference_documents = [SpectrumDocument(s, n_decimals=2) for s in spectra_cleaned]
+Quick start
+===========
 
-    # Train your reference model
-    model_file = "references.model"
-    model = train_new_word2vec_model(reference_documents, iterations=[10, 20, 30], filename=model_file,
-                                     workers=2, progress_logger=True)
+Spec2Vec represents spectra as lists of ``peak@...`` and optionally
+``loss@...`` words. A Gensim Word2Vec model learns relationships between
+these words; Spec2Vec compares the resulting spectrum embeddings.
 
-Once a word2vec model has been trained, spec2vec allows to calculate the similarities
-between mass spectra based on this model. In cases where the word2vec model was
-trained on data different than the data it is applied for, a number of peaks ("words")
-might be unknown to the model (if they weren't part of the training dataset). To
-account for those cases it is important to specify the ``allowed_missing_percentage``,
-as in the example below.
+The example below assumes you have a reference MGF file. Its intensities
+must be normalized to a maximum of 1 before creating spectrum documents.
 
 .. code-block:: python
 
-    import gensim
-    from matchms import calculate_scores
-    from spec2vec import Spec2Vec
+   from matchms.importing import load_from_mgf
+   from spec2vec import SpectrumDocument
+   from spec2vec.model_building import train_new_word2vec_model
 
-    # query_spectra loaded from files using https://matchms.readthedocs.io/en/latest/api/matchms.importing.load_from_mgf.html
-    query_spectra = list(load_from_mgf("query_spectrums.mgf"))
-    query_spectra_cleaned, _ = processor.process_spectra(query_spectra)
+   references = list(load_from_mgf("references.mgf"))
+   documents = [SpectrumDocument(s, n_decimals=2) for s in references]
 
-    # Omit spectra that didn't qualify for analysis
-    query_spectra_cleaned = [s for s in query_spectra_cleaned if s is not None]
+   model = train_new_word2vec_model(
+       documents,
+       iterations=20,
+       filename="references.model",
+       workers=2,
+   )
 
-    # Import pre-trained word2vec model (see code example above)
-    model_file = "references.model"
-    model = gensim.models.Word2Vec.load(model_file)
+To compare already-preprocessed spectra using a pretrained model:
 
-    # Define similarity_function
-    spec2vec_similarity = Spec2Vec(model=model, intensity_weighting_power=0.5,
-                                   allowed_missing_percentage=5.0)
+.. code-block:: python
 
-    # Calculate scores on all combinations of reference spectra and queries
-    scores = calculate_scores(reference_documents, query_spectra_cleaned, spec2vec_similarity)
+   import numpy as np
+   from gensim.models import Word2Vec
+   from matchms import calculate_scores
+   from spec2vec import Spec2Vec
 
-    # Find the highest scores for a query spectrum of interest
-    best_matches = scores.scores_by_query(query_spectra_cleaned[0], sort=True)[:10]
+   model = Word2Vec.load("references.model")
+   similarity = Spec2Vec(model, intensity_weighting_power=0.5)
+   scores = calculate_scores(references, queries, similarity)
 
-    # Return highest scores
-    print([x[1] for x in best_matches])
+   # matchms 1.0: rows correspond to references; columns to queries.
+   values = scores.to_array("score")
+   best_reference_indices = np.argsort(values[:, 0])[::-1][:10]
+   best_references = [references[i] for i in best_reference_indices]
 
+Here ``references`` and ``queries`` are lists of preprocessed matchms spectra
+or matching spectrum documents. Preprocessing, peak selection, and decimal
+rounding must be consistent with the Word2Vec model. See the documentation's
+`Quickstart <https://spec2vec.readthedocs.io/en/latest/quickstart.html>`_
+for complete loading and preprocessing examples.
+
+**matchms 0.x:** its ``calculate_scores`` result exposes
+``scores.scores_by_query(query, sort=True)`` instead of the matrix-oriented
+``Scores.to_array("score")`` API.
 
 Glossary of terms
 =================
@@ -203,11 +197,11 @@ Glossary of terms
        in retrieving information associated with a certain molecule from a
        database.
    * - InChIKey / InChI key / :code:`INCHIKEY`
-     - An indentifier for molecules. For example, the InChI key for carbon
+     - An identifier for molecules. For example, the InChI key for carbon
        dioxide is :code:`InChIKey=CURLTUGMZLYLDI-UHFFFAOYSA-N` (yes, it
        includes the substring :code:`InChIKey=`).
    * - MGF File / Mascot Generic Format
-     - A plan ASCII file format to store peak list data from a mass spectrometry experiment. Links: `matrixscience.com <http://www.matrixscience.com/help/data_file_help.html#GEN>`__,
+     - A plain ASCII file format to store peak list data from a mass spectrometry experiment. Links: `matrixscience.com <http://www.matrixscience.com/help/data_file_help.html#GEN>`__,
        `fiehnlab.ucdavis.edu <https://fiehnlab.ucdavis.edu/projects/lipidblast/mgf-files>`__.
    * - parent mass / :code:`parent_mass`
      - Actual mass (in Dalton) of the original compound prior to fragmentation.
@@ -225,82 +219,52 @@ Glossary of terms
 Documentation for developers
 ****************************
 
-Installation
-============
+Development installation
+========================
 
-To install spec2vec, do:
-
-.. code-block:: console
-
-  git clone https://github.com/iomega/spec2vec.git
-  cd spec2vec
-  conda env create --file conda/environment-dev.yml
-  conda activate spec2vec-dev
-  pip install --editable .
-
-Run the linter with:
+The current repository uses Poetry for development and CI. For example:
 
 .. code-block:: console
 
-  prospector
+   git clone https://github.com/iomega/spec2vec.git
+   cd spec2vec
+   python -m pip install --upgrade poetry
+   poetry install
+   poetry run pytest
+   poetry run prospector -o grouped -o pylint:pylint-report.txt
 
-Run tests (including coverage) with:
+The planned migration to uv and Ruff will be documented separately; the
+commands above describe the current tooling.
+
+Documentation build
+===================
+
+Install the documentation dependencies described in
+``readthedocs/requirements.txt`` and run from the repository root:
 
 .. code-block:: console
 
-  pytest
+   python -m sphinx -b html readthedocs readthedocs/_build/html
 
+For a local build using the Poetry environment, run the equivalent
+``poetry run sphinx-build -b html readthedocs readthedocs/_build/html``.
 
 Conda package
 =============
 
-The conda packaging is handled by a `recipe at Bioconda <https://github.com/bioconda/bioconda-recipes/blob/master/recipes/spec2vec/meta.yaml>`_.
-
-Publishing to PyPI will trigger the creation of a `pull request on the bioconda recipes repository <https://github.com/bioconda/bioconda-recipes/pulls?q=is%3Apr+is%3Aopen+spec2vec>`_
-Once the PR is merged the new version of matchms will appear on `https://anaconda.org/bioconda/spec2vec <https://anaconda.org/bioconda/spec2vec>`_ 
-
-
-To remove spec2vec package from the active environment:
-
-.. code-block:: console
-
-  conda remove spec2vec
-
-
-To remove spec2vec environment:
-
-.. code-block:: console
-
-  conda env remove --name spec2vec
+The Conda recipe is under ``conda/`` in this repository. The published
+Bioconda recipe is at
+`bioconda-recipes <https://github.com/bioconda/bioconda-recipes/tree/master/recipes/spec2vec>`_.
+Bioconda packages may be updated separately from PyPI releases.
 
 Contributing
 ============
 
-If you want to contribute to the development of spec2vec,
-have a look at the `contribution guidelines <CONTRIBUTING.md>`_.
+See `CONTRIBUTING.md <CONTRIBUTING.md>`_ for contributor guidelines.
 
-*******
 License
-*******
+=======
 
-Copyright (c) 2023, Netherlands eScience Center & Düsseldorf University of Applied Sciences
+Copyright (c) Florian Huber @ Düsseldorf University of Applied Sciences & Netherlands eScience Center and contributors.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
-*******
-Credits
-*******
-
-This package was created with `Cookiecutter
-<https://github.com/audreyr/cookiecutter>`_ and the `NLeSC/python-template
-<https://github.com/NLeSC/python-template>`_.
+Licensed under the Apache License, Version 2.0. See ``LICENSE`` for details.

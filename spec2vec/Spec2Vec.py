@@ -24,7 +24,7 @@ class Spec2Vec(BaseSimilarity):
     and a small test dataset that can be found at
     :download:`../tests/pesticides.mgf </../tests/pesticides.mgf>`.
 
-    .. testcode::
+    .. code-block:: python
 
         import os
         import gensim

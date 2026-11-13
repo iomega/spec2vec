@@ -160,6 +160,7 @@ jobs:
           auto-update-conda: true
           environment-file: conda/environment-build.yml
           python-version: '3.12'
+          conda-build-version: "*"
       - name: Show conda config
         shell: bash -l {0}
         run: |

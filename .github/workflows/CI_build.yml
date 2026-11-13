@@ -3,16 +3,15 @@ name: CI Build
 on:
   push:
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, synchronize]
   workflow_dispatch:
     inputs:
       tag:
         description: Tag for manually running CI Build workflow
-        required: False
+        required: false
         default: ''
 
 jobs:
-
   first_check:
     name: first code check / python-3.13 / ubuntu-latest
     runs-on: ubuntu-latest
@@ -21,21 +20,19 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: '3.13'
       - name: Python info
         run: |
-          which python
+          python -c "import sys; print(sys.executable)"
           python --version
       - name: Build package and create dev environment
         run: |
           python -m pip install --upgrade pip poetry
           poetry install
       - name: Show pip list
-        run: |
-          pip list
+        run: poetry run python -m pip list
       - name: Test with coverage
-        run: |
-          poetry run pytest --cov --cov-report term --cov-report xml --junitxml=xunit-result.xml
+        run: poetry run pytest --cov --cov-report term --cov-report xml --junitxml=xunit-result.xml
       - name: Correct coverage paths
         run: sed -i "s+$PWD/++g" coverage.xml
       - name: Check style against standards using prospector
@@ -44,12 +41,41 @@ jobs:
       - name: Check whether import statements are used consistently
         shell: bash -l {0}
         run: poetry run isort --check-only --diff --conda-env spec2vec-dev .
-#      - name: SonarQube Scan
-#        if: github.repository == 'iomega/spec2vec'
-#        uses: SonarSource/sonarqube-scan-action@v6
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  # Explicitly test BOTH the latest matchms 0.x and the 1.0 pre-release.
+  # Poetry installs the locked default environment first and pip then replaces
+  # matchms with the exact test version, including its required dependencies.
+  matchms_compatibility:
+    name: matchms ${{ matrix.matchms-version }} / python-${{ matrix.python-version }} / ubuntu
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - python-version: '3.13'
+            matchms-version: '0.33.1'
+          - python-version: '3.13'
+            matchms-version: '1.0.0.dev1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Poetry and project dependencies
+        run: |
+          python -m pip install --upgrade pip poetry
+          poetry install
+      - name: Install exact matchms version (including pre-releases)
+        run: |
+          poetry run python -m pip install --upgrade --pre "matchms==${{ matrix.matchms-version }}"
+          poetry run python -m pip check
+      - name: Verify exact matchms version
+        run: |
+          poetry run python -c "from importlib.metadata import version; actual = version('matchms'); expected = '${{ matrix.matchms-version }}'; print(f'matchms: {actual}'); assert actual == expected, (actual, expected)"
+      - name: Focused cross-version API tests
+        run: poetry run pytest -q tests/test_matchms_api_compat.py
+      - name: Full test suite with selected matchms
+        run: poetry run pytest
 
   build_pypi:
     name: Pypi and documentation build / python-${{ matrix.python-version }} / ${{ matrix.os }}
@@ -61,8 +87,7 @@ jobs:
         os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
         python-version: ['3.10', '3.11', '3.12', '3.13']
         exclude:
-          # already tested in first_check job
-          - python-version: "3.13"
+          - python-version: '3.13'
             os: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -72,46 +97,40 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Python info
         run: |
-          which python
+          python -c "import sys; print(sys.executable)"
           python --version
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip poetry
+        run: python -m pip install --upgrade pip poetry
       - name: Build package
-        run: |
-          poetry build
+        run: poetry build
       - name: Test package
         run: |
-          pip install twine
+          python -m pip install twine
           python -m twine check dist/*
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip poetry
-          poetry install
+      - name: Install dev environment
+        run: poetry install
       - name: Show pip list
-        run: |
-          pip list
+        run: poetry run python -m pip list
       - name: Test
-        run: |
-          poetry run pytest
-      - name: Show environment variables
-        shell: bash -l {0}
-        run: |
-          env | sort
-      - name: Build documentation
-        run: |
-          poetry run make coverage doctest html
+        run: poetry run pytest
+      - name: Build documentation (no GNU Make dependency)
         working-directory: readthedocs/
-        env:
-          SPHINXOPTS: "-n"  # enable nit-picky mode
+        run: |
+          poetry run sphinx-build -n -b html . _build/html
+          poetry run sphinx-build -n -b doctest . _build/doctest
+          poetry run sphinx-build -n -b coverage . _build/coverage
       - name: Check documentation coverage threshold
         if: matrix.os == 'ubuntu-latest'
+        shell: bash
         run: |
           cat readthedocs/_build/coverage/python.txt
           UNCOVERED_MEMBERS=$(grep '*' readthedocs/_build/coverage/python.txt | wc -l)
           UNCOVERED_MEMBERS_ALLOWED=5
-          if (( $UNCOVERED_MEMBERS > $UNCOVERED_MEMBERS_ALLOWED )) ; then echo "There are currently ${UNCOVERED_MEMBERS} uncovered members in the documentation, which is more than the ${UNCOVERED_MEMBERS_ALLOWED} allowed." && exit 1;fi
-          echo "The code is sufficiently documented with ${UNCOVERED_MEMBERS} uncovered members out of ${UNCOVERED_MEMBERS_ALLOWED} allowed.";
+          if (( UNCOVERED_MEMBERS > UNCOVERED_MEMBERS_ALLOWED )); then
+            echo "There are ${UNCOVERED_MEMBERS} uncovered members, more than ${UNCOVERED_MEMBERS_ALLOWED} allowed."
+            exit 1
+          fi
+          echo "Documentation check passed: ${UNCOVERED_MEMBERS} uncovered members."
 
   anaconda_build:
     name: Anaconda build / python-3.12 / ubuntu-latest
@@ -122,14 +141,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: "0"
+          fetch-depth: '0'
       - name: Create spec2vec-build environment
         uses: conda-incubator/setup-miniconda@v3
         with:
           activate-environment: spec2vec-build
           auto-update-conda: true
           environment-file: conda/environment-build.yml
-          python-version: "3.12"
+          python-version: '3.12'
       - name: Show conda config
         shell: bash -l {0}
         run: |
@@ -145,8 +164,7 @@ jobs:
           python --version
       - name: Show environment variables
         shell: bash -l {0}
-        run: |
-          env | sort
+        run: env | sort
       - name: Build the conda package
         shell: bash -l {0}
         run: |

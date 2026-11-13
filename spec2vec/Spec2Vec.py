@@ -3,9 +3,8 @@ from typing import List, Union
 import numpy as np
 from gensim.models import Word2Vec
 from matchms import Spectrum
-from matchms.similarity.BaseSimilarity import BaseSimilarity
-from sparsestack import StackedSparseArray
 from tqdm import tqdm
+from spec2vec._matchms_compat import BaseSimilarity, MATCHMS_V1, Scores
 from spec2vec.serialization import Word2VecLight
 from spec2vec.SpectrumDocument import SpectrumDocument
 from spec2vec.vector_operations import (calc_vector, cosine_similarity,
@@ -66,19 +65,23 @@ class Spec2Vec(BaseSimilarity):
         # Calculate scores on all combinations of references and queries
         scores = calculate_scores(spectrums[10:], spectrums[:10], spec2vec)
 
-        # Select top-10 candidates for first query spectrum
-        spectrum0_top10 = scores.scores_by_query(spectrums[0], sort=True)[:10]
+        # The two generations of matchms expose different Scores APIs.
+        if hasattr(scores, "score_fields"):  # matchms >= 1.0
+            import numpy as np
+            top_indices = np.argsort(scores.to_array("score")[:, 0])[::-1][:10]
+            top_matches = [spectrums[10:][i] for i in top_indices]
+        else:  # matchms 0.x
+            top_matches = [entry[0] for entry in
+                           scores.scores_by_query(spectrums[0], sort=True)[:10]]
 
-        # Display spectrum IDs for top-10 matches (only works if metadata contains "spectrum_id" field)
-        print([s[0].metadata['spectrum_id'] for s in spectrum0_top10])
-
-    Should output
-
-    .. testoutput::
-
-        ['CCMSLIB00001058430', 'CCMSLIB00001058367', 'CCMSLIB00001058433', ...
+        top10_ids = [s.metadata["spectrum_id"] for s in top_matches]
 
     """
+
+    is_commutative = True
+    score_datatype = np.float64
+    score_fields = ("score",)
+
     def __init__(self, model: Union[Word2Vec, Word2VecLight], intensity_weighting_power: Union[float, int] = 0,
                  allowed_missing_percentage: Union[float, int] = 10, progress_bar: bool = False):
         """
@@ -132,56 +135,83 @@ class Spec2Vec(BaseSimilarity):
         return cosine_similarity(reference_vector, query_vector)
 
     def matrix(self, references: Union[List[SpectrumDocument], List[Spectrum]],
-               queries: Union[List[SpectrumDocument], List[Spectrum]],
-               array_type: str = "numpy",
-               is_symmetric: bool = False) -> np.ndarray:
-        """Calculate the spec2vec similarities between all references and queries.
+               queries: Union[List[SpectrumDocument], List[Spectrum], None] = None,
+               score_fields=None,
+               progress_bar: Union[bool, None] = None,
+               *, array_type: str = "numpy", is_symmetric: bool = False):
+        """Calculate Spec2Vec similarities between reference and query documents.
+
+        The matrix uses reference rows and query columns. With matchms >= 1.0,
+        a :class:`matchms.scores.Scores` container is returned. With matchms
+        0.x, the legacy NumPy or StackedSparseArray result is retained.
 
         Parameters
         ----------
-        references:
-            Reference spectrums or spectrum documents.
-        queries:
-            Query spectrums or spectrum documents.
+        references
+            Reference spectra or spectrum documents.
+        queries
+            Query spectra or documents. ``None`` means compare references with
+            themselves (and reuse their embeddings).
         array_type
-            Specify the output array type. Can be "numpy" or "sparse".
-            Currently, only "numpy" is supported and will return a numpy array.
-            Future versions will include "sparse" as option to return a COO-sparse array.
-        is_symmetric:
-            Set to True if references == queries to speed up calculation about 2x.
-            Uses the fact that in this case score[i, j] = score[j, i]. Default is False.
-
-        Returns
-        -------
-        spec2vec_similarity
-            Array of spec2vec similarity scores.
+            ``"numpy"`` (default) or ``"sparse"``. Sparse legacy output is a
+            StackedSparseArray; under matchms 1.0 it is a sparse Scores object.
+        is_symmetric
+            Legacy option for identical reference and query collections.
+        score_fields
+            matchms 1.0 option. Only ``("score",)`` is supported.
+        progress_bar
+            Override the progress bar setting from the constructor for this call.
         """
-        n_rows = len(references)
-        reference_vectors = np.empty((n_rows, self.vector_size), dtype="float")
-        for index_reference, reference in enumerate(tqdm(references, desc='Calculating vectors of reference spectrums',
-                                                         disable=self.disable_progress_bar)):
-            reference_vectors[index_reference, 0:self.vector_size] = self._calculate_embedding(reference)
+        # Recognize old positional usage matrix(refs, queries, "numpy", True).
+        # Keyword array_type/is_symmetric continues to work on both matchms APIs.
+        if isinstance(score_fields, str) and score_fields in ("numpy", "sparse"):
+            array_type = score_fields
+            score_fields = None
+            if progress_bar is not None:
+                is_symmetric = progress_bar
+                progress_bar = None
+        if score_fields is not None and tuple(score_fields) != ("score",):
+            raise ValueError("Spec2Vec supports only score_fields=('score',).")
+        if array_type not in ("numpy", "sparse"):
+            raise ValueError("array_type must be 'numpy' or 'sparse'.")
 
-        n_cols = len(queries)
+        if queries is None:
+            queries = references
+            is_symmetric = True
         if is_symmetric:
-            assert np.all(references == queries), \
-                "Expected references to be equal to queries for is_symmetric=True"
+            if references is not queries and not np.array_equal(references, queries):
+                raise ValueError("is_symmetric=True requires identical references and queries.")
+        show_progress = not self.disable_progress_bar if progress_bar is None else progress_bar
+
+        n_rows = len(references)
+        reference_vectors = np.empty((n_rows, self.vector_size), dtype=float)
+        for i, reference in enumerate(tqdm(
+                references, desc="Calculating reference vectors", disable=not show_progress)):
+            reference_vectors[i, :] = self._calculate_embedding(reference)
+
+        if is_symmetric:
             query_vectors = reference_vectors
         else:
-            query_vectors = np.empty((n_cols, self.vector_size), dtype="float")
-            for index_query, query in enumerate(tqdm(queries, desc='Calculating vectors of query spectrums',
-                                                     disable=self.disable_progress_bar)):
-                query_vectors[index_query, 0:self.vector_size] = self._calculate_embedding(query)
+            query_vectors = np.empty((len(queries), self.vector_size), dtype=float)
+            for j, query in enumerate(tqdm(
+                    queries, desc="Calculating query vectors", disable=not show_progress)):
+                query_vectors[j, :] = self._calculate_embedding(query)
 
-        spec2vec_similarity = cosine_similarity_matrix(reference_vectors, query_vectors)
+        similarities = cosine_similarity_matrix(reference_vectors, query_vectors)
 
-        if array_type == "numpy":
-            return spec2vec_similarity
+        if MATCHMS_V1:
+            if array_type == "sparse":
+                from scipy.sparse import coo_array
+                return Scores({"score": coo_array(similarities)})
+            return Scores({"score": similarities})
+
         if array_type == "sparse":
-            sparse = StackedSparseArray(n_rows, n_cols)
-            sparse.add_dense_matrix(spec2vec_similarity, "")
+            # Only needed for the old matchms scoring API.
+            from sparsestack import StackedSparseArray
+            sparse = StackedSparseArray(len(references), len(queries))
+            sparse.add_dense_matrix(similarities, "")
             return sparse
-        raise NotImplementedError("Only 'numpy' and 'sparse' array types are supported.")
+        return similarities
 
     @staticmethod
     def _get_word_decimals(model):

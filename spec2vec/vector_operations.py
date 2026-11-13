@@ -110,10 +110,14 @@ def cosine_similarity_matrix(vectors_1: np.ndarray, vectors_2: np.ndarray) -> np
     vectors_2 = vectors_2.astype(np.float64)
     norm_1 = np.sqrt(np.sum(vectors_1**2, axis=1))
     norm_2 = np.sqrt(np.sum(vectors_2**2, axis=1))
+    # A document with no known vocabulary words has a zero embedding.
+    # Keep that row zero rather than producing NaN scores by dividing by zero.
     for i in range(vectors_1.shape[0]):
-        vectors_1[i] = vectors_1[i] / norm_1[i]
+        if norm_1[i] > 0:
+            vectors_1[i] = vectors_1[i] / norm_1[i]
     for i in range(vectors_2.shape[0]):
-        vectors_2[i] = vectors_2[i] / norm_2[i]
+        if norm_2[i] > 0:
+            vectors_2[i] = vectors_2[i] / norm_2[i]
     return np.dot(vectors_1, vectors_2.T)
 
 

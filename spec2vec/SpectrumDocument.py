@@ -1,5 +1,4 @@
-from matchms import Spectrum
-from matchms.Fragments import Fragments
+from matchms import Fragments, Spectrum
 from .Document import Document
 
 

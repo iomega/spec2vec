@@ -19,12 +19,14 @@ def train_new_word2vec_model(documents: List, iterations: Union[List[int], int],
 
     .. code-block:: python
 
-        from matchms import SpectrumDocument
+        from spec2vec import SpectrumDocument
         from spec2vec.model_building import train_new_word2vec_model
 
         documents = [SpectrumDocument(s, n_decimals=1) for s in spectrums]
-        model = train_new_word2vec_model(documents, iterations=20, size=200,
-                                         workers=1, progress_logger=False)
+        model = train_new_word2vec_model(
+            documents, iterations=20, vector_size=200,
+            workers=1, progress_logger=False
+            )
 
     Parameters
     ----------
@@ -59,7 +61,7 @@ def train_new_word2vec_model(documents: List, iterations: Union[List[int], int],
         negative specifies how many “noise words” should be drawn (usually
         between 5-20). If set to 0, no negative sampling is used.
         Default for Spec2Vec is 5.
-    size: int,
+    vector_size: int,
         Dimensions of word vectors. Default is 300.
     window: int,
         Window size for context words (small for local context, larger for

@@ -10,7 +10,13 @@ Code quality checks:
 
 |GitHub Workflow Status|
 |ReadTheDocs Badge|
-|Sonarcloud Quality Gate Badge| |Sonarcloud Coverage Badge|
+
+.. image:: readthedocs/spec2vec_logo_01.png
+   :width: 300px
+   :target: readthedocs/spec2vec_logo_01.png
+   :align: left
+   :alt: spec2vec logo
+
 
 ################################################################################
 spec2vec
@@ -67,14 +73,6 @@ Thanks!
 .. |ReadTheDocs Badge| image:: https://readthedocs.org/projects/spec2vec/badge/?version=latest
     :alt: Documentation Status
     :target: https://spec2vec.readthedocs.io/en/latest/?badge=latest
-
-.. |Sonarcloud Quality Gate Badge| image:: https://sonarcloud.io/api/project_badges/measure?project=iomega_spec2vec&metric=alert_status
-   :target: https://sonarcloud.io/dashboard?id=iomega_spec2vec
-   :alt: Sonarcloud Quality Gate
-
-.. |Sonarcloud Coverage Badge| image:: https://sonarcloud.io/api/project_badges/measure?project=iomega_spec2vec&metric=coverage
-   :target: https://sonarcloud.io/component_measures?id=iomega_spec2vec&metric=Coverage&view=list
-   :alt: Sonarcloud Coverage
 
 .. |GitHub Workflow Status| image:: https://img.shields.io/github/actions/workflow/status/matchms/spec2vec/CI_build.yml?branch=master
    :target: https://img.shields.io/github/workflow/status/iomega/spec2vec/CI%20Build

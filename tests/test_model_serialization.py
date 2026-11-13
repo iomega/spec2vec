@@ -136,7 +136,15 @@ def test_reloaded_model_computes_scores(model, tmp_path):
     scores = list(calculate_scores(references, queries, spec2vec))
     scores_reloaded = list(calculate_scores(references, queries, spec2vec_reloaded))
 
-    assert scores == scores_reloaded
+    scores = calculate_scores(references, queries, spec2vec)
+    scores_reloaded = calculate_scores(references, queries, spec2vec_reloaded)
+    if hasattr(scores, "scores_by_query"):
+        # matchms 0.x: calculate_scores results iterate as (reference, query, score).
+        assert list(scores) == list(scores_reloaded)
+    else:
+        # matchms 1.0: compare the score matrices, not the Scores containers.
+        np.testing.assert_array_equal(scores.to_array("score"),
+                                      scores_reloaded.to_array("score"))
 
 
 def test_export_model(tmp_path, new_model):

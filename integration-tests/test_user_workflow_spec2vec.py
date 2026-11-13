@@ -10,6 +10,7 @@ from matchms.importing import load_from_mgf
 from spec2vec import Spec2Vec, SpectrumDocumentWithLosses
 
 
+# pylint: disable=too-many-locals
 def test_user_workflow_spec2vec():
     """Test typical user workflow to get from mass spectra to spec2vec similarities.
 
@@ -46,7 +47,7 @@ def test_user_workflow_spec2vec():
         model = gensim.models.Word2Vec.load(model_file)
     else:
         # create and train model
-        model = gensim.models.Word2Vec([d.words for d in documents], size=5, min_count=1)
+        model = gensim.models.Word2Vec([d.words for d in documents], vector_size=5, min_count=1)
         model.train([d.words for d in documents], total_examples=len(documents), epochs=20)
         model.save(model_file)
 
@@ -56,11 +57,25 @@ def test_user_workflow_spec2vec():
     references = documents[:26]
     queries = documents[25:]
 
-    # calculate scores on all combinations of references and queries
-    scores = list(calculate_scores(references, queries, spec2vec))
-
-    # filter out self-comparisons
-    filtered = [(reference, query, score) for (reference, query, score) in scores if reference != query]
+    # Calculate scores for all reference/query combinations.
+    scores = calculate_scores(references, queries, spec2vec)
+    if hasattr(scores, "scores_by_query"):
+        # matchms 0.x: extract scalar similarities from structured scores.
+        scored_pairs = [
+            (reference, query, float(score[0]))
+            for reference, query, score in scores
+        ]
+    else:
+        # matchms 1.0: reference indices are rows, query indices are columns.
+        score_matrix = scores.to_array("score")
+        scored_pairs = [
+            (reference, query, float(score_matrix[i, j]))
+            for i, reference in enumerate(references)
+            for j, query in enumerate(queries)
+        ]
+    # Filter out self-comparisons.
+    filtered = [(reference, query, score) for (reference, query, score)
+                in scored_pairs if reference != query]
 
     sorted_by_score = sorted(filtered, key=lambda elem: elem[2], reverse=True)
 
@@ -81,4 +96,7 @@ def test_user_workflow_spec2vec():
 
     assert [x[0] for x in actual_top10] == [x[0] for x in expected_top10]
     assert [x[1] for x in actual_top10] == [x[1] for x in expected_top10]
-    assert np.allclose([x[2][0] for x in actual_top10], [x[2] for x in expected_top10]), "Expected different top 10 table."
+    assert np.allclose(
+        [x[2] for x in actual_top10],
+        [x[2] for x in expected_top10],
+    ), "Expected different top 10 table."

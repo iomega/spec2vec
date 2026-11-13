@@ -1,9 +1,10 @@
 """Sphinx configuration for Spec2Vec documentation."""
+import os
+import sys
 from datetime import datetime
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
-import os
-import sys
+
 
 DOCS_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = DOCS_DIR.parent

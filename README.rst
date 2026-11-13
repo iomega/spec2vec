@@ -12,11 +12,12 @@ Code quality checks:
 |ReadTheDocs Badge|
 |Sonarcloud Quality Gate Badge| |Sonarcloud Coverage Badge|
 
-.. image:: readthedocs/spec2vec_logo_01.svg
+.. image:: readthedocs/spec2vec_logo_01.png
    :width: 500px
-   :target: readthedocs/spec2vec_logo_01.svg
+   :target: readthedocs/spec2vec_logo_01.png
    :align: left
    :alt: spec2vec logo
+
 
 ################################################################################
 spec2vec

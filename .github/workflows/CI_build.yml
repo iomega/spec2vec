@@ -1,3 +1,4 @@
+
 name: CI Build
 
 on:
@@ -17,47 +18,41 @@ on:
         required: false
         default: ''
 
-# Cancel outdated runs when new commits are pushed to the same PR.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   first_check:
-    name: first code check / python-3.13 / ubuntu-latest
+    name: Code quality / Python 3.13 / Ubuntu
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
-      - name: Python info
-        run: |
-          python -c "import sys; print(sys.executable)"
-          python --version
-      - name: Build package and create dev environment
+
+      - name: Install project
         run: |
           python -m pip install --upgrade pip poetry
           poetry install
-      - name: Show pip list
-        run: poetry run python -m pip list
+
       - name: Test with coverage
         run: poetry run pytest --cov --cov-report term --cov-report xml --junitxml=xunit-result.xml
+
       - name: Correct coverage paths
         run: sed -i "s+$PWD/++g" coverage.xml
-      - name: Check style against standards using prospector
-        shell: bash -l {0}
+
+      - name: Check style with Prospector
         run: poetry run prospector -o grouped -o pylint:pylint-report.txt
-      - name: Check whether import statements are used consistently
-        shell: bash -l {0}
+
+      - name: Check import order
         run: poetry run isort --check-only --diff --conda-env spec2vec-dev .
 
-  # Explicitly test BOTH the latest matchms 0.x and the 1.0 pre-release.
-  # Poetry installs the locked default environment first and pip then replaces
-  # matchms with the exact test version, including its required dependencies.
   matchms_compatibility:
-    name: matchms ${{ matrix.matchms-version }} / python-${{ matrix.python-version }} / ubuntu
+    name: matchms ${{ matrix.matchms-version }} / Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -67,127 +62,159 @@ jobs:
             matchms-version: '0.33.1'
           - python-version: '3.13'
             matchms-version: '1.0.0.dev1'
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install Poetry and project dependencies
+
+      - name: Install project
         run: |
           python -m pip install --upgrade pip poetry
           poetry install
-      - name: Install exact matchms version (including pre-releases)
+
+      - name: Install selected matchms version
         run: |
           poetry run python -m pip install --upgrade --pre "matchms==${{ matrix.matchms-version }}"
           poetry run python -m pip check
-      - name: Verify exact matchms version
+
+      - name: Verify matchms version
         run: |
           poetry run python -c "from importlib.metadata import version; actual = version('matchms'); expected = '${{ matrix.matchms-version }}'; print(f'matchms: {actual}'); assert actual == expected, (actual, expected)"
-      - name: Focused cross-version API tests
+
+      - name: Focused compatibility tests
         run: poetry run pytest -q tests/test_matchms_api_compat.py
-      - name: Full test suite with selected matchms
+
+      - name: Full test suite
         run: poetry run pytest
 
   build_pypi:
-    name: Pypi and documentation build / python-${{ matrix.python-version }} / ${{ matrix.os }}
+    name: PyPI package / Python ${{ matrix.python-version }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     needs: first_check
     strategy:
       fail-fast: false
       matrix:
-        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ['3.10', '3.11', '3.12', '3.13']
         exclude:
+          # Already tested by first_check
           - python-version: '3.13'
             os: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python-version }}
+
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Python info
-        run: |
-          python -c "import sys; print(sys.executable)"
-          python --version
-      - name: Install dependencies
-        run: python -m pip install --upgrade pip poetry
+
+      - name: Install build tools
+        run: python -m pip install --upgrade pip poetry twine
+
       - name: Build package
         run: poetry build
-      - name: Test package
-        run: |
-          python -m pip install twine
-          python -m twine check dist/*
-      - name: Install dev environment
+
+      - name: Validate distribution
+        run: python -m twine check dist/*
+
+      - name: Install development environment
         run: poetry install
-      - name: Show pip list
-        run: poetry run python -m pip list
-      - name: Test
+
+      - name: Run tests
         run: poetry run pytest
-      - name: Build documentation (no GNU Make dependency)
-        working-directory: readthedocs/
+
+  # Documentation builds once, independently of the package matrix.
+  build_docs:
+    name: Documentation / Python 3.13 / Ubuntu
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install project and documentation dependencies
         run: |
-          poetry run sphinx-build -n -b html . _build/html
-          poetry run sphinx-build -n -b doctest . _build/doctest
-          poetry run sphinx-build -n -b coverage . _build/coverage
+          python -m pip install --upgrade pip poetry
+          poetry install
+          poetry run python -m pip install -r readthedocs/requirements.txt
+
+      - name: Build HTML documentation
+        run: |
+          poetry run sphinx-build -n -b html readthedocs readthedocs/_build/html
+
+      - name: Run documentation examples
+        run: |
+          poetry run sphinx-build -n -b doctest readthedocs readthedocs/_build/doctest
+
+      - name: Check documentation coverage
+        run: |
+          poetry run sphinx-build -n -b coverage readthedocs readthedocs/_build/coverage
+
       - name: Check documentation coverage threshold
-        if: matrix.os == 'ubuntu-latest'
         shell: bash
         run: |
-          cat readthedocs/_build/coverage/python.txt
-          UNCOVERED_MEMBERS=$(grep '*' readthedocs/_build/coverage/python.txt | wc -l)
+          REPORT=readthedocs/_build/coverage/python.txt
+          cat "$REPORT"
+
+          UNCOVERED_MEMBERS=$(grep -cE '^[[:space:]]*\*' "$REPORT" || true)
           UNCOVERED_MEMBERS_ALLOWED=5
+
+          echo "Undocumented members: ${UNCOVERED_MEMBERS}"
+          echo "Allowed: ${UNCOVERED_MEMBERS_ALLOWED}"
+
           if (( UNCOVERED_MEMBERS > UNCOVERED_MEMBERS_ALLOWED )); then
-            echo "There are ${UNCOVERED_MEMBERS} uncovered members, more than ${UNCOVERED_MEMBERS_ALLOWED} allowed."
+            echo "::error::Too many undocumented members"
             exit 1
           fi
-          echo "Documentation check passed: ${UNCOVERED_MEMBERS} uncovered members."
+
+          echo "Documentation coverage check passed."
 
   anaconda_build:
-    name: Anaconda build / python-3.12 / ubuntu-latest
+    name: Conda package / Python 3.12 / Ubuntu
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     needs: first_check
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: '0'
-      - name: Create spec2vec-build environment
+
+      - name: Create build environment
         uses: conda-incubator/setup-miniconda@v3
         with:
           activate-environment: spec2vec-build
           auto-update-conda: true
           environment-file: conda/environment-build.yml
           python-version: '3.12'
-          conda-build-version: "*"
-      - name: Show conda config
+          conda-build-version: '*'
+
+      - name: Show Conda configuration
         shell: bash -l {0}
         run: |
           conda info
           conda list
           conda config --show-sources
-          conda config --show
           conda env list
-      - name: Python info
+
+      - name: Build Conda package
         shell: bash -l {0}
         run: |
-          which python
-          python --version
-      - name: Show environment variables
-        shell: bash -l {0}
-        run: env | sort
-      - name: Build the conda package
-        shell: bash -l {0}
-        run: |
-          export BUILDDIR=$RUNNER_TEMP/spec2vec/_build
-          [ "$RUNNING_OS" = "Windows" ] && export BUILDDIR=$RUNNER_TEMP\\spec2vec\\_build\\
+          BUILDDIR="$RUNNER_TEMP/spec2vec/_build"
           conda config --set anaconda_upload no
           conda build --no-include-recipe \
             --channel conda-forge --channel bioconda \
-            --croot ${BUILDDIR} \
+            --croot "$BUILDDIR" \
             ./conda
-      - name: Upload package artifact from build
+
+      - name: Upload Conda package
         uses: actions/upload-artifact@v4
         with:
           name: conda-package-artifact

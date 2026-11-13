@@ -46,7 +46,7 @@ def test_user_workflow_spec2vec():
         model = gensim.models.Word2Vec.load(model_file)
     else:
         # create and train model
-        model = gensim.models.Word2Vec([d.words for d in documents], size=5, min_count=1)
+        model = gensim.models.Word2Vec([d.words for d in documents], vector_size=5, min_count=1)
         model.train([d.words for d in documents], total_examples=len(documents), epochs=20)
         model.save(model_file)
 
@@ -59,8 +59,11 @@ def test_user_workflow_spec2vec():
     # Calculate scores for all reference/query combinations.
     scores = calculate_scores(references, queries, spec2vec)
     if hasattr(scores, "scores_by_query"):
-        # matchms 0.x: each entry already contains the reference and query.
-        scored_pairs = list(scores)
+        # matchms 0.x: extract scalar similarities from structured scores.
+        scored_pairs = [
+            (reference, query, float(score[0]))
+            for reference, query, score in scores
+        ]
     else:
         # matchms 1.0: reference indices are rows, query indices are columns.
         score_matrix = scores.to_array("score")
@@ -92,4 +95,7 @@ def test_user_workflow_spec2vec():
 
     assert [x[0] for x in actual_top10] == [x[0] for x in expected_top10]
     assert [x[1] for x in actual_top10] == [x[1] for x in expected_top10]
-    assert np.allclose([x[2][0] for x in actual_top10], [x[2] for x in expected_top10]), "Expected different top 10 table."
+    assert np.allclose(
+        [x[2] for x in actual_top10],
+        [x[2] for x in expected_top10],
+    ), "Expected different top 10 table."

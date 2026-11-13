@@ -180,7 +180,10 @@ class Spec2Vec(BaseSimilarity):
             is_symmetric = True
         if is_symmetric:
             if references is not queries and not np.array_equal(references, queries):
-                raise ValueError("is_symmetric=True requires identical references and queries.")
+                # Preserve the exception type and message used by matchms 0.x callers.
+                raise AssertionError(
+                    "Expected references to be equal to queries for is_symmetric=True"
+                )
         show_progress = not self.disable_progress_bar if progress_bar is None else progress_bar
 
         n_rows = len(references)

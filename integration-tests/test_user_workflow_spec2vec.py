@@ -56,11 +56,22 @@ def test_user_workflow_spec2vec():
     references = documents[:26]
     queries = documents[25:]
 
-    # calculate scores on all combinations of references and queries
-    scores = list(calculate_scores(references, queries, spec2vec))
-
-    # filter out self-comparisons
-    filtered = [(reference, query, score) for (reference, query, score) in scores if reference != query]
+    # Calculate scores for all reference/query combinations.
+    scores = calculate_scores(references, queries, spec2vec)
+    if hasattr(scores, "scores_by_query"):
+        # matchms 0.x: each entry already contains the reference and query.
+        scored_pairs = list(scores)
+    else:
+        # matchms 1.0: reference indices are rows, query indices are columns.
+        score_matrix = scores.to_array("score")
+        scored_pairs = [
+            (reference, query, float(score_matrix[i, j]))
+            for i, reference in enumerate(references)
+            for j, query in enumerate(queries)
+        ]
+    # Filter out self-comparisons.
+    filtered = [(reference, query, score) for (reference, query, score)
+                in scored_pairs if reference != query]
 
     sorted_by_score = sorted(filtered, key=lambda elem: elem[2], reverse=True)
 
